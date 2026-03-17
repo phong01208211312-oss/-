@@ -3,108 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>華語進階：開學了挑戰賽 v2</title>
+    <title>華語學習：第一課 開學了 (進階版)</title>
     <style>
         :root {
             --edu-blue: #3498db; --edu-yellow: #f1c40f; --edu-red: #e74c3c;
             --edu-green: #2ecc71; --text-dark: #2c3e50;
         }
-        body {
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-            background: #f0f2f5; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;
-        }
-        #app {
-            width: 95%; max-width: 800px; background: white; border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden;
-        }
-        .header { background: var(--edu-blue); color: white; padding: 15px; text-align: center; border-bottom: 4px solid var(--edu-yellow); }
+        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: #f4f7f6; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        #app { width: 95%; max-width: 800px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: var(--edu-blue); color: white; padding: 15px; text-align: center; border-bottom: 4px solid var(--edu-yellow); position: relative; }
+        .audio-btn { cursor: pointer; font-size: 1.5rem; vertical-align: middle; margin-left: 10px; transition: transform 0.2s; display: inline-block; }
+        .audio-btn:hover { transform: scale(1.2); }
         .progress-bar { height: 8px; background: #eee; width: 100%; }
         #progress-fill { height: 100%; background: var(--edu-green); width: 0%; transition: 0.3s; }
         .content { padding: 25px; text-align: center; min-height: 400px; }
         .hidden { display: none; }
-        .image-container { width: 100%; max-width: 300px; margin: 0 auto 15px; border-radius: 10px; overflow: hidden; border: 2px solid #eee; }
-        .image-container img { width: 100%; height: auto; display: block; }
-        .sentence-display { font-size: 1.3rem; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; }
+        .sentence-display { font-size: 1.3rem; margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 10px; border-left: 5px solid var(--edu-blue); }
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .btn { padding: 12px; border: 2px solid var(--edu-blue); background: white; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn:hover { background: var(--edu-blue); color: white; }
+        .btn:hover:not(:disabled) { background: var(--edu-blue); color: white; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .word-tile { padding: 10px 15px; background: var(--edu-yellow); border-radius: 5px; cursor: pointer; margin: 5px; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .sort-zone { min-height: 60px; border: 2px dashed #ccc; margin: 15px 0; padding: 10px; border-radius: 10px; background: #fffdf0; }
-        #feedback { margin-top: 15px; padding: 10px; border-radius: 8px; font-weight: bold; }
-        .correct { background: #d4edda; color: #155724; }
-        .wrong { background: #f8d7da; color: #721c24; }
-        .cite-tag { font-size: 0.8rem; color: #95a5a6; display: block; margin-top: 5px; }
+        #feedback { margin-top: 15px; padding: 15px; border-radius: 8px; font-weight: bold; line-height: 1.5; }
+        .correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .attempt-info { font-size: 0.9rem; color: var(--edu-red); margin-top: 5px; }
+        .cite-tag { font-size: 0.85rem; color: #666; display: block; margin-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 5px; }
     </style>
 </head>
 <body>
 
 <div id="app">
-    <div class="header"><h2 id="level-title">第1課：開學了 互動挑戰</h2></div>
+    <div class="header">
+        <h2 style="margin:0">第一課：開學了 <span class="audio-btn" title="聽發音" onclick="replayQ()">🔊</span></h2>
+    </div>
     <div class="progress-bar"><div id="progress-fill"></div></div>
 
     <div id="start-screen" class="content">
-        <h2 style="color: var(--edu-blue);">🎒 準備好開學了嗎？</h2>
-        <p>本練習共有 15 道關卡，包含聽力、圖片與語法挑戰。</p>
-        <button class="btn" style="background: var(--edu-blue); color: white; padding: 15px 40px;" onclick="initGame()">立即開始</button>
+        <h2 style="color: var(--edu-blue);">🎒 華語能力大考驗</h2>
+        <p>點擊 🔊 圖示可以聽題目發音。<br>答錯兩次將會顯示正確答案，加油！</p>
+        <button class="btn" style="background: var(--edu-blue); color: white; padding: 15px 40px; font-size:1.2rem;" onclick="initGame()">進入學習挑戰</button>
     </div>
 
     <div id="game-screen" class="content hidden">
-        <div id="image-area" class="image-container hidden"></div>
-        <div class="sentence-display" id="q-text"></div>
+        <div id="attempt-hint" class="attempt-info"></div>
+        <div class="sentence-display">
+            <span id="q-text"></span>
+            <span class="audio-btn" style="font-size:1.1rem" onclick="replayQ()">🔊</span>
+        </div>
         <div id="interactive-area"></div>
         <div id="feedback" class="hidden"></div>
-        <button id="next-btn" class="btn hidden" onclick="nextQuestion()" style="margin-top:20px; width: 100%; background: var(--edu-green); color: white; border: none;">繼續挑戰</button>
+        <button id="next-btn" class="btn hidden" onclick="nextQuestion()" style="margin-top:20px; width: 100%; background: var(--edu-green); color: white; border: none;">繼續下一題</button>
     </div>
 
     <div id="end-screen" class="content hidden">
-        <h2 id="final-msg">🎉 恭喜完成！</h2>
+        <h2>🎉 挑戰結束！</h2>
         <div id="score-display" style="font-size: 2rem; margin: 20px 0;"></div>
+        <p id="final-stats"></p>
         <button class="btn" onclick="location.reload()">重新挑戰</button>
     </div>
 </div>
 
 <script>
-    // 預設圖片路徑 (建議使用者將圖片放在同資料夾或轉換為Base64)
-    // 這裡使用 Placeholder 代替，你可以替換成實際檔名
     const questions = [
-        { type: 'choice', q: '他每天都在圖書館讀書，非常____。', options: ['原來', '用功', '反對'], ans: 1, cite: '頁面 16 [cite: 95]' },
-        { type: 'choice', q: '爸爸____我晚上太晚回家。', options: ['原來', '反對', '用功'], ans: 1, cite: '頁面 16 [cite: 94]' },
-        { type: 'choice', q: '你的中文真好，____你學中文有十年了！', options: ['原來', '反對', '用功'], ans: 0, cite: '頁面 16 [cite: 96]' },
-        { type: 'choice', q: '台北的天氣真奇怪，說下雨____下雨。', options: ['都', '就', '也'], ans: 1, cite: '頁面 6 ' },
-        { type: 'sort', q: '請排列：(愛喝奶茶的習慣)', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '頁面 6 ' },
-        { type: 'choice', q: '李老師很嚴，常常說考試____考試。', options: ['都', '就', '再'], ans: 1, cite: '頁面 9 ' },
-        { type: 'choice', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...'], ans: 0, cite: '頁面 8 [cite: 43]' },
-        { type: 'choice', q: '參觀這個博物館，不管____，都要買票。', options: ['誰', '什麼人', '哪裡'], ans: 1, cite: '頁面 14 ' },
-        { type: 'sort', q: '請排列：(小美的學習態度)', words: ['不管', '累不累', '她', '都會來', '上課'], ans: '不管累不累她都會來上課', cite: '頁面 15 ' },
-        { type: 'choice', q: '不管天氣____，我都要去海邊。', options: ['好不好', '怎麼樣', '以上皆可'], ans: 2, cite: '頁面 12 ' },
-        { type: 'choice', q: '我原來在____工作。', options: ['美國', '台北', '圖書館'], ans: 0, cite: '頁面 4 [cite: 26]' },
-        { type: 'sort', q: '請排列：(購物習慣)', words: ['看到', '喜歡的衣服', '說買', '就買'], ans: '看到喜歡的衣服說買就買', cite: '頁面 7 [cite: 40, 41]' },
-        { type: 'choice', q: '他很用功念書，不管____，他都拿第一名。', options: ['什麼考試', '什麼時候', '什麼人'], ans: 0, cite: '頁面 11 [cite: 64]' },
-        { type: 'choice', q: '____你會照相！(驚訝)', options: ['反對', '原來', '用功'], ans: 1, cite: '頁面 4 [cite: 25]' },
-        { type: 'choice', q: '我反對老師每天都____。', options: ['買衣服', '筆試/口試', '去海邊'], ans: 1, cite: '頁面 3 [cite: 17]' }
+        { type: 'choice', q: '他每天都在圖書館讀書，非常____。', options: ['原來', '用功', '反對'], ans: 1, cite: '頁面 2：[生詞] 他很用功念書。' },
+        { type: 'choice', q: '爸爸____我晚上太晚回家。', options: ['原來', '反對', '用功'], ans: 1, cite: '頁面 16：[練習] 爸爸反對我太晚回家。' },
+        { type: 'choice', q: '你的中文真好，____你學中文有十年了！', options: ['原來', '反對', '用功'], ans: 0, cite: '頁面 4：[生詞] 原來你會照相。' },
+        { type: 'choice', q: '台北的天氣真奇怪，說下雨____下雨。', options: ['都', '就', '也'], ans: 1, cite: '頁面 6：[語法] 台北的天氣說下雨就下雨。' },
+        { type: 'sort', q: '請重組：(奶茶店)', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '頁面 6：[語法] 說買就買。' },
+        { type: 'choice', q: '李老師很嚴，常常說考試____考試。', options: ['都', '就', '再'], ans: 1, cite: '頁面 9：[語法] 常常說考試就考試。' },
+        { type: 'choice', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...'], ans: 0, cite: '頁面 8：[練習] 說吃火鍋就吃火鍋。' },
+        { type: 'choice', q: '參觀這個博物館，不管____，都要買票。', options: ['誰', '什麼人', '哪裡'], ans: 1, cite: '頁面 14：[練習] 不管什麼人都要買票。' },
+        { type: 'sort', q: '請重組：(學習態度)', words: ['不管', '累不累', '她', '都會來', '上課'], ans: '不管累不累她都會來上課', cite: '頁面 15：[練習] 不管累不累都會來上課。' },
+        { type: 'choice', q: '不管天氣____，我都要去海邊。', options: ['好不好', '怎麼樣', '以上皆可'], ans: 2, cite: '頁面 12：[語法] 不管天氣怎麼樣/好不好。' },
+        { type: 'choice', q: '我原來在____工作。', options: ['美國', '台北', '圖書館'], ans: 0, cite: '頁面 4：[生詞] 我原來在美國工作。' },
+        { type: 'sort', q: '請重組：(買衣服)', words: ['看到', '喜歡的衣服', '說買', '就買'], ans: '看到喜歡的衣服說買就買', cite: '頁面 7：[語法] 說買就買。' },
+        { type: 'choice', q: '他很用功念書，不管____，他都拿第一名。', options: ['什麼考試', '什麼時候', '什麼人'], ans: 0, cite: '頁面 11：[語法] 「不管」後面常是一個問題。' },
+        { type: 'choice', q: '____你會照相！我以前不知道。', options: ['反對', '原來', '用功'], ans: 1, cite: '頁面 4：[生詞] 原來你會照相。' },
+        { type: 'choice', q: '我反對老師每天都____。', options: ['買衣服', '筆試/口試', '去海邊'], ans: 1, cite: '頁面 3：[生詞] 我反對老師每天都筆試/口試。' }
     ];
 
-    let currentQ = 0;
-    let score = 0;
-    let userSort = [];
-
+    let currentQ = 0, score = 0, attempts = 0, userSort = [];
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    function playSound(type) {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        if(type === 'correct') {
-            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
-        } else {
-            osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
-            osc.frequency.linearRampToValueAtTime(110, audioCtx.currentTime + 0.2);
-        }
-        osc.start();
-        gain.gain.fadeOut = audioCtx.currentTime + 0.3;
-        osc.stop(audioCtx.currentTime + 0.3);
+    function replayQ() { speak(questions[currentQ].type === 'choice' ? questions[currentQ].q : '請將詞彙排列正確。'); }
+
+    function speak(txt) {
+        window.speechSynthesis.cancel();
+        const m = new SpeechSynthesisUtterance(txt);
+        m.lang = 'zh-TW';
+        window.speechSynthesis.speak(m);
     }
 
     function initGame() {
@@ -116,15 +105,15 @@
     function showQuestion() {
         const q = questions[currentQ];
         const interactive = document.getElementById('interactive-area');
-        const nextBtn = document.getElementById('next-btn');
         const feedback = document.getElementById('feedback');
+        attempts = 0;
         
         document.getElementById('progress-fill').style.width = `${(currentQ / questions.length) * 100}%`;
         document.getElementById('q-text').innerText = q.q;
+        document.getElementById('attempt-hint').innerText = "剩餘嘗試機會：2";
         interactive.innerHTML = '';
-        feedback.classList.add('hidden');
-        nextBtn.classList.add('hidden');
-        userSort = [];
+        feedback.className = 'hidden';
+        document.getElementById('next-btn').classList.add('hidden');
 
         if(q.type === 'choice') {
             const grid = document.createElement('div');
@@ -133,7 +122,7 @@
                 const b = document.createElement('button');
                 b.className = 'btn';
                 b.innerText = opt;
-                b.onclick = () => checkAns(idx);
+                b.onclick = () => checkAns(idx, b);
                 grid.appendChild(b);
             });
             interactive.appendChild(grid);
@@ -142,28 +131,23 @@
             zone.className = 'sort-zone';
             zone.id = 'sort-zone';
             interactive.appendChild(zone);
-            
             const pool = document.createElement('div');
             q.words.sort(() => Math.random() - 0.5).forEach(w => {
                 const t = document.createElement('div');
                 t.className = 'word-tile';
                 t.innerText = w;
-                t.onclick = () => {
-                    userSort.push(w);
-                    updateSortDisplay();
-                };
+                t.onclick = () => { userSort.push(w); updateSortDisplay(); };
                 pool.appendChild(t);
             });
             interactive.appendChild(pool);
-            
             const cBtn = document.createElement('button');
             cBtn.className = 'btn';
-            cBtn.style.marginTop = '10px';
+            cBtn.style.marginTop = '15px';
             cBtn.innerText = '確認排序';
             cBtn.onclick = checkSort;
             interactive.appendChild(cBtn);
         }
-        speak(q.q);
+        replayQ();
     }
 
     function updateSortDisplay() {
@@ -172,42 +156,68 @@
         userSort.forEach((w, i) => {
             const t = document.createElement('div');
             t.className = 'word-tile';
-            t.style.background = '#3498db';
-            t.style.color = 'white';
+            t.style.background = '#3498db'; t.style.color = 'white';
             t.innerText = w;
             t.onclick = () => { userSort.splice(i,1); updateSortDisplay(); };
             zone.appendChild(t);
         });
     }
 
-    function checkAns(idx) {
-        const q = questions[currentQ];
-        const fb = document.getElementById('feedback');
-        fb.classList.remove('hidden');
+    function checkAns(idx, btn) {
+        const q = questions[currentQ], fb = document.getElementById('feedback');
         if(idx === q.ans) {
-            fb.innerHTML = `正確！✨ <span class="cite-tag">${q.cite}</span>`;
-            fb.className = 'correct';
-            score++; playSound('correct');
+            handleSuccess(`答對了！非常棒。✨`);
         } else {
-            fb.innerHTML = `錯誤 ❌ 正確答案是：${q.options[q.ans]} <span class="cite-tag">${q.cite}</span>`;
-            fb.className = 'wrong'; playSound('wrong');
+            attempts++;
+            btn.disabled = true;
+            btn.style.borderColor = '#ddd';
+            if(attempts >= 2) {
+                handleFailure(`正確答案是：${q.options[q.ans]}`);
+            } else {
+                fb.className = 'wrong'; fb.classList.remove('hidden');
+                fb.innerText = "答錯了，再試一次！(剩餘 1 次機會)";
+                document.getElementById('attempt-hint').innerText = "剩餘嘗試機會：1";
+            }
         }
-        document.getElementById('next-btn').classList.remove('hidden');
     }
 
     function checkSort() {
         const q = questions[currentQ];
-        const fb = document.getElementById('feedback');
-        fb.classList.remove('hidden');
         if(userSort.join('') === q.ans) {
-            fb.innerHTML = `正確排列！✅ <span class="cite-tag">${q.cite}</span>`;
-            fb.className = 'correct';
-            score++; playSound('correct');
+            handleSuccess(`排序正確！✅`);
         } else {
-            fb.innerHTML = `順序錯誤 ❌ <span class="cite-tag">${q.cite}</span>`;
-            fb.className = 'wrong'; playSound('wrong');
+            attempts++;
+            if(attempts >= 2) {
+                handleFailure(`正確順序是：${q.ans}`);
+            } else {
+                const fb = document.getElementById('feedback');
+                fb.className = 'wrong'; fb.classList.remove('hidden');
+                fb.innerText = "順序不對喔，再檢查一下！(剩餘 1 次機會)";
+                document.getElementById('attempt-hint').innerText = "剩餘嘗試機會：1";
+            }
         }
+    }
+
+    function handleSuccess(msg) {
+        const q = questions[currentQ], fb = document.getElementById('feedback');
+        fb.innerHTML = `${msg} <span class="cite-tag">💡 ${q.cite}</span>`;
+        fb.className = 'correct'; fb.classList.remove('hidden');
+        score++;
+        endStep();
+    }
+
+    function handleFailure(msg) {
+        const q = questions[currentQ], fb = document.getElementById('feedback');
+        fb.innerHTML = `已達嘗試上限。${msg} <span class="cite-tag">💡 ${q.cite}</span>`;
+        fb.className = 'wrong'; fb.classList.remove('hidden');
+        endStep();
+    }
+
+    function endStep() {
         document.getElementById('next-btn').classList.remove('hidden');
+        document.getElementById('attempt-hint').innerText = "本題結束";
+        const btns = document.querySelectorAll('.btn');
+        btns.forEach(b => { if(b.id !== 'next-btn') b.disabled = true; });
     }
 
     function nextQuestion() {
@@ -219,13 +229,8 @@
     function showEnd() {
         document.getElementById('game-screen').classList.add('hidden');
         document.getElementById('end-screen').classList.remove('hidden');
-        document.getElementById('score-display').innerText = `${score} / ${questions.length}`;
-    }
-
-    function speak(txt) {
-        const m = new SpeechSynthesisUtterance(txt);
-        m.lang = 'zh-TW';
-        window.speechSynthesis.speak(m);
+        document.getElementById('score-display').innerText = `得分：${score} / ${questions.length}`;
+        document.getElementById('final-stats').innerText = score >= 12 ? "太厲害了！你對本課掌握度很高。" : "繼續加油，多練習幾次會更好！";
     }
 </script>
 </body>
