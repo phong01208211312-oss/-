@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第三冊 第1課：開學了 - 網頁遊戲</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --success: #27ae60;
+            --bg: #f4f7f6;
+        }
+        body {
+            font-family: 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #game-container {
+            width: 90%;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-top: 50px;
+            text-align: center;
+        }
+        .hidden { display: none; }
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 10px;
+        }
+        .btn:hover { transform: scale(1.05); }
+        .quiz-option {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .quiz-option:hover { background-color: #f0f8ff; border-color: var(--accent); }
+        #progress { margin-bottom: 20px; color: #7f8c8d; }
+        .feedback { font-weight: bold; margin-top: 15px; height: 24px; }
+        .correct { color: var(--success); }
+        .wrong { color: #e74c3c; }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <div id="start-screen">
+            <h1>🎒 開學了！</h1>
+            <p>第三冊 第1課：開學了 [cite: 3]</p>
+            <p>袁國豐老師 製作 [cite: 5]</p>
+            <button class="btn" onclick="startGame()">開始學習挑戰</button>
+        </div>
+
+        <div id="game-screen" class="hidden">
+            <div id="progress">關卡: <span id="current-step">1</span> / 5</div>
+            <h2 id="question-text">題目載入中...</h2>
+            <div id="options-container"></div>
+            <div id="feedback" class="feedback"></div>
+            <button id="next-btn" class="btn hidden" onclick="loadNextQuestion()">下一題</button>
+        </div>
+
+        <div id="end-screen" class="hidden">
+            <h2>🎊 挑戰成功！</h2>
+            <p>你已經掌握了本課的生詞與語法：</p>
+            <ul style="text-align: left; display: inline-block;">
+                <li>用功、反對、原來 [cite: 10, 15, 23]</li>
+                <li>說...就... [cite: 32]</li>
+                <li>不管...都... [cite: 54]</li>
+            </ul>
+            <br>
+            <button class="btn" onclick="location.reload()">再玩一次</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                q: "他每天都在圖書館讀書，非常____。",
+                options: ["用功", "反對", "原來"],
+                correct: 0,
+                cite: "頁面 16, 練習一 [cite: 95]"
+            },
+            {
+                q: "爸爸____我晚上太晚回家。",
+                options: ["原來", "反對", "用功"],
+                correct: 1,
+                cite: "頁面 16, 練習一 [cite: 94]"
+            },
+            {
+                q: "台北的天氣真奇怪，____下雨____下雨。",
+                options: ["不管...都...", "一...就...", "說...就..."],
+                correct: 2,
+                cite: "頁面 6, 例句 1 [cite: 37]"
+            },
+            {
+                q: "小美很喜歡學中文，____累不累，她____會來上課。",
+                options: ["不管...都...", "說...就...", "雖然...但是..."],
+                correct: 0,
+                cite: "頁面 15, 語法練習 [cite: 91]"
+            },
+            {
+                q: "____你會照相！我以前不知道。",
+                options: ["反對", "用功", "原來"],
+                correct: 2,
+                cite: "頁面 4, 生詞 3 [cite: 25]"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function startGame() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            loadNextQuestion();
+        }
+
+        function loadNextQuestion() {
+            if (currentQuestionIndex >= quizData.length) {
+                showEndScreen();
+                return;
+            }
+
+            const data = quizData[currentQuestionIndex];
+            document.getElementById('current-step').innerText = currentQuestionIndex + 1;
+            document.getElementById('question-text').innerText = data.q;
+            document.getElementById('feedback').innerText = "";
+            document.getElementById('next-btn').classList.add('hidden');
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = "";
+
+            data.options.forEach((opt, index) => {
+                const button = document.createElement('button');
+                button.className = 'quiz-option';
+                button.innerText = opt;
+                button.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            const data = quizData[currentQuestionIndex];
+            const feedback = document.getElementById('feedback');
+            const options = document.getElementsByClassName('quiz-option');
+
+            // 禁用所有按鈕
+            for (let btn of options) btn.style.pointerEvents = "none";
+
+            if (selectedIndex === data.correct) {
+                feedback.innerText = "答對了！✅ " + (data.cite || "");
+                feedback.className = "feedback correct";
+                options[selectedIndex].style.backgroundColor = "#d4edda";
+                speak(data.options[selectedIndex]);
+            } else {
+                feedback.innerText = "再試試看！❌";
+                feedback.className = "feedback wrong";
+                options[selectedIndex].style.backgroundColor = "#f8d7da";
+            }
+
+            document.getElementById('next-btn').classList.remove('hidden');
+            currentQuestionIndex++;
+        }
+
+        function showEndScreen() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('hidden');
+        }
+
+        function speak(text) {
+            const msg = new SpeechSynthesisUtterance();
+            msg.text = text;
+            msg.lang = 'zh-TW';
+            window.speechSynthesis.speak(msg);
+        }
+    </script>
+</body>
+</html>
