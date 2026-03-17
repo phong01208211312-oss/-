@@ -3,365 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>華語進階：開學了挑戰賽</title>
+    <title>華語進階：開學了挑戰賽 v2</title>
     <style>
         :root {
-            --edu-blue: #3498db;
-            --edu-yellow: #f1c40f;
-            --edu-red: #e74c3c;
-            --edu-green: #2ecc71;
-            --text-dark: #2c3e50;
-            --card-bg: #ffffff;
+            --edu-blue: #3498db; --edu-yellow: #f1c40f; --edu-red: #e74c3c;
+            --edu-green: #2ecc71; --text-dark: #2c3e50;
         }
         body {
-            font-family: 'PingFang TC', 'Heiti TC', 'Microsoft JhengHei', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: var(--text-dark);
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            background: #f0f2f5; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;
         }
         #app {
-            width: 95%;
-            max-width: 700px;
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            overflow: hidden;
-            position: relative;
+            width: 95%; max-width: 800px; background: white; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden;
         }
-        /* Header */
-        .header {
-            background: var(--edu-blue);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-bottom: 5px solid var(--edu-yellow);
-        }
-        .header h1 { margin: 0; font-size: 1.5rem; }
-        
-        /* Progress Bar */
-        .progress-container {
-            height: 10px;
-            background: #eee;
-            width: 100%;
-        }
-        #progress-fill {
-            height: 100%;
-            background: var(--edu-green);
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        /* Content Areas */
-        .content { padding: 30px; min-height: 350px; text-align: center; }
+        .header { background: var(--edu-blue); color: white; padding: 15px; text-align: center; border-bottom: 4px solid var(--edu-yellow); }
+        .progress-bar { height: 8px; background: #eee; width: 100%; }
+        #progress-fill { height: 100%; background: var(--edu-green); width: 0%; transition: 0.3s; }
+        .content { padding: 25px; text-align: center; min-height: 400px; }
         .hidden { display: none; }
-
-        /* Game Elements */
-        .instruction { color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px; }
-        .sentence-display {
-            font-size: 1.4rem;
-            margin: 20px 0;
-            line-height: 1.6;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 10px;
-        }
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .btn {
-            padding: 12px 20px;
-            border: 2px solid var(--edu-blue);
-            background: white;
-            color: var(--edu-blue);
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
+        .image-container { width: 100%; max-width: 300px; margin: 0 auto 15px; border-radius: 10px; overflow: hidden; border: 2px solid #eee; }
+        .image-container img { width: 100%; height: auto; display: block; }
+        .sentence-display { font-size: 1.3rem; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn { padding: 12px; border: 2px solid var(--edu-blue); background: white; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         .btn:hover { background: var(--edu-blue); color: white; }
-        .btn-primary { background: var(--edu-blue); color: white; }
-
-        /* Word Sort (Level 2) */
-        .sort-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
-            min-height: 50px;
-            padding: 10px;
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-        }
-        .word-tile {
-            padding: 8px 15px;
-            background: var(--edu-yellow);
-            border-radius: 5px;
-            cursor: pointer;
-            user-select: none;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-        }
-
-        /* Feedback */
-        #feedback {
-            margin-top: 20px;
-            padding: 10px;
-            font-weight: bold;
-            border-radius: 5px;
-        }
+        .word-tile { padding: 10px 15px; background: var(--edu-yellow); border-radius: 5px; cursor: pointer; margin: 5px; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .sort-zone { min-height: 60px; border: 2px dashed #ccc; margin: 15px 0; padding: 10px; border-radius: 10px; background: #fffdf0; }
+        #feedback { margin-top: 15px; padding: 10px; border-radius: 8px; font-weight: bold; }
         .correct { background: #d4edda; color: #155724; }
         .wrong { background: #f8d7da; color: #721c24; }
-
-        .cite-tag {
-            font-size: 0.7rem;
-            color: #bdc3c7;
-            display: block;
-            margin-top: 10px;
-        }
+        .cite-tag { font-size: 0.8rem; color: #95a5a6; display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <div id="app">
-    <div class="header">
-        <h1 id="title">第三冊 第1課：開學了 🎒</h1>
-    </div>
-    <div class="progress-container">
-        <div id="progress-fill"></div>
-    </div>
+    <div class="header"><h2 id="level-title">第1課：開學了 互動挑戰</h2></div>
+    <div class="progress-bar"><div id="progress-fill"></div></div>
 
     <div id="start-screen" class="content">
-        <h2 style="color: var(--edu-blue);">數位學習挑戰</h2>
-        <p>本練習包含生詞運用、語法重組與情境判斷</p>
-        <div style="margin: 30px 0;">
-            <span style="color: var(--edu-red);">● 反對</span>
-            <span style="color: var(--edu-blue);"> ● 用功</span>
-            <span style="color: var(--edu-yellow);"> ● 原來</span>
-        </div>
-        <button class="btn btn-primary" onclick="initGame()">開始挑戰</button>
+        <h2 style="color: var(--edu-blue);">🎒 準備好開學了嗎？</h2>
+        <p>本練習共有 15 道關卡，包含聽力、圖片與語法挑戰。</p>
+        <button class="btn" style="background: var(--edu-blue); color: white; padding: 15px 40px;" onclick="initGame()">立即開始</button>
     </div>
 
     <div id="game-screen" class="content hidden">
-        <div class="instruction" id="level-instr"></div>
-        <div id="visual-area"></div>
-        <div class="sentence-display" id="sentence-display"></div>
+        <div id="image-area" class="image-container hidden"></div>
+        <div class="sentence-display" id="q-text"></div>
         <div id="interactive-area"></div>
         <div id="feedback" class="hidden"></div>
-        <button id="next-btn" class="btn btn-primary hidden" onclick="nextLevel()" style="margin-top: 20px;">下一關</button>
+        <button id="next-btn" class="btn hidden" onclick="nextQuestion()" style="margin-top:20px; width: 100%; background: var(--edu-green); color: white; border: none;">繼續挑戰</button>
     </div>
 
     <div id="end-screen" class="content hidden">
-        <h2>🎉 太棒了！</h2>
-        <p>你已經完成了所有開學挑戰。</p>
-        <div id="final-stats"></div>
-        <button class="btn btn-primary" onclick="location.reload()">重新學習</button>
+        <h2 id="final-msg">🎉 恭喜完成！</h2>
+        <div id="score-display" style="font-size: 2rem; margin: 20px 0;"></div>
+        <button class="btn" onclick="location.reload()">重新挑戰</button>
     </div>
 </div>
 
 <script>
-    const levels = [
-        {
-            type: 'choice',
-            instr: '【生詞選擇】請根據情境選出最適合的詞彙',
-            q: '他每天晚上都念書念到十二點，老師說他很____。',
-            options: ['原來', '用功', '反對', '嚴'],
-            answer: 1,
-            cite: '參考教材頁面 2：生詞 1 [cite: 10]'
-        },
-        {
-            type: 'choice',
-            instr: '【語法判斷】選擇正確的否定結構',
-            q: '對於老師每天都要筆試，很多同學都表示____。',
-            options: ['不要', '原來', '反對', '說就'],
-            answer: 2,
-            cite: '參考教材頁面 3：生詞 2 [cite: 15]'
-        },
-        {
-            type: 'sort',
-            instr: '【語法重組】請拼湊出「說...就...」的正確順序',
-            words: ['台北', '天氣', '說', '下雨', '就', '下雨'],
-            answer: '台北天氣說下雨就下雨',
-            cite: '參考教材頁面 6：語法 VI [cite: 37]'
-        },
-        {
-            type: 'choice',
-            instr: '【語法運用】請選擇「不管」的正確搭配',
-            q: '____天氣好不好，我____要去海邊玩。',
-            options: ['因為...所以...', '不管...都...', '如果...就...', '雖然...但是...'],
-            answer: 1,
-            cite: '參考教材頁面 12：語法 VII [cite: 69]'
-        },
-        {
-            type: 'sort',
-            instr: '【情境重組】小美對學習的態度是？',
-            words: ['不管', '累不累', '她', '都', '會', '來上課'],
-            answer: '不管累不累她都會來上課',
-            cite: '參考教材頁面 15：語法練習 [cite: 91]'
-        }
+    // 預設圖片路徑 (建議使用者將圖片放在同資料夾或轉換為Base64)
+    // 這裡使用 Placeholder 代替，你可以替換成實際檔名
+    const questions = [
+        { type: 'choice', q: '他每天都在圖書館讀書，非常____。', options: ['原來', '用功', '反對'], ans: 1, cite: '頁面 16 [cite: 95]' },
+        { type: 'choice', q: '爸爸____我晚上太晚回家。', options: ['原來', '反對', '用功'], ans: 1, cite: '頁面 16 [cite: 94]' },
+        { type: 'choice', q: '你的中文真好，____你學中文有十年了！', options: ['原來', '反對', '用功'], ans: 0, cite: '頁面 16 [cite: 96]' },
+        { type: 'choice', q: '台北的天氣真奇怪，說下雨____下雨。', options: ['都', '就', '也'], ans: 1, cite: '頁面 6 ' },
+        { type: 'sort', q: '請排列：(愛喝奶茶的習慣)', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '頁面 6 ' },
+        { type: 'choice', q: '李老師很嚴，常常說考試____考試。', options: ['都', '就', '再'], ans: 1, cite: '頁面 9 ' },
+        { type: 'choice', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...'], ans: 0, cite: '頁面 8 [cite: 43]' },
+        { type: 'choice', q: '參觀這個博物館，不管____，都要買票。', options: ['誰', '什麼人', '哪裡'], ans: 1, cite: '頁面 14 ' },
+        { type: 'sort', q: '請排列：(小美的學習態度)', words: ['不管', '累不累', '她', '都會來', '上課'], ans: '不管累不累她都會來上課', cite: '頁面 15 ' },
+        { type: 'choice', q: '不管天氣____，我都要去海邊。', options: ['好不好', '怎麼樣', '以上皆可'], ans: 2, cite: '頁面 12 ' },
+        { type: 'choice', q: '我原來在____工作。', options: ['美國', '台北', '圖書館'], ans: 0, cite: '頁面 4 [cite: 26]' },
+        { type: 'sort', q: '請排列：(購物習慣)', words: ['看到', '喜歡的衣服', '說買', '就買'], ans: '看到喜歡的衣服說買就買', cite: '頁面 7 [cite: 40, 41]' },
+        { type: 'choice', q: '他很用功念書，不管____，他都拿第一名。', options: ['什麼考試', '什麼時候', '什麼人'], ans: 0, cite: '頁面 11 [cite: 64]' },
+        { type: 'choice', q: '____你會照相！(驚訝)', options: ['反對', '原來', '用功'], ans: 1, cite: '頁面 4 [cite: 25]' },
+        { type: 'choice', q: '我反對老師每天都____。', options: ['買衣服', '筆試/口試', '去海邊'], ans: 1, cite: '頁面 3 [cite: 17]' }
     ];
 
-    let currentLevel = 0;
+    let currentQ = 0;
     let score = 0;
     let userSort = [];
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        if(type === 'correct') {
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
+        } else {
+            osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+            osc.frequency.linearRampToValueAtTime(110, audioCtx.currentTime + 0.2);
+        }
+        osc.start();
+        gain.gain.fadeOut = audioCtx.currentTime + 0.3;
+        osc.stop(audioCtx.currentTime + 0.3);
+    }
 
     function initGame() {
         document.getElementById('start-screen').classList.add('hidden');
         document.getElementById('game-screen').classList.remove('hidden');
-        renderLevel();
+        showQuestion();
     }
 
-    function renderLevel() {
-        const level = levels[currentLevel];
-        const instr = document.getElementById('level-instr');
-        const display = document.getElementById('sentence-display');
+    function showQuestion() {
+        const q = questions[currentQ];
         const interactive = document.getElementById('interactive-area');
-        const feedback = document.getElementById('feedback');
         const nextBtn = document.getElementById('next-btn');
-
-        // Reset
-        instr.innerText = level.instr;
+        const feedback = document.getElementById('feedback');
+        
+        document.getElementById('progress-fill').style.width = `${(currentQ / questions.length) * 100}%`;
+        document.getElementById('q-text').innerText = q.q;
+        interactive.innerHTML = '';
         feedback.classList.add('hidden');
         nextBtn.classList.add('hidden');
-        interactive.innerHTML = '';
         userSort = [];
-        
-        // Progress
-        document.getElementById('progress-fill').style.width = `${(currentLevel / levels.length) * 100}%`;
 
-        if (level.type === 'choice') {
-            display.innerText = level.q;
+        if(q.type === 'choice') {
             const grid = document.createElement('div');
             grid.className = 'options-grid';
-            level.options.forEach((opt, idx) => {
+            q.options.forEach((opt, idx) => {
                 const b = document.createElement('button');
                 b.className = 'btn';
                 b.innerText = opt;
-                b.onclick = () => checkChoice(idx);
+                b.onclick = () => checkAns(idx);
                 grid.appendChild(b);
             });
             interactive.appendChild(grid);
-        } 
-        else if (level.type === 'sort') {
-            display.innerText = "點擊詞彙進行排序：";
-            const sortArea = document.createElement('div');
-            sortArea.className = 'sort-container';
-            sortArea.id = 'user-sort-area';
+        } else {
+            const zone = document.createElement('div');
+            zone.className = 'sort-zone';
+            zone.id = 'sort-zone';
+            interactive.appendChild(zone);
             
-            const poolArea = document.createElement('div');
-            poolArea.className = 'sort-container';
-            
-            // 隨機打亂詞彙
-            const shuffled = [...level.words].sort(() => Math.random() - 0.5);
-            
-            shuffled.forEach(word => {
-                const w = document.createElement('div');
-                w.className = 'word-tile';
-                w.innerText = word;
-                w.onclick = () => {
-                    if (!userSort.includes(word) || level.words.filter(x => x===word).length > userSort.filter(x => x===word).length) {
-                        userSort.push(word);
-                        updateSortDisplay();
-                    }
+            const pool = document.createElement('div');
+            q.words.sort(() => Math.random() - 0.5).forEach(w => {
+                const t = document.createElement('div');
+                t.className = 'word-tile';
+                t.innerText = w;
+                t.onclick = () => {
+                    userSort.push(w);
+                    updateSortDisplay();
                 };
-                poolArea.appendChild(w);
+                pool.appendChild(t);
             });
-
-            interactive.appendChild(sortArea);
-            interactive.appendChild(poolArea);
+            interactive.appendChild(pool);
             
-            const checkBtn = document.createElement('button');
-            checkBtn.className = 'btn btn-primary';
-            checkBtn.innerText = '檢查答案';
-            checkBtn.onclick = checkSort;
-            interactive.appendChild(checkBtn);
+            const cBtn = document.createElement('button');
+            cBtn.className = 'btn';
+            cBtn.style.marginTop = '10px';
+            cBtn.innerText = '確認排序';
+            cBtn.onclick = checkSort;
+            interactive.appendChild(cBtn);
         }
+        speak(q.q);
     }
 
     function updateSortDisplay() {
-        const area = document.getElementById('user-sort-area');
-        area.innerHTML = '';
-        userSort.forEach((w, idx) => {
-            const tile = document.createElement('div');
-            tile.className = 'word-tile';
-            tile.style.background = '#3498db';
-            tile.style.color = 'white';
-            tile.innerText = w;
-            tile.onclick = () => {
-                userSort.splice(idx, 1);
-                updateSortDisplay();
-            };
-            area.appendChild(tile);
+        const zone = document.getElementById('sort-zone');
+        zone.innerHTML = '';
+        userSort.forEach((w, i) => {
+            const t = document.createElement('div');
+            t.className = 'word-tile';
+            t.style.background = '#3498db';
+            t.style.color = 'white';
+            t.innerText = w;
+            t.onclick = () => { userSort.splice(i,1); updateSortDisplay(); };
+            zone.appendChild(t);
         });
     }
 
-    function checkChoice(idx) {
-        const level = levels[currentLevel];
+    function checkAns(idx) {
+        const q = questions[currentQ];
         const fb = document.getElementById('feedback');
         fb.classList.remove('hidden');
-        
-        if (idx === level.answer) {
-            fb.innerHTML = `正確！✨ <span class="cite-tag">${level.cite}</span>`;
+        if(idx === q.ans) {
+            fb.innerHTML = `正確！✨ <span class="cite-tag">${q.cite}</span>`;
             fb.className = 'correct';
-            score++;
-            speak(level.options[idx]);
+            score++; playSound('correct');
         } else {
-            fb.innerHTML = `可惜錯了，再想想！❌ <span class="cite-tag">${level.cite}</span>`;
-            fb.className = 'wrong';
+            fb.innerHTML = `錯誤 ❌ 正確答案是：${q.options[q.ans]} <span class="cite-tag">${q.cite}</span>`;
+            fb.className = 'wrong'; playSound('wrong');
         }
         document.getElementById('next-btn').classList.remove('hidden');
     }
 
     function checkSort() {
-        const level = levels[currentLevel];
+        const q = questions[currentQ];
         const fb = document.getElementById('feedback');
-        const result = userSort.join('');
         fb.classList.remove('hidden');
-
-        if (result === level.answer) {
-            fb.innerHTML = `排列正確！✅ <span class="cite-tag">${level.cite}</span>`;
+        if(userSort.join('') === q.ans) {
+            fb.innerHTML = `正確排列！✅ <span class="cite-tag">${q.cite}</span>`;
             fb.className = 'correct';
-            score++;
-            speak(result);
+            score++; playSound('correct');
         } else {
-            fb.innerHTML = `順序不太對喔，再試一次。❌`;
-            fb.className = 'wrong';
+            fb.innerHTML = `順序錯誤 ❌ <span class="cite-tag">${q.cite}</span>`;
+            fb.className = 'wrong'; playSound('wrong');
         }
         document.getElementById('next-btn').classList.remove('hidden');
     }
 
-    function nextLevel() {
-        currentLevel++;
-        if (currentLevel < levels.length) {
-            renderLevel();
-        } else {
-            showEnd();
-        }
+    function nextQuestion() {
+        currentQ++;
+        if(currentQ < questions.length) showQuestion();
+        else showEnd();
     }
 
     function showEnd() {
         document.getElementById('game-screen').classList.add('hidden');
         document.getElementById('end-screen').classList.remove('hidden');
-        document.getElementById('progress-fill').style.width = '100%';
-        document.getElementById('final-stats').innerHTML = `
-            <h3>最終得分：${score} / ${levels.length}</h3>
-            <p>你已經學會了：<br><strong>用功、反對、原來、說...就...、不管...都...</strong></p>
-        `;
+        document.getElementById('score-display').innerText = `${score} / ${questions.length}`;
     }
 
-    function speak(text) {
-        const msg = new SpeechSynthesisUtterance();
-        msg.text = text;
-        msg.lang = 'zh-TW';
-        window.speechSynthesis.speak(msg);
+    function speak(txt) {
+        const m = new SpeechSynthesisUtterance(txt);
+        m.lang = 'zh-TW';
+        window.speechSynthesis.speak(m);
     }
 </script>
-
 </body>
 </html>
