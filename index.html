@@ -3,321 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>華語進階：開學了 情境挑戰賽</title>
-    <style>
-        :root { --edu-blue: #4A90E2; --edu-yellow: #FFD200; --edu-red: #FF5A5F; --edu-green: #7ED321; --text-dark: #333; }
-        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: #EBF2F6; margin: 0; padding: 10px; display: flex; justify-content: center; min-height: 100vh; }
-        #app { width: 100%; max-width: 750px; background: white; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); overflow: hidden; position: relative; }
-        .banner { width: 100%; height: 160px; background: url('https://study.mdnkids.com/CH/images/main.jpg') center/cover; border-bottom: 5px solid var(--edu-yellow); }
-        .top-info { position: absolute; top: 10px; left: 20px; background: rgba(255,255,255,0.9); padding: 5px 15px; border-radius: 20px; font-weight: bold; color: var(--edu-blue); z-index: 10; border: 2px solid var(--edu-blue); }
-        .score-panel { position: absolute; top: 10px; right: 20px; background: rgba(255,255,255,0.9); padding: 5px 15px; border-radius: 20px; border: 2px solid var(--edu-blue); font-weight: bold; z-index: 10; text-align: right; }
-        .combo-badge { color: var(--edu-red); font-size: 1.1rem; }
-        .content { padding: 30px; text-align: center; min-height: 450px; }
-        .hidden { display: none !important; }
-        
-        /* Form Inputs */
-        .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--edu-blue); }
-        .input-group input, .input-group select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 1.1rem; box-sizing: border-box; }
-        
-        /* Game UI */
-        .context-box { background: #FFF9C4; padding: 15px; border-radius: 10px; border-left: 5px solid var(--edu-yellow); margin-bottom: 15px; font-weight: bold; color: #555; text-align: left; }
-        .q-image { max-width: 100%; border-radius: 10px; margin-bottom: 15px; max-height: 200px; object-fit: cover; }
-        .sentence-display { font-size: 1.3rem; margin: 10px 0 20px 0; padding: 20px; background: #F0F7FF; border-radius: 15px; border-left: 8px solid var(--edu-blue); position: relative; }
-        .audio-btn { cursor: pointer; color: var(--edu-blue); margin-left: 10px; }
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .btn { padding: 12px; border: 2px solid var(--edu-blue); background: white; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; color: var(--edu-blue); font-size: 1.1rem; }
-        .btn-primary { background: var(--edu-blue); color: white; width: 100%; margin-top: 10px; }
-        .btn:hover:not(:disabled) { background: var(--edu-blue); color: white; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        
-        /* Sorting UI */
-        .word-tile { padding: 10px 15px; background: var(--edu-yellow); border-radius: 8px; cursor: pointer; margin: 5px; display: inline-block; font-weight: bold; color: #333; }
-        .sort-zone { min-height: 60px; border: 3px dashed var(--edu-blue); margin: 15px 0; padding: 10px; border-radius: 15px; background: #FFFDF0; }
-        
-        /* Feedback */
-        #feedback { margin-top: 15px; padding: 15px; border-radius: 12px; font-weight: bold; }
-        .correct { background: #E8F5E9; color: #2E7D32; border: 2px solid #A5D6A7; }
-        .wrong { background: #FFEBEE; color: #C62828; border: 2px solid #EF9A9A; }
-        
-        /* Admin */
-        .admin-btn { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 1.5rem; cursor: pointer; opacity: 0.3; transition: 0.3s; z-index: 100; }
-        .admin-btn:hover { opacity: 1; }
-        .admin-panel { background: #f9f9f9; padding: 20px; border-radius: 10px; text-align: left; max-height: 400px; overflow-y: auto; }
-        .admin-item { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #ccc; }
-        .admin-item input { width: 100%; padding: 8px; margin-top: 5px; }
-    </style>
-</head>
-<body>
-
-<div id="app">
-    <div class="banner"></div>
-    <div class="top-info hidden" id="player-info"></div>
-    <div class="score-panel hidden" id="score-ui">
-        <div>總分: <span id="total-score">0</span></div>
-        <div class="combo-badge" id="combo-display">Combo x0</div>
-    </div>
-    
-    <div id="login-screen" class="content">
-        <h2 style="color: var(--edu-blue);">🎒 開學了！情境學習挑戰</h2>
-        <div class="input-group">
-            <label>📝 請輸入你的名字：</label>
-            <input type="text" id="player-name" placeholder="例如：約翰 (John)" required>
-        </div>
-        <div class="input-group">
-            <label>📊 請選擇你的層級：</label>
-            <select id="player-level">
-                <option value="初級學習者">🟢 初級學習者 (Beginner)</option>
-                <option value="中級學習者" selected>🟡 中級學習者 (Intermediate)</option>
-                <option value="高級學習者">🔴 高級學習者 (Advanced)</option>
-            </select>
-        </div>
-        <button class="btn btn-primary" style="padding: 15px;" onclick="startGame()">進入遊戲</button>
-    </div>
-
-    <div id="game-screen" class="content hidden">
-        <div id="context-box" class="context-box"></div>
-        <img id="q-img" class="q-image hidden" src="" alt="情境圖片">
-        
-        <div class="sentence-display">
-            <span id="q-text"></span>
-            <span class="audio-btn" onclick="replayQ()">🔊</span>
-        </div>
-        
-        <div id="attempt-hint" style="color: var(--edu-red); font-weight: bold; margin-bottom: 10px;"></div>
-        <div id="interactive-area"></div>
-        <div id="feedback" class="hidden"></div>
-        <button id="next-btn" class="btn btn-primary hidden" onclick="nextQuestion()">下一題</button>
-    </div>
-
-    <div id="end-screen" class="content hidden">
-        <h2>🎊 挑戰結束</h2>
-        <h3 id="end-player" style="color: var(--edu-blue);"></h3>
-        <div style="font-size: 3rem; margin: 20px 0; color: var(--edu-green);" id="final-score"></div>
-        <button class="btn btn-primary" onclick="location.reload()">再玩一次</button>
-    </div>
-
-    <div id="admin-screen" class="content hidden">
-        <h2 style="color: #333;">⚙️ 題目編輯後台</h2>
-        <p style="color: #666; font-size: 0.9rem;">提示：在此貼上圖片的網址（URL），點擊儲存後即可在遊戲中顯示。因為這是靜態網頁，資料僅存於本台裝置。</p>
-        <div id="admin-list" class="admin-panel"></div>
-        <button class="btn btn-primary" onclick="saveAdminData()">💾 儲存設定</button>
-        <button class="btn" onclick="closeAdmin()" style="width:100%; margin-top:10px;">返回遊戲</button>
-    </div>
-</div>
-
-<button class="admin-btn" onclick="openAdmin()">⚙️</button>
-
-<script>
-    // 預設題目資料庫（加入情境語境與擴充選項）
-    let defaultQuestions = [
-        { type: 'choice', context: '期中考快到了，你看到同學小明連假日都不休息。', q: '他每天都在圖書館讀書，非常____。', options: ['原來', '用功', '反對', '嚴'], ans: 1, cite: '頁面 2', img: '' },
-        { type: 'choice', context: '你跟朋友約好去夜唱，但家人覺得半夜出門很不安全。', q: '爸爸____我晚上太晚回家。', options: ['原來', '反對', '用功', '累'], ans: 1, cite: '頁面 16', img: '' },
-        { type: 'choice', context: '剛剛出大太陽，突然又下起大雨了。', q: '台北的天氣真奇怪，說下雨____下雨。', options: ['都', '就', '也', '還'], ans: 1, cite: '頁面 6', img: '' },
-        { type: 'sort', context: '你的朋友是個愛喝手搖杯的人，一看到飲料店就控制不住。', q: '請重組句子：', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '頁面 6', img: '' },
-        { type: 'choice', context: '博物館有規定，所有的參觀者，包含小孩和老人，都需要購票進場。', q: '參觀這個博物館，不管____，都要買票。', options: ['誰想去', '什麼人', '哪裡好玩', '想不想買'], ans: 1, cite: '頁面 14', img: '' },
-        { type: 'choice', context: '老師完全不先通知，一進教室就發考卷。', q: '李老師很嚴，常常說考試____考試。', options: ['都', '就', '也', '又'], ans: 1, cite: '頁面 9', img: '' },
-        { type: 'choice', context: '你跟新朋友介紹你以前住的地方。', q: '我原來在____工作，現在搬來台北了。', options: ['美國', '照相', '用功', '不管'], ans: 0, cite: '頁面 4', img: '' },
-        { type: 'choice', context: '冬天很冷，你想吃熱熱的東西，不想等別人同意。', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...', '雖然...但是...'], ans: 0, cite: '頁面 8', img: '' },
-        { type: 'sort', context: '小美對學中文非常有熱忱，每天下班不管身體狀況如何都堅持上課。', q: '請重組句子：', words: ['不管', '累不累', '她', '都會來', '上課'], ans: '不管累不累她都會來上課', cite: '頁面 15', img: '' },
-        { type: 'choice', context: '你跟朋友約好去海邊玩，即使下雨也不改變計畫。', q: '不管天氣____，我都要去海邊。', options: ['好不好', '怎麼樣', '好還是壞', '以上皆可'], ans: 3, cite: '頁面 12', img: '' }
-    ];
-
-    // 讀取 LocalStorage 或使用預設
-    let questions = JSON.parse(localStorage.getItem('huayuQuestions')) || defaultQuestions;
-    
-    let currentQ = 0, score = 0, combo = 0, attempts = 0, maxAttempts = 2;
-    let userSort = [], playerName = "", playerLevel = "";
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    function playSound(isCorrect) {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        if(isCorrect) {
-            osc.frequency.setValueAtTime(440 + (combo*100), audioCtx.currentTime);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
-        } else {
-            osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-            osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-        }
-    }
-
-    function replayQ() { speak(questions[currentQ].context + " " + questions[currentQ].q); }
-    function speak(txt) { window.speechSynthesis.cancel(); const m = new SpeechSynthesisUtterance(txt); m.lang = 'zh-TW'; window.speechSynthesis.speak(m); }
-
-    function startGame() {
-        const nameInput = document.getElementById('player-name').value;
-        if(!nameInput) return alert('請輸入名字喔！');
-        playerName = nameInput;
-        playerLevel = document.getElementById('player-level').value;
-        
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('player-info').innerText = `${playerLevel}：${playerName}`;
-        document.getElementById('player-info').classList.remove('hidden');
-        document.getElementById('score-ui').classList.remove('hidden');
-        document.getElementById('game-screen').classList.remove('hidden');
-        
-        showQuestion();
-    }
-
-    function showQuestion() {
-        const q = questions[currentQ], interactive = document.getElementById('interactive-area'), fb = document.getElementById('feedback');
-        
-        // 依據題型調整機會次數 (重組題給 4 次，選擇題給 2 次)
-        maxAttempts = (q.type === 'sort') ? 4 : 2;
-        attempts = 0; userSort = [];
-        
-        // 載入情境與圖片
-        document.getElementById('context-box').innerText = `💡 情境：${q.context}`;
-        const imgEl = document.getElementById('q-img');
-        if(q.img && q.img.trim() !== "") { imgEl.src = q.img; imgEl.classList.remove('hidden'); } 
-        else { imgEl.classList.add('hidden'); }
-
-        document.getElementById('q-text').innerText = q.q;
-        document.getElementById('attempt-hint').innerText = `剩餘機會：${maxAttempts} 次`;
-        interactive.innerHTML = ''; fb.className = 'hidden';
-        document.getElementById('next-btn').classList.add('hidden');
-
-        if(q.type === 'choice') {
-            const grid = document.createElement('div'); grid.className = 'options-grid';
-            q.options.forEach((opt, idx) => {
-                const b = document.createElement('button'); b.className = 'btn'; b.innerText = opt;
-                b.onclick = () => checkAns(idx, b); grid.appendChild(b);
-            });
-            interactive.appendChild(grid);
-        } else {
-            const zone = document.createElement('div'); zone.className = 'sort-zone'; zone.id = 'sort-zone';
-            interactive.appendChild(zone);
-            const pool = document.createElement('div');
-            [...q.words].sort(() => Math.random() - 0.5).forEach(w => {
-                const t = document.createElement('div'); t.className = 'word-tile'; t.innerText = w;
-                t.onclick = () => { userSort.push(w); updateSortDisplay(); }; pool.appendChild(t);
-            });
-            interactive.appendChild(pool);
-            const cBtn = document.createElement('button'); cBtn.className = 'btn btn-primary'; cBtn.innerText = '✅ 檢查句子';
-            cBtn.onclick = checkSort; interactive.appendChild(cBtn);
-        }
-        replayQ();
-    }
-
-    function updateSortDisplay() {
-        const zone = document.getElementById('sort-zone'); zone.innerHTML = '';
-        userSort.forEach((w, i) => {
-            const t = document.createElement('div'); t.className = 'word-tile';
-            t.style.background = 'var(--edu-blue)'; t.style.color = 'white'; t.innerText = w;
-            t.onclick = () => { userSort.splice(i,1); updateSortDisplay(); }; zone.appendChild(t);
-        });
-    }
-
-    function checkAns(idx, btn) {
-        const q = questions[currentQ];
-        if(idx === q.ans) { handleResult(true); }
-        else {
-            attempts++; btn.disabled = true;
-            if(attempts >= maxAttempts) handleResult(false, `答案是：${q.options[q.ans]}`);
-            else showHint(`答錯囉，剩 ${maxAttempts - attempts} 次機會！`);
-        }
-    }
-
-    function checkSort() {
-        const q = questions[currentQ];
-        if(userSort.join('') === q.ans) handleResult(true);
-        else {
-            attempts++;
-            if(attempts >= maxAttempts) handleResult(false, `正確句子是：${q.ans}`);
-            else showHint(`句子不對喔，你還有 ${maxAttempts - attempts} 次機會修改！`);
-        }
-    }
-
-    function handleResult(isCorrect, msg = "") {
-        const fb = document.getElementById('feedback');
-        fb.classList.remove('hidden');
-        if(isCorrect) {
-            combo++; const addScore = combo * 100; score += addScore;
-            fb.innerHTML = `太棒了！連續答對加 ${addScore} 分！🔥<br><small>📚 出處：${questions[currentQ].cite}</small>`;
-            fb.className = 'correct'; playSound(true);
-        } else {
-            combo = 0;
-            fb.innerHTML = `機會用完啦。❌ ${msg}<br><small>📚 出處：${questions[currentQ].cite}</small>`;
-            fb.className = 'wrong'; playSound(false);
-        }
-        document.getElementById('total-score').innerText = score;
-        document.getElementById('combo-display').innerText = `Combo x${combo}`;
-        document.getElementById('attempt-hint').innerText = "本題結束";
-        document.getElementById('next-btn').classList.remove('hidden');
-        const btns = document.querySelectorAll('#interactive-area .btn'); 
-        btns.forEach(b => b.disabled = true);
-    }
-
-    function showHint(txt) {
-        const fb = document.getElementById('feedback');
-        document.getElementById('attempt-hint').innerText = `剩餘機會：${maxAttempts - attempts} 次`;
-        fb.innerText = txt; fb.className = 'wrong'; fb.classList.remove('hidden');
-    }
-
-    function nextQuestion() {
-        currentQ++;
-        if(currentQ < questions.length) showQuestion();
-        else {
-            document.getElementById('game-screen').classList.add('hidden');
-            document.getElementById('score-ui').classList.add('hidden');
-            document.getElementById('player-info').classList.add('hidden');
-            document.getElementById('end-screen').classList.remove('hidden');
-            document.getElementById('end-player').innerText = `${playerLevel}：${playerName}`;
-            document.getElementById('final-score').innerText = `總得分：${score}`;
-        }
-    }
-
-    // --- 後台管理系統 ---
-    function openAdmin() {
-        const user = prompt("請輸入管理員帳號：");
-        const pass = prompt("請輸入密碼：");
-        if(user === "oscar" && pass === "12345678") {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('game-screen').classList.add('hidden');
-            document.getElementById('end-screen').classList.add('hidden');
-            document.getElementById('admin-screen').classList.remove('hidden');
-            renderAdminList();
-        } else {
-            alert("帳號或密碼錯誤！");
-        }
-    }
-
-    function closeAdmin() { location.reload(); }
-
-    function renderAdminList() {
-        const list = document.getElementById('admin-list');
-        list.innerHTML = '';
-        questions.forEach((q, idx) => {
-            const div = document.createElement('div');
-            div.className = 'admin-item';
-            div.innerHTML = `
-                <strong>題號 ${idx + 1}:</strong> ${q.q}<br>
-                <small>圖片網址 (URL):</small>
-                <input type="text" id="img-input-${idx}" value="${q.img || ''}" placeholder="貼上圖片網址（例如：https://.../img.jpg）">
-            `;
-            list.appendChild(div);
-        });
-    }
-
-    function saveAdminData() {
-        questions.forEach((q, idx) => {
-            q.img = document.getElementById(`img-input-${idx}`).value.trim();
-        });
-        localStorage.setItem('huayuQuestions', JSON.stringify(questions));
-        alert("設定已儲存！");
-    }
-</script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>華語初級：歡迎你來臺灣！ 情境挑戰賽</title>
+    <title>學華語 Let's Learn Mandarin</title>
     <style>
         :root { --edu-blue: #4A90E2; --edu-yellow: #FFD200; --edu-red: #FF5A5F; --edu-green: #7ED321; --text-dark: #333; }
         body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: #EBF2F6; margin: 0; padding: 10px; display: flex; justify-content: center; min-height: 100vh; }
@@ -374,7 +60,7 @@
     </div>
     
     <div id="login-screen" class="content">
-        <h2 style="color: var(--edu-blue);">🎒 第一課：歡迎你來臺灣！</h2>
+        <h2 style="color: var(--edu-blue);">🎒 學華語 Let's Learn Mandarin</h2>
         <div class="input-group">
             <label>📝 請輸入你的名字 (Name)：</label>
             <input type="text" id="player-name" placeholder="例如：約翰 (John)" required>
@@ -382,15 +68,16 @@
         <div class="input-group">
             <label>📊 請選擇你的層級 (Level)：</label>
             <select id="player-level">
-                <option value="初級學習者" selected>🟢 初級學習者 (Beginner)</option>
-                <option value="中級學習者">🟡 中級學習者 (Intermediate)</option>
-                <option value="高級學習者">🔴 高級學習者 (Advanced)</option>
+                <option value="初級學習者">🟢 初級學習者 (Beginner) - 第一課：歡迎你來臺灣！</option>
+                <option value="中級學習者">🟡 中級學習者 (Intermediate) - 開學了！情境學習挑戰</option>
+                <option value="高級學習者">🔴 高級學習者 (Advanced) - 敬請期待</option>
             </select>
         </div>
         <button class="btn btn-primary" style="padding: 15px;" onclick="startGame()">進入遊戲 (Start Game)</button>
     </div>
 
     <div id="game-screen" class="content hidden">
+        <h2 id="main-game-title" style="color: var(--edu-blue); margin-top: 0;"></h2>
         <div id="context-box" class="context-box"></div>
         <img id="q-img" class="q-image hidden" src="" alt="情境圖片">
         
@@ -414,54 +101,62 @@
 
     <div id="admin-screen" class="content hidden">
         <h2 style="color: #333;">⚙️ 題目編輯後台</h2>
-        <p style="color: #666; font-size: 0.9rem;">提示：在此貼上圖片的網址（URL），點擊儲存後即可在遊戲中顯示。因為這是靜態網頁，資料僅存於本台裝置。</p>
+        
+        <div class="input-group">
+            <label>請選擇要編輯的題庫：</label>
+            <select id="admin-level-select" onchange="renderAdminList()">
+                <option value="beginner">🟢 初級 (Beginner) - 歡迎你來臺灣</option>
+                <option value="intermediate">🟡 中級 (Intermediate) - 開學了情境挑戰</option>
+            </select>
+        </div>
+
+        <p style="color: #666; font-size: 0.9rem;">提示：在此貼上圖片的網址（URL），點擊儲存後即可在遊戲中顯示。</p>
         <div id="admin-list" class="admin-panel"></div>
-        <button class="btn btn-primary" onclick="saveAdminData()">💾 儲存設定</button>
-        <button class="btn" onclick="closeAdmin()" style="width:100%; margin-top:10px;">返回遊戲</button>
+        <button class="btn btn-primary" onclick="saveAdminData()">💾 儲存設定 (Save)</button>
+        <button class="btn" onclick="closeAdmin()" style="width:100%; margin-top:10px;">返回遊戲 (Back)</button>
     </div>
 </div>
 
 <button class="admin-btn" onclick="openAdmin()">⚙️</button>
 
 <script>
-    // 預設初級題目資料庫（附帶拼音與情境）
-    let defaultQuestions = [
-        // 語法 1B: 嗎 (ma)
+    // --- 資料庫：初級題目 (Beginner) ---
+    let defaultBeginner = [
         { type: 'choice', context: '你想確認對方是不是陳小姐。(You want to confirm if she is Miss Chen.)', q: '請問你是陳小姐____？<br><span class="pinyin">(Qǐngwèn nǐ shì Chén xiǎojiě ____?)</span>', options: ['的 (de)', '嗎 (ma)', '呢 (ne)', '不 (bù)'], ans: 1, cite: '第一課 語法：嗎 ma', img: '' },
-        
-        // 語法 2B: 不 (bù)
         { type: 'choice', context: '你不喝咖啡，想告訴朋友。(You don\'t drink coffee, tell your friend.)', q: '謝謝，我____喝咖啡。<br><span class="pinyin">(Xièxie, wǒ ____ hē kāfēi.)</span>', options: ['很 (hěn)', '是 (shì)', '什麼 (shénme)', '不 (bù)'], ans: 3, cite: '第一課 語法：不 bù', img: '' },
-        
-        // 語法 1A: A-not-A 
         { type: 'choice', context: '你想問朋友想喝什麼。(You ask your friend what they want to drink.)', q: '你____喝烏龍茶？<br><span class="pinyin">(Nǐ ____ hē wūlóngchá?)</span>', options: ['要不要 (yào bú yào)', '是不是 (shì bú shì)', '好不好 (hǎo bù hǎo)', '來不來 (lái bù lái)'], ans: 0, cite: '第一課 語法：A-not-A (要不要)', img: '' },
-        
-        // 語法 3: 很 (hěn)
         { type: 'choice', context: '朋友請你喝臺灣的茶，你覺得味道不錯。(The tea tastes very good.)', q: '這個烏龍茶____好喝。<br><span class="pinyin">(Zhège wūlóngchá ____ hǎohē.)</span>', options: ['不 (bù)', '嗎 (ma)', '很 (hěn)', '呢 (ne)'], ans: 2, cite: '第一課 語法：很 hěn', img: '' },
-        
-        // 重組題：歡迎
         { type: 'sort', context: '在機場，你看到新朋友，上前歡迎她。(At the airport, you welcome your new friend.)', q: '請重組句子：(Please rearrange the words)', words: ['歡迎<br>(huānyíng)', '你<br>(nǐ)', '來<br>(lái)', '臺灣<br>(Táiwān)'], ans: '歡迎<br>(huānyíng)你<br>(nǐ)來<br>(lái)臺灣<br>(Táiwān)', cite: '第一課 生詞：歡迎來臺灣', img: '' },
-        
-        // 語法：哪 (nǎ) 
         { type: 'choice', context: '你想問這位新朋友來自哪裡。(You want to ask where this friend is from.)', q: '對不起，請問你是____國人？<br><span class="pinyin">(Duìbùqǐ, qǐngwèn nǐ shì ____ guó rén?)</span>', options: ['哪 (nǎ)', '什麼 (shénme)', '呢 (ne)', '嗎 (ma)'], ans: 0, cite: '第一課 生詞：哪國人', img: '' },
-        
-        // 生詞：姓 (xìng)
         { type: 'choice', context: '你向別人介紹自己的名字。(You introduce yourself.)', q: '你好，我____王，叫開文。<br><span class="pinyin">(Nǐ hǎo, wǒ ____ Wáng, jiào Kāiwén.)</span>', options: ['是 (shì)', '姓 (xìng)', '叫 (jiào)', '來 (lái)'], ans: 1, cite: '第一課 生詞：姓 xìng', img: '' },
-        
-        // 語法 4: 呢 (ne)
         { type: 'choice', context: '你是美國人，想問對方是不是也一樣。(You are American, you ask about them.)', q: '我是美國人，你____？<br><span class="pinyin">(Wǒ shì Měiguó rén, nǐ ____?)</span>', options: ['什麼 (shénme)', '哪 (nǎ)', '嗎 (ma)', '呢 (ne)'], ans: 3, cite: '第一課 語法：呢 ne', img: '' },
-        
-        // 生詞：不客氣
         { type: 'choice', context: '朋友跟你說謝謝，你應該說什麼？(A friend says "Thank you", you reply:)', q: '____。<br><span class="pinyin">(____.)</span>', options: ['不客氣 (búkèqi)', '對不起 (duìbùqǐ)', '請問 (qǐngwèn)', '好喝 (hǎohē)'], ans: 0, cite: '第一課 生詞：不客氣', img: '' },
-        
-        // 重組題：喜歡喝茶
         { type: 'sort', context: '有人問你喜歡喝什麼，你回答：(Someone asks what you like to drink, you answer:)', q: '請重組句子：(Please rearrange the words)', words: ['喜歡<br>(xǐhuān)', '我<br>(wǒ)', '喝<br>(hē)', '茶<br>(chá)'], ans: '我<br>(wǒ)喜歡<br>(xǐhuān)喝<br>(hē)茶<br>(chá)', cite: '第一課 生詞：喜歡喝茶', img: '' }
     ];
 
-    // 為了避免和之前的資料衝突，這裡使用新 Key
-    let questions = JSON.parse(localStorage.getItem('huayuQuestionsL1')) || defaultQuestions;
-    
+    // --- 資料庫：中級題目 (Intermediate) ---
+    let defaultIntermediate = [
+        { type: 'choice', context: '期中考快到了，你看到同學小明連假日都不休息。', q: '他每天都在圖書館讀書，非常____。', options: ['原來', '用功', '反對', '嚴'], ans: 1, cite: '頁面 2', img: '' },
+        { type: 'choice', context: '你跟朋友約好去夜唱，但家人覺得半夜出門很不安全。', q: '爸爸____我晚上太晚回家。', options: ['原來', '反對', '用功', '累'], ans: 1, cite: '頁面 16', img: '' },
+        { type: 'choice', context: '剛剛出大太陽，突然又下起大雨了。', q: '台北的天氣真奇怪，說下雨____下雨。', options: ['都', '就', '也', '還'], ans: 1, cite: '頁面 6', img: '' },
+        { type: 'sort', context: '你的朋友是個愛喝手搖杯的人，一看到飲料店就控制不住。', q: '請重組句子：', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '頁面 6', img: '' },
+        { type: 'choice', context: '博物館有規定，所有的參觀者，包含小孩和老人，都需要購票進場。', q: '參觀這個博物館，不管____，都要買票。', options: ['誰想去', '什麼人', '哪裡好玩', '想不想買'], ans: 1, cite: '頁面 14', img: '' },
+        { type: 'choice', context: '老師完全不先通知，一進教室就發考卷。', q: '李老師很嚴，常常說考試____考試。', options: ['都', '就', '也', '又'], ans: 1, cite: '頁面 9', img: '' },
+        { type: 'choice', context: '你跟新朋友介紹你以前住的地方。', q: '我原來在____工作，現在搬來台北了。', options: ['美國', '照相', '用功', '不管'], ans: 0, cite: '頁面 4', img: '' },
+        { type: 'choice', context: '冬天很冷，你想吃熱熱的東西，不想等別人同意。', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...', '雖然...但是...'], ans: 0, cite: '頁面 8', img: '' },
+        { type: 'sort', context: '小美對學中文非常有熱忱，每天下班不管身體狀況如何都堅持上課。', q: '請重組句子：', words: ['不管', '累不累', '她', '都會來', '上課'], ans: '不管累不累她都會來上課', cite: '頁面 15', img: '' },
+        { type: 'choice', context: '你跟朋友約好去海邊玩，即使下雨也不改變計畫。', q: '不管天氣____，我都要去海邊。', options: ['好不好', '怎麼樣', '好還是壞', '以上皆可'], ans: 3, cite: '頁面 12', img: '' }
+    ];
+
+    // 從 LocalStorage 載入資料
+    let qBeginner = JSON.parse(localStorage.getItem('huayuDataBeginner')) || defaultBeginner;
+    let qIntermediate = JSON.parse(localStorage.getItem('huayuDataIntermediate')) || defaultIntermediate;
+
+    // 遊戲狀態變數
+    let currentData = []; 
     let currentQ = 0, score = 0, combo = 0, attempts = 0, maxAttempts = 2;
     let userSort = [], playerName = "", playerLevel = "";
+    
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     function playSound(isCorrect) {
@@ -478,15 +173,15 @@
         }
     }
 
-    // 將包含 HTML 標籤（如 <br>）的字串過濾，只保留中文用於發音
+    // 濾除 HTML 標籤與拼音，供語音朗讀使用
     function cleanTextForSpeech(text) {
-        let cleanText = text.replace(/<[^>]*>?/gm, ''); // 移除 HTML
-        cleanText = cleanText.replace(/\([a-zA-Z\sàáāǎèéēěìíīǐòóōǒùúūǔüǖǘǚǜ]*\)/g, ''); // 移除括號內的拼音
+        let cleanText = text.replace(/<[^>]*>?/gm, ''); 
+        cleanText = cleanText.replace(/\([a-zA-Z\sàáāǎèéēěìíīǐòóōǒùúūǔüǖǘǚǜ]*\)/g, ''); 
         return cleanText;
     }
 
     function replayQ() { 
-        speak(cleanTextForSpeech(questions[currentQ].context) + " " + cleanTextForSpeech(questions[currentQ].q)); 
+        speak(cleanTextForSpeech(currentData[currentQ].context) + " " + cleanTextForSpeech(currentData[currentQ].q)); 
     }
     
     function speak(txt) { 
@@ -496,11 +191,26 @@
         window.speechSynthesis.speak(m); 
     }
 
+    // 啟動遊戲：根據選擇的層級載入不同的題庫
     function startGame() {
         const nameInput = document.getElementById('player-name').value;
         if(!nameInput) return alert('請輸入名字喔！(Please enter your name)');
+        
         playerName = nameInput;
         playerLevel = document.getElementById('player-level').value;
+        
+        // 判斷題庫與標題
+        if (playerLevel === "初級學習者") {
+            currentData = qBeginner;
+            document.getElementById('main-game-title').innerText = "第一課：歡迎你來臺灣！";
+        } else if (playerLevel === "中級學習者") {
+            currentData = qIntermediate;
+            document.getElementById('main-game-title').innerText = "開學了！情境學習挑戰";
+        } else {
+            alert("高級學習者內容敬請期待！載入中級題庫。");
+            currentData = qIntermediate;
+            document.getElementById('main-game-title').innerText = "開學了！情境學習挑戰";
+        }
         
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('player-info').innerText = `${playerLevel}：${playerName}`;
@@ -512,9 +222,11 @@
     }
 
     function showQuestion() {
-        const q = questions[currentQ], interactive = document.getElementById('interactive-area'), fb = document.getElementById('feedback');
+        const q = currentData[currentQ];
+        const interactive = document.getElementById('interactive-area');
+        const fb = document.getElementById('feedback');
         
-        // 依據題型調整機會次數 (重組題給 4 次，選擇題給 2 次)
+        // 依據題型調整機會次數
         maxAttempts = (q.type === 'sort') ? 4 : 2;
         attempts = 0; userSort = [];
         
@@ -533,8 +245,12 @@
             const grid = document.createElement('div'); grid.className = 'options-grid';
             q.options.forEach((opt, idx) => {
                 const b = document.createElement('button'); b.className = 'btn'; 
-                // 將選項內的拼音包起來以便調整樣式
-                b.innerHTML = opt.replace(/\(([^)]+)\)/, '<br><span class="pinyin">($1)</span>');
+                // 處理選項內的拼音樣式
+                if(opt.includes('(')) {
+                    b.innerHTML = opt.replace(/\(([^)]+)\)/, '<br><span class="pinyin">($1)</span>');
+                } else {
+                    b.innerHTML = opt;
+                }
                 b.onclick = () => checkAns(idx, b); grid.appendChild(b);
             });
             interactive.appendChild(grid);
@@ -563,7 +279,7 @@
     }
 
     function checkAns(idx, btn) {
-        const q = questions[currentQ];
+        const q = currentData[currentQ];
         if(idx === q.ans) { handleResult(true); }
         else {
             attempts++; btn.disabled = true;
@@ -573,7 +289,7 @@
     }
 
     function checkSort() {
-        const q = questions[currentQ];
+        const q = currentData[currentQ];
         if(userSort.join('') === q.ans) handleResult(true);
         else {
             attempts++;
@@ -587,11 +303,11 @@
         fb.classList.remove('hidden');
         if(isCorrect) {
             combo++; const addScore = combo * 100; score += addScore;
-            fb.innerHTML = `太棒了 (Great)！連續答對加 ${addScore} 分！🔥<br><small>📚 出處：${questions[currentQ].cite}</small>`;
+            fb.innerHTML = `太棒了 (Great)！連續答對加 ${addScore} 分！🔥<br><small>📚 出處：${currentData[currentQ].cite}</small>`;
             fb.className = 'correct'; playSound(true);
         } else {
             combo = 0;
-            fb.innerHTML = `機會用完啦 (Out of chances)。❌<br>${msg}<br><small>📚 出處：${questions[currentQ].cite}</small>`;
+            fb.innerHTML = `機會用完啦 (Out of chances)。❌<br>${msg}<br><small>📚 出處：${currentData[currentQ].cite}</small>`;
             fb.className = 'wrong'; playSound(false);
         }
         document.getElementById('total-score').innerText = score;
@@ -610,7 +326,7 @@
 
     function nextQuestion() {
         currentQ++;
-        if(currentQ < questions.length) showQuestion();
+        if(currentQ < currentData.length) showQuestion();
         else {
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('score-ui').classList.add('hidden');
@@ -630,7 +346,7 @@
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('end-screen').classList.add('hidden');
             document.getElementById('admin-screen').classList.remove('hidden');
-            renderAdminList();
+            renderAdminList(); // 預設載入選單選擇的層級
         } else {
             alert("帳號或密碼錯誤！");
         }
@@ -640,8 +356,11 @@
 
     function renderAdminList() {
         const list = document.getElementById('admin-list');
+        const selectedLevel = document.getElementById('admin-level-select').value;
+        const editData = selectedLevel === 'beginner' ? qBeginner : qIntermediate;
+        
         list.innerHTML = '';
-        questions.forEach((q, idx) => {
+        editData.forEach((q, idx) => {
             const div = document.createElement('div');
             div.className = 'admin-item';
             div.innerHTML = `
@@ -654,11 +373,16 @@
     }
 
     function saveAdminData() {
-        questions.forEach((q, idx) => {
+        const selectedLevel = document.getElementById('admin-level-select').value;
+        const editData = selectedLevel === 'beginner' ? qBeginner : qIntermediate;
+        const storageKey = selectedLevel === 'beginner' ? 'huayuDataBeginner' : 'huayuDataIntermediate';
+
+        editData.forEach((q, idx) => {
             q.img = document.getElementById(`img-input-${idx}`).value.trim();
         });
-        localStorage.setItem('huayuQuestionsL1', JSON.stringify(questions));
-        alert("設定已儲存！");
+        
+        localStorage.setItem(storageKey, JSON.stringify(editData));
+        alert("設定已儲存！(Saved successfully)");
     }
 </script>
 </body>
