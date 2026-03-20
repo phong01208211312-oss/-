@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>學華語 Let's Learn Mandarin</title>
+    <title>學華語 Let's Learn Mandarin - 全層級挑戰系統</title>
     <style>
         :root { --edu-blue: #4A90E2; --edu-yellow: #FFD200; --edu-red: #FF5A5F; --edu-green: #7ED321; --text-dark: #333; }
         body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: #EBF2F6; margin: 0; padding: 10px; display: flex; justify-content: center; min-height: 100vh; }
@@ -68,9 +68,9 @@
         <div class="input-group">
             <label>📊 請選擇你的層級 (Level)：</label>
             <select id="player-level">
-                <option value="初級學習者">🟢 初級學習者 (Beginner) - 第一課：歡迎你來臺灣！</option>
-                <option value="中級學習者">🟡 中級學習者 (Intermediate) - 開學了！情境學習挑戰</option>
-                <option value="高級學習者">🔴 高級學習者 (Advanced) - 敬請期待</option>
+                <option value="beginner">🟢 初級 (Beginner) - 歡迎你來臺灣！</option>
+                <option value="intermediate">🟡 中級 (Intermediate) - 開學了！情境挑戰</option>
+                <option value="advanced">🔴 高級 (Advanced) - 言論自由的界線</option>
             </select>
         </div>
         <button class="btn btn-primary" style="padding: 15px;" onclick="startGame()">進入遊戲 (Start Game)</button>
@@ -106,7 +106,8 @@
             <label>請選擇要編輯的題庫：</label>
             <select id="admin-level-select" onchange="renderAdminList()">
                 <option value="beginner">🟢 初級 (Beginner) - 歡迎你來臺灣</option>
-                <option value="intermediate">🟡 中級 (Intermediate) - 開學了情境挑戰</option>
+                <option value="intermediate">🟡 中級 (Intermediate) - 開學了</option>
+                <option value="advanced">🔴 高級 (Advanced) - 言論自由的界線</option>
             </select>
         </div>
 
@@ -120,7 +121,7 @@
 <button class="admin-btn" onclick="openAdmin()">⚙️</button>
 
 <script>
-    // --- 資料庫：初級題目 (Beginner) ---
+    // --- 1. 初級資料庫 (Beginner) ---
     let defaultBeginner = [
         { type: 'choice', context: '你想確認對方是不是陳小姐。(You want to confirm if she is Miss Chen.)', q: '請問你是陳小姐____？<br><span class="pinyin">(Qǐngwèn nǐ shì Chén xiǎojiě ____?)</span>', options: ['的 (de)', '嗎 (ma)', '呢 (ne)', '不 (bù)'], ans: 1, cite: '第一課 語法：嗎 ma', img: '' },
         { type: 'choice', context: '你不喝咖啡，想告訴朋友。(You don\'t drink coffee, tell your friend.)', q: '謝謝，我____喝咖啡。<br><span class="pinyin">(Xièxie, wǒ ____ hē kāfēi.)</span>', options: ['很 (hěn)', '是 (shì)', '什麼 (shénme)', '不 (bù)'], ans: 3, cite: '第一課 語法：不 bù', img: '' },
@@ -134,28 +135,43 @@
         { type: 'sort', context: '有人問你喜歡喝什麼，你回答：(Someone asks what you like to drink, you answer:)', q: '請重組句子：(Please rearrange the words)', words: ['喜歡<br>(xǐhuān)', '我<br>(wǒ)', '喝<br>(hē)', '茶<br>(chá)'], ans: '我<br>(wǒ)喜歡<br>(xǐhuān)喝<br>(hē)茶<br>(chá)', cite: '第一課 生詞：喜歡喝茶', img: '' }
     ];
 
-    // --- 資料庫：中級題目 (Intermediate) ---
+    // --- 2. 中級資料庫 (Intermediate) ---
     let defaultIntermediate = [
-        { type: 'choice', context: '期中考快到了，你看到同學小明連假日都不休息。', q: '他每天都在圖書館讀書，非常____。', options: ['原來', '用功', '反對', '嚴'], ans: 1, cite: '頁面 2', img: '' },
-        { type: 'choice', context: '你跟朋友約好去夜唱，但家人覺得半夜出門很不安全。', q: '爸爸____我晚上太晚回家。', options: ['原來', '反對', '用功', '累'], ans: 1, cite: '頁面 16', img: '' },
-        { type: 'choice', context: '剛剛出大太陽，突然又下起大雨了。', q: '台北的天氣真奇怪，說下雨____下雨。', options: ['都', '就', '也', '還'], ans: 1, cite: '頁面 6', img: '' },
-        { type: 'sort', context: '你的朋友是個愛喝手搖杯的人，一看到飲料店就控制不住。', q: '請重組句子：', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '頁面 6', img: '' },
-        { type: 'choice', context: '博物館有規定，所有的參觀者，包含小孩和老人，都需要購票進場。', q: '參觀這個博物館，不管____，都要買票。', options: ['誰想去', '什麼人', '哪裡好玩', '想不想買'], ans: 1, cite: '頁面 14', img: '' },
-        { type: 'choice', context: '老師完全不先通知，一進教室就發考卷。', q: '李老師很嚴，常常說考試____考試。', options: ['都', '就', '也', '又'], ans: 1, cite: '頁面 9', img: '' },
-        { type: 'choice', context: '你跟新朋友介紹你以前住的地方。', q: '我原來在____工作，現在搬來台北了。', options: ['美國', '照相', '用功', '不管'], ans: 0, cite: '頁面 4', img: '' },
-        { type: 'choice', context: '冬天很冷，你想吃熱熱的東西，不想等別人同意。', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...', '雖然...但是...'], ans: 0, cite: '頁面 8', img: '' },
-        { type: 'sort', context: '小美對學中文非常有熱忱，每天下班不管身體狀況如何都堅持上課。', q: '請重組句子：', words: ['不管', '累不累', '她', '都會來', '上課'], ans: '不管累不累她都會來上課', cite: '頁面 15', img: '' },
-        { type: 'choice', context: '你跟朋友約好去海邊玩，即使下雨也不改變計畫。', q: '不管天氣____，我都要去海邊。', options: ['好不好', '怎麼樣', '好還是壞', '以上皆可'], ans: 3, cite: '頁面 12', img: '' }
+        { type: 'choice', context: '期中考快到了，你看到同學小明連假日都不休息。', q: '他每天都在圖書館讀書，非常____。', options: ['原來', '用功', '反對', '嚴'], ans: 1, cite: '頁面 2：生詞', img: '' },
+        { type: 'choice', context: '你跟朋友約好去夜唱，但家人覺得半夜出門很不安全。', q: '爸爸____我晚上太晚回家。', options: ['原來', '反對', '用功', '累'], ans: 1, cite: '頁面 16：練習', img: '' },
+        { type: 'choice', context: '剛剛出大太陽，突然又下起大雨了。', q: '台北的天氣真奇怪，說下雨____下雨。', options: ['都', '就', '也', '還'], ans: 1, cite: '頁面 6：語法', img: '' },
+        { type: 'sort', context: '你的朋友是個愛喝手搖杯的人，一看到飲料店就控制不住。', q: '請重組句子：', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '頁面 6：語法', img: '' },
+        { type: 'choice', context: '博物館有規定，所有的參觀者，包含小孩和老人，都需要購票進場。', q: '參觀這個博物館，不管____，都要買票。', options: ['誰想去', '什麼人', '哪裡好玩', '想不想買'], ans: 1, cite: '頁面 14：語法練習', img: '' },
+        { type: 'choice', context: '老師完全不先通知，一進教室就發考卷。', q: '李老師很嚴，常常說考試____考試。', options: ['都', '就', '也', '又'], ans: 1, cite: '頁面 9：語法練習', img: '' },
+        { type: 'choice', context: '你跟新朋友介紹你以前住的地方。', q: '我原來在____工作，現在搬來台北了。', options: ['美國', '照相', '用功', '不管'], ans: 0, cite: '頁面 4：生詞', img: '' },
+        { type: 'choice', context: '冬天很冷，你想吃熱熱的東西，不想等別人同意。', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...', '雖然...但是...'], ans: 0, cite: '頁面 8：語法練習', img: '' },
+        { type: 'sort', context: '小美對學中文非常有熱忱，每天下班不管身體狀況如何都堅持上課。', q: '請重組句子：', words: ['不管', '累不累', '她', '都會來', '上課'], ans: '不管累不累她都會來上課', cite: '頁面 15：語法練習', img: '' },
+        { type: 'choice', context: '你跟朋友約好去海邊玩，即使下雨也不改變計畫。', q: '不管天氣____，我都要去海邊。', options: ['好不好', '怎麼樣', '好還是壞', '以上皆可'], ans: 3, cite: '頁面 12：語法', img: '' }
+    ];
+
+    // --- 3. 高級資料庫 (Advanced) ---
+    let defaultAdvanced = [
+        { type: 'choice', context: '討論「自由廣場」的命名涵義與人民權益。', q: '自由廣場，____，就是一個讓人民自由表達意見的地方。', options: ['顧名思義', '胡作非為', '無理取鬧', '一來一往'], ans: 0, cite: '高級 第一課：顧名思義', img: '' },
+        { type: 'choice', context: '探討法律的公平性與司法判決的適用範圍。', q: '法律之前，人人平等，____。', options: ['即使是總統也不例外', '也就是總統不例外', '即使是總統就例外', '即使總統才例外'], ans: 0, cite: '高級 第一課：即使...也...', img: '' },
+        { type: 'sort', context: '描述網路不實謠言傳播的特性與危險性。', q: '請重組句子：', words: ['一旦', '網路謠言', '散播出去', '就很難停止'], ans: '一旦網路謠言散播出去就很難停止', cite: '高級 第一課：一旦...就...', img: '' },
+        { type: 'choice', context: '探討媒體在監督政府施政上扮演的角色。', q: '政府的決策如果缺乏人民的監督，官員就很可能____。', options: ['越辯越明', '胡作非為', '顧名思義', '無理取鬧'], ans: 1, cite: '高級 第一課：胡作非為', img: '' },
+        { type: 'choice', context: '批評某些政客在議會上的負面表現與立場盲點。', q: '他們如果只是____，根本無法好好溝通，這對政策毫無幫助。', options: ['為反對而反對', '因為反對而反對', '為了反對就反對', '為反對才反對'], ans: 0, cite: '高級 第一課：為 A 而 A', img: '' },
+        { type: 'choice', context: '面對網路酸民的霸凌與仇恨言論時的應對態度。', q: '面對酸民的____，他選擇冷靜講理，相信真理終究會越辯越明。', options: ['無理取鬧', '顧名思義', '一來一往', '胡作非為'], ans: 0, cite: '高級 第一課：無理取鬧、越辯越明', img: '' },
+        { type: 'sort', context: '探討言論自由與法律規範的真實關係。', q: '請重組句子：', words: ['有些人以為', '言論過於自由', '事實上', '法律早有規範'], ans: '有些人以為言論過於自由事實上法律早有規範', cite: '高級 第一課：事實上', img: '' },
+        { type: 'choice', context: '探討政治人物決策的責任歸屬與價值觀。', q: '污染、教育等問題都脫離不了政治，所以政府得____。', options: ['為自己的政策負責', '負責自己的政策', '為政策自己負責', '自己為政策的負責'], ans: 0, cite: '高級 第一課：A 為 B 負責', img: '' },
+        { type: 'choice', context: '威權政府應對民眾抗議與洗腦的常見手段。', q: '因為這件事會讓人民抗議，所以政府打算先____，不讓媒體報導。', options: ['封住媒體的嘴', '蒙住媒體的眼', '抓住媒體的手', '擋住媒體的路'], ans: 0, cite: '高級 第一課：封住...的嘴', img: '' },
+        { type: 'choice', context: '描述一場激烈但理性的司法辯論會。', q: '在這場辯論中，雙方____地互相指正，最後終於達成了共識。', options: ['一來一往', '顧名思義', '胡作非為', '無理取鬧'], ans: 0, cite: '高級 第一課：一來一往', img: '' }
     ];
 
     // 從 LocalStorage 載入資料
     let qBeginner = JSON.parse(localStorage.getItem('huayuDataBeginner')) || defaultBeginner;
     let qIntermediate = JSON.parse(localStorage.getItem('huayuDataIntermediate')) || defaultIntermediate;
+    let qAdvanced = JSON.parse(localStorage.getItem('huayuDataAdvanced')) || defaultAdvanced;
 
     // 遊戲狀態變數
     let currentData = []; 
     let currentQ = 0, score = 0, combo = 0, attempts = 0, maxAttempts = 2;
-    let userSort = [], playerName = "", playerLevel = "";
+    let userSort = [], playerName = "", playerLevel = "", displayLevelText = "";
     
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -173,20 +189,23 @@
         }
     }
 
-    // 濾除 HTML 標籤與拼音，供語音朗讀使用
+    // ⭐ 強力過濾器：將 HTML 標籤、所有括號內的內容（拼音/英文）、以及獨立英文字母全部濾除
     function cleanTextForSpeech(text) {
-        let cleanText = text.replace(/<[^>]*>?/gm, ''); 
-        cleanText = cleanText.replace(/\([a-zA-Z\sàáāǎèéēěìíīǐòóōǒùúūǔüǖǘǚǜ]*\)/g, ''); 
+        let cleanText = text.replace(/<[^>]*>?/gm, ''); // 移除 HTML 標籤
+        cleanText = cleanText.replace(/\([^)]*\)/g, ''); // 移除所有括號()及其內部內容
+        cleanText = cleanText.replace(/[a-zA-Z]/g, ''); // 移除所有英文字母
         return cleanText;
     }
 
     function replayQ() { 
-        speak(cleanTextForSpeech(currentData[currentQ].context) + " " + cleanTextForSpeech(currentData[currentQ].q)); 
+        let textToSpeak = cleanTextForSpeech(currentData[currentQ].context) + " " + cleanTextForSpeech(currentData[currentQ].q);
+        speak(textToSpeak); 
     }
     
     function speak(txt) { 
         window.speechSynthesis.cancel(); 
-        const m = new SpeechSynthesisUtterance(txt); 
+        const cleanTxt = cleanTextForSpeech(txt); // 確保朗讀的字串是乾淨的純中文
+        const m = new SpeechSynthesisUtterance(cleanTxt); 
         m.lang = 'zh-TW'; 
         window.speechSynthesis.speak(m); 
     }
@@ -200,20 +219,22 @@
         playerLevel = document.getElementById('player-level').value;
         
         // 判斷題庫與標題
-        if (playerLevel === "初級學習者") {
+        if (playerLevel === "beginner") {
             currentData = qBeginner;
+            displayLevelText = "初級學習者";
             document.getElementById('main-game-title').innerText = "第一課：歡迎你來臺灣！";
-        } else if (playerLevel === "中級學習者") {
+        } else if (playerLevel === "intermediate") {
             currentData = qIntermediate;
-            document.getElementById('main-game-title').innerText = "開學了！情境學習挑戰";
-        } else {
-            alert("高級學習者內容敬請期待！載入中級題庫。");
-            currentData = qIntermediate;
-            document.getElementById('main-game-title').innerText = "開學了！情境學習挑戰";
+            displayLevelText = "中級學習者";
+            document.getElementById('main-game-title').innerText = "第一課：開學了！情境挑戰";
+        } else if (playerLevel === "advanced") {
+            currentData = qAdvanced;
+            displayLevelText = "高級學習者";
+            document.getElementById('main-game-title').innerText = "第一課：言論自由的界線";
         }
         
         document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('player-info').innerText = `${playerLevel}：${playerName}`;
+        document.getElementById('player-info').innerText = `${displayLevelText}：${playerName}`;
         document.getElementById('player-info').classList.remove('hidden');
         document.getElementById('score-ui').classList.remove('hidden');
         document.getElementById('game-screen').classList.remove('hidden');
@@ -245,13 +266,14 @@
             const grid = document.createElement('div'); grid.className = 'options-grid';
             q.options.forEach((opt, idx) => {
                 const b = document.createElement('button'); b.className = 'btn'; 
-                // 處理選項內的拼音樣式
+                // 處理選項內的拼音樣式 (若有括號才處理)
                 if(opt.includes('(')) {
                     b.innerHTML = opt.replace(/\(([^)]+)\)/, '<br><span class="pinyin">($1)</span>');
                 } else {
                     b.innerHTML = opt;
                 }
-                b.onclick = () => checkAns(idx, b); grid.appendChild(b);
+                b.onclick = () => { checkAns(idx, b); speak(opt); }; 
+                grid.appendChild(b);
             });
             interactive.appendChild(grid);
         } else {
@@ -283,7 +305,7 @@
         if(idx === q.ans) { handleResult(true); }
         else {
             attempts++; btn.disabled = true;
-            if(attempts >= maxAttempts) handleResult(false, `答案是 (Answer is)：<br>${q.options[q.ans]}`);
+            if(attempts >= maxAttempts) handleResult(false, `答案是 (Answer is)：<br>${q.options[q.ans].replace(/\([^)]*\)/g, '')}`);
             else showHint(`答錯囉，剩 ${maxAttempts - attempts} 次機會！(Try again!)`);
         }
     }
@@ -332,7 +354,7 @@
             document.getElementById('score-ui').classList.add('hidden');
             document.getElementById('player-info').classList.add('hidden');
             document.getElementById('end-screen').classList.remove('hidden');
-            document.getElementById('end-player').innerText = `${playerLevel}：${playerName}`;
+            document.getElementById('end-player').innerText = `${displayLevelText}：${playerName}`;
             document.getElementById('final-score').innerText = `總得分：${score}`;
         }
     }
@@ -346,7 +368,7 @@
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('end-screen').classList.add('hidden');
             document.getElementById('admin-screen').classList.remove('hidden');
-            renderAdminList(); // 預設載入選單選擇的層級
+            renderAdminList(); 
         } else {
             alert("帳號或密碼錯誤！");
         }
@@ -357,7 +379,11 @@
     function renderAdminList() {
         const list = document.getElementById('admin-list');
         const selectedLevel = document.getElementById('admin-level-select').value;
-        const editData = selectedLevel === 'beginner' ? qBeginner : qIntermediate;
+        
+        let editData;
+        if (selectedLevel === 'beginner') editData = qBeginner;
+        else if (selectedLevel === 'intermediate') editData = qIntermediate;
+        else editData = qAdvanced;
         
         list.innerHTML = '';
         editData.forEach((q, idx) => {
@@ -374,8 +400,11 @@
 
     function saveAdminData() {
         const selectedLevel = document.getElementById('admin-level-select').value;
-        const editData = selectedLevel === 'beginner' ? qBeginner : qIntermediate;
-        const storageKey = selectedLevel === 'beginner' ? 'huayuDataBeginner' : 'huayuDataIntermediate';
+        let editData, storageKey;
+
+        if (selectedLevel === 'beginner') { editData = qBeginner; storageKey = 'huayuDataBeginner'; }
+        else if (selectedLevel === 'intermediate') { editData = qIntermediate; storageKey = 'huayuDataIntermediate'; }
+        else { editData = qAdvanced; storageKey = 'huayuDataAdvanced'; }
 
         editData.forEach((q, idx) => {
             q.img = document.getElementById(`img-input-${idx}`).value.trim();
