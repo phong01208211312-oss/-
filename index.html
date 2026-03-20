@@ -3,64 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>學華語 Let's Learn Mandarin - 全層級挑戰系統</title>
+    <title>學華語 Let's Learn Mandarin - 旗艦版</title>
     <style>
-        :root { --edu-blue: #4A90E2; --edu-yellow: #FFD200; --edu-red: #FF5A5F; --edu-green: #7ED321; --text-dark: #333; }
-        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: #EBF2F6; margin: 0; padding: 10px; display: flex; justify-content: center; min-height: 100vh; }
+        /* 預設主題：經典活力藍 */
+        :root { 
+            --edu-primary: #4A90E2; 
+            --edu-secondary: #FFD200; 
+            --edu-accent: #FF5A5F; 
+            --edu-success: #7ED321; 
+            --text-dark: #333; 
+            --bg-color: #EBF2F6; 
+            --box-bg: #F0F7FF;
+        }
+        /* 主題二：木質溫暖風 */
+        [data-theme="wood"] { 
+            --edu-primary: #8D6E63; --edu-secondary: #FFE082; --edu-accent: #E53935; --edu-success: #66BB6A; 
+            --bg-color: #F7F3E9; --box-bg: #EFEBE0;
+        }
+        /* 主題三：自然清新綠 */
+        [data-theme="nature"] { 
+            --edu-primary: #26A69A; --edu-secondary: #D4E157; --edu-accent: #FF7043; --edu-success: #4CAF50; 
+            --bg-color: #E8F5E9; --box-bg: #E0F2F1;
+        }
+
+        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: var(--bg-color); margin: 0; padding: 10px; display: flex; justify-content: center; min-height: 100vh; transition: background 0.5s; }
         #app { width: 100%; max-width: 750px; background: white; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); overflow: hidden; position: relative; }
-        .banner { width: 100%; height: 160px; background: url('https://study.mdnkids.com/CH/images/main.jpg') center/cover; border-bottom: 5px solid var(--edu-yellow); }
-        .top-info { position: absolute; top: 10px; left: 20px; background: rgba(255,255,255,0.9); padding: 5px 15px; border-radius: 20px; font-weight: bold; color: var(--edu-blue); z-index: 10; border: 2px solid var(--edu-blue); }
-        .score-panel { position: absolute; top: 10px; right: 20px; background: rgba(255,255,255,0.9); padding: 5px 15px; border-radius: 20px; border: 2px solid var(--edu-blue); font-weight: bold; z-index: 10; text-align: right; }
-        .combo-badge { color: var(--edu-red); font-size: 1.1rem; }
-        .content { padding: 30px; text-align: center; min-height: 450px; }
+        
+        .banner { width: 100%; height: 160px; background-size: cover; background-position: center; border-bottom: 5px solid var(--edu-secondary); }
+        
+        /* 頂部資訊列 (返回、名稱、分數) */
+        .top-bar { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: flex-start; z-index: 10; pointer-events: none; }
+        .top-bar > div, .top-bar > button { pointer-events: auto; }
+        .back-btn { background: rgba(255,255,255,0.9); border: 2px solid var(--edu-primary); color: var(--edu-primary); font-weight: bold; padding: 5px 15px; border-radius: 20px; cursor: pointer; transition: 0.2s; }
+        .back-btn:hover { background: var(--edu-primary); color: white; }
+        
+        .info-pill { background: rgba(255,255,255,0.9); padding: 5px 15px; border-radius: 20px; font-weight: bold; border: 2px solid var(--edu-primary); color: var(--edu-primary); margin-bottom: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        .score-panel { text-align: right; }
+        .combo-badge { color: var(--edu-accent); font-size: 1.1rem; }
+
+        .content { padding: 30px; text-align: center; min-height: 450px; position: relative; }
         .hidden { display: none !important; }
         
-        /* Form Inputs */
+        /* 表單與輸入 */
         .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--edu-blue); }
+        .input-group label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--edu-primary); }
         .input-group input, .input-group select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 1.1rem; box-sizing: border-box; }
         
-        /* Game UI */
-        .context-box { background: #FFF9C4; padding: 15px; border-radius: 10px; border-left: 5px solid var(--edu-yellow); margin-bottom: 15px; font-weight: bold; color: #555; text-align: left; }
+        /* 遊戲介面 */
+        .timer-display { font-size: 1.8rem; font-weight: bold; color: var(--edu-accent); margin-bottom: 15px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .context-box { background: #FFF9C4; padding: 15px; border-radius: 10px; border-left: 5px solid var(--edu-secondary); margin-bottom: 15px; font-weight: bold; color: #555; text-align: left; line-height: 1.5; }
         .q-image { max-width: 100%; border-radius: 10px; margin-bottom: 15px; max-height: 200px; object-fit: cover; }
-        .sentence-display { font-size: 1.3rem; margin: 10px 0 20px 0; padding: 20px; background: #F0F7FF; border-radius: 15px; border-left: 8px solid var(--edu-blue); position: relative; line-height: 1.6; }
-        .pinyin { font-size: 1rem; color: #666; display: block; margin-top: 5px; font-weight: normal; }
-        .audio-btn { cursor: pointer; color: var(--edu-blue); margin-left: 10px; }
+        .sentence-display { font-size: 1.4rem; margin: 10px 0 20px 0; padding: 20px; background: var(--box-bg); border-radius: 15px; border-left: 8px solid var(--edu-primary); line-height: 1.6; }
+        .pinyin { font-size: 1rem; color: #7f8c8d; display: block; margin-top: 5px; font-weight: normal; }
+        .audio-btn { cursor: pointer; color: var(--edu-primary); margin-left: 10px; font-size: 1.2rem; }
+        
+        /* 按鈕與重組區 */
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .btn { padding: 12px; border: 2px solid var(--edu-blue); background: white; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; color: var(--edu-blue); font-size: 1.1rem; line-height: 1.4; }
-        .btn-primary { background: var(--edu-blue); color: white; width: 100%; margin-top: 10px; }
-        .btn:hover:not(:disabled) { background: var(--edu-blue); color: white; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn { padding: 12px; border: 2px solid var(--edu-primary); background: white; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; color: var(--edu-primary); font-size: 1.1rem; line-height: 1.4; }
+        .btn-primary { background: var(--edu-primary); color: white; width: 100%; margin-top: 10px; }
+        .btn:hover:not(:disabled) { background: var(--edu-primary); color: white; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .word-tile { padding: 10px 15px; background: var(--edu-secondary); border-radius: 8px; cursor: pointer; margin: 5px; display: inline-block; font-weight: bold; color: #333; line-height: 1.4; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .sort-zone { min-height: 60px; border: 3px dashed var(--edu-primary); margin: 15px 0; padding: 10px; border-radius: 15px; background: #FFFDF0; }
         
-        /* Sorting UI */
-        .word-tile { padding: 10px 15px; background: var(--edu-yellow); border-radius: 8px; cursor: pointer; margin: 5px; display: inline-block; font-weight: bold; color: #333; line-height: 1.4; }
-        .sort-zone { min-height: 60px; border: 3px dashed var(--edu-blue); margin: 15px 0; padding: 10px; border-radius: 15px; background: #FFFDF0; }
-        
-        /* Feedback */
-        #feedback { margin-top: 15px; padding: 15px; border-radius: 12px; font-weight: bold; }
+        /* 回饋區 */
+        #feedback { margin-top: 15px; padding: 15px; border-radius: 12px; font-weight: bold; line-height: 1.5; text-align: left;}
         .correct { background: #E8F5E9; color: #2E7D32; border: 2px solid #A5D6A7; }
         .wrong { background: #FFEBEE; color: #C62828; border: 2px solid #EF9A9A; }
+        .explanation { font-size: 0.95rem; color: #555; margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 10px; }
         
-        /* Admin */
-        .admin-btn { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 1.5rem; cursor: pointer; opacity: 0.3; transition: 0.3s; z-index: 100; }
-        .admin-btn:hover { opacity: 1; }
-        .admin-panel { background: #f9f9f9; padding: 20px; border-radius: 10px; text-align: left; max-height: 400px; overflow-y: auto; }
-        .admin-item { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #ccc; }
-        .admin-item input { width: 100%; padding: 8px; margin-top: 5px; }
+        /* 管理員登入 Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .modal-box { background: white; padding: 30px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        
+        /* 管理員按鈕 (文字+Logo) */
+        .admin-entry-btn { position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 30px; padding: 10px 20px; font-size: 1rem; cursor: pointer; transition: 0.3s; z-index: 100; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        .admin-entry-btn:hover { background: var(--edu-primary); transform: scale(1.05); }
+        
+        /* 後台版面 */
+        .admin-panel { background: #f9f9f9; padding: 20px; border-radius: 10px; text-align: left; max-height: 350px; overflow-y: auto; border: 1px solid #ddd; margin-bottom:15px; }
+        .admin-tabs { display: flex; margin-bottom: 15px; gap: 10px; }
+        .admin-tab { flex: 1; padding: 10px; background: #eee; border:none; border-radius: 10px; cursor: pointer; font-weight:bold; }
+        .admin-tab.active { background: var(--edu-primary); color: white; }
     </style>
 </head>
 <body>
 
 <div id="app">
-    <div class="banner"></div>
-    <div class="top-info hidden" id="player-info"></div>
-    <div class="score-panel hidden" id="score-ui">
-        <div>總分: <span id="total-score">0</span></div>
-        <div class="combo-badge" id="combo-display">Combo x0</div>
+    <div class="banner" id="top-banner" style="background-image: url('https://study.mdnkids.com/CH/images/main.jpg');"></div>
+    
+    <div class="top-bar hidden" id="top-bar">
+        <div>
+            <button class="back-btn" onclick="quitGame()">⬅ 返回首頁</button>
+            <div class="info-pill" id="player-info" style="margin-top: 10px;"></div>
+        </div>
+        <div class="score-panel info-pill" id="score-ui">
+            <div>總分: <span id="total-score">0</span></div>
+            <div class="combo-badge" id="combo-display">Combo x0</div>
+        </div>
     </div>
     
     <div id="login-screen" class="content">
-        <h2 style="color: var(--edu-blue);">🎒 學華語 Let's Learn Mandarin</h2>
+        <h2 style="color: var(--edu-primary); margin-top: 20px;">🎒 學華語 Let's Learn Mandarin</h2>
         <div class="input-group">
             <label>📝 請輸入你的名字 (Name)：</label>
             <input type="text" id="player-name" placeholder="例如：約翰 (John)" required>
@@ -73,11 +117,13 @@
                 <option value="advanced">🔴 高級 (Advanced) - 言論自由的界線</option>
             </select>
         </div>
-        <button class="btn btn-primary" style="padding: 15px;" onclick="startGame()">進入遊戲 (Start Game)</button>
+        <button class="btn btn-primary" style="padding: 15px; font-size: 1.2rem;" onclick="startGame()">進入遊戲 (Start Game)</button>
     </div>
 
-    <div id="game-screen" class="content hidden">
-        <h2 id="main-game-title" style="color: var(--edu-blue); margin-top: 0;"></h2>
+    <div id="game-screen" class="content hidden" style="padding-top: 60px;">
+        <h2 id="main-game-title" style="color: var(--edu-primary); margin-top: 0;"></h2>
+        <div class="timer-display" id="timer-display">⏳ 15</div>
+        
         <div id="context-box" class="context-box"></div>
         <img id="q-img" class="q-image hidden" src="" alt="情境圖片">
         
@@ -86,95 +132,166 @@
             <span class="audio-btn" onclick="replayQ()">🔊</span>
         </div>
         
-        <div id="attempt-hint" style="color: var(--edu-red); font-weight: bold; margin-bottom: 10px;"></div>
+        <div id="attempt-hint" style="color: var(--edu-accent); font-weight: bold; margin-bottom: 10px;"></div>
         <div id="interactive-area"></div>
         <div id="feedback" class="hidden"></div>
         <button id="next-btn" class="btn btn-primary hidden" onclick="nextQuestion()">下一題 (Next)</button>
     </div>
 
-    <div id="end-screen" class="content hidden">
+    <div id="end-screen" class="content hidden" style="padding-top: 60px;">
         <h2>🎊 挑戰結束 (Finished)</h2>
-        <h3 id="end-player" style="color: var(--edu-blue);"></h3>
-        <div style="font-size: 3rem; margin: 20px 0; color: var(--edu-green);" id="final-score"></div>
-        <button class="btn btn-primary" onclick="location.reload()">再玩一次 (Play Again)</button>
+        <h3 id="end-player" style="color: var(--edu-primary);"></h3>
+        <div style="font-size: 3.5rem; margin: 20px 0; color: var(--edu-success); font-weight: bold;" id="final-score"></div>
+        <button class="btn btn-primary" style="font-size:1.2rem; padding:15px;" onclick="location.reload()">再玩一次 (Play Again)</button>
     </div>
 
     <div id="admin-screen" class="content hidden">
-        <h2 style="color: #333;">⚙️ 題目編輯後台</h2>
+        <h2 style="color: #333; margin-top:0;">⚙️ 學習系統管理後台</h2>
         
-        <div class="input-group">
-            <label>請選擇要編輯的題庫：</label>
-            <select id="admin-level-select" onchange="renderAdminList()">
-                <option value="beginner">🟢 初級 (Beginner) - 歡迎你來臺灣</option>
-                <option value="intermediate">🟡 中級 (Intermediate) - 開學了</option>
-                <option value="advanced">🔴 高級 (Advanced) - 言論自由的界線</option>
-            </select>
+        <div class="admin-tabs">
+            <button class="admin-tab active" id="tab-global" onclick="switchAdminTab('global')">全局設定</button>
+            <button class="admin-tab" id="tab-qbank" onclick="switchAdminTab('qbank')">題庫編輯</button>
         </div>
 
-        <p style="color: #666; font-size: 0.9rem;">提示：在此貼上圖片的網址（URL），點擊儲存後即可在遊戲中顯示。</p>
-        <div id="admin-list" class="admin-panel"></div>
-        <button class="btn btn-primary" onclick="saveAdminData()">💾 儲存設定 (Save)</button>
-        <button class="btn" onclick="closeAdmin()" style="width:100%; margin-top:10px;">返回遊戲 (Back)</button>
+        <div id="admin-global-sec" class="admin-panel">
+            <div class="input-group">
+                <label>更換上方橫幅圖片 (Banner URL)：</label>
+                <input type="text" id="setting-banner" placeholder="貼上圖片網址">
+            </div>
+            <div class="input-group">
+                <label>選擇介面風格 (Theme)：</label>
+                <select id="setting-theme">
+                    <option value="classic">🔵 經典活力藍 (預設)</option>
+                    <option value="wood">🟤 木質溫暖風</option>
+                    <option value="nature">🟢 自然清新綠</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>遊戲中顯示資訊權限：</label>
+                <select id="setting-display">
+                    <option value="both">顯示「參加者名稱」與「積分」</option>
+                    <option value="nameOnly">只顯示「參加者名稱」</option>
+                    <option value="scoreOnly">只顯示「積分」</option>
+                    <option value="none">完全隱藏（盲測模式）</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="admin-qbank-sec" class="admin-panel hidden">
+            <div class="input-group">
+                <select id="admin-level-select" onchange="renderAdminList()">
+                    <option value="beginner">🟢 初級 (Beginner) - 歡迎你來臺灣</option>
+                    <option value="intermediate">🟡 中級 (Intermediate) - 開學了</option>
+                    <option value="advanced">🔴 高級 (Advanced) - 言論自由</option>
+                </select>
+            </div>
+            <p style="color: #666; font-size: 0.85rem; margin-top:-10px;">提示：在此貼上圖片網址即可為該題增加配圖。</p>
+            <div id="admin-list"></div>
+        </div>
+
+        <button class="btn btn-primary" onclick="saveAdminSettings()">💾 儲存所有設定 (Save)</button>
+        <button class="btn" onclick="closeAdmin()" style="width:100%; margin-top:10px;">⬅ 返回系統</button>
     </div>
 </div>
 
-<button class="admin-btn" onclick="openAdmin()">⚙️</button>
+<div id="admin-login-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <h3 style="color: var(--edu-primary);">⚙️ 管理員登錄</h3>
+        <div class="input-group">
+            <label>管理員帳號：</label>
+            <input type="text" id="admin-usr" value="oscar" placeholder="請輸入帳號">
+        </div>
+        <div class="input-group">
+            <label>管理員密碼：</label>
+            <input type="password" id="admin-pwd" value="12345678" placeholder="請輸入密碼">
+        </div>
+        <button class="btn btn-primary" onclick="verifyAdmin()">登入 (Login)</button>
+        <button class="btn" onclick="closeAdminLoginModal()" style="width:100%; margin-top:10px;">取消 (Cancel)</button>
+    </div>
+</div>
+
+<button class="admin-entry-btn" onclick="showAdminLoginModal()">⚙️ 管理員登錄</button>
 
 <script>
-    // --- 1. 初級資料庫 (Beginner) ---
+    // ================== 資料庫定義區 ==================
+    // --- 1. 初級 (Beginner) ---
     let defaultBeginner = [
-        { type: 'choice', context: '你想確認對方是不是陳小姐。(You want to confirm if she is Miss Chen.)', q: '請問你是陳小姐____？<br><span class="pinyin">(Qǐngwèn nǐ shì Chén xiǎojiě ____?)</span>', options: ['的 (de)', '嗎 (ma)', '呢 (ne)', '不 (bù)'], ans: 1, cite: '第一課 語法：嗎 ma', img: '' },
-        { type: 'choice', context: '你不喝咖啡，想告訴朋友。(You don\'t drink coffee, tell your friend.)', q: '謝謝，我____喝咖啡。<br><span class="pinyin">(Xièxie, wǒ ____ hē kāfēi.)</span>', options: ['很 (hěn)', '是 (shì)', '什麼 (shénme)', '不 (bù)'], ans: 3, cite: '第一課 語法：不 bù', img: '' },
-        { type: 'choice', context: '你想問朋友想喝什麼。(You ask your friend what they want to drink.)', q: '你____喝烏龍茶？<br><span class="pinyin">(Nǐ ____ hē wūlóngchá?)</span>', options: ['要不要 (yào bú yào)', '是不是 (shì bú shì)', '好不好 (hǎo bù hǎo)', '來不來 (lái bù lái)'], ans: 0, cite: '第一課 語法：A-not-A (要不要)', img: '' },
-        { type: 'choice', context: '朋友請你喝臺灣的茶，你覺得味道不錯。(The tea tastes very good.)', q: '這個烏龍茶____好喝。<br><span class="pinyin">(Zhège wūlóngchá ____ hǎohē.)</span>', options: ['不 (bù)', '嗎 (ma)', '很 (hěn)', '呢 (ne)'], ans: 2, cite: '第一課 語法：很 hěn', img: '' },
-        { type: 'sort', context: '在機場，你看到新朋友，上前歡迎她。(At the airport, you welcome your new friend.)', q: '請重組句子：(Please rearrange the words)', words: ['歡迎<br>(huānyíng)', '你<br>(nǐ)', '來<br>(lái)', '臺灣<br>(Táiwān)'], ans: '歡迎<br>(huānyíng)你<br>(nǐ)來<br>(lái)臺灣<br>(Táiwān)', cite: '第一課 生詞：歡迎來臺灣', img: '' },
-        { type: 'choice', context: '你想問這位新朋友來自哪裡。(You want to ask where this friend is from.)', q: '對不起，請問你是____國人？<br><span class="pinyin">(Duìbùqǐ, qǐngwèn nǐ shì ____ guó rén?)</span>', options: ['哪 (nǎ)', '什麼 (shénme)', '呢 (ne)', '嗎 (ma)'], ans: 0, cite: '第一課 生詞：哪國人', img: '' },
-        { type: 'choice', context: '你向別人介紹自己的名字。(You introduce yourself.)', q: '你好，我____王，叫開文。<br><span class="pinyin">(Nǐ hǎo, wǒ ____ Wáng, jiào Kāiwén.)</span>', options: ['是 (shì)', '姓 (xìng)', '叫 (jiào)', '來 (lái)'], ans: 1, cite: '第一課 生詞：姓 xìng', img: '' },
-        { type: 'choice', context: '你是美國人，想問對方是不是也一樣。(You are American, you ask about them.)', q: '我是美國人，你____？<br><span class="pinyin">(Wǒ shì Měiguó rén, nǐ ____?)</span>', options: ['什麼 (shénme)', '哪 (nǎ)', '嗎 (ma)', '呢 (ne)'], ans: 3, cite: '第一課 語法：呢 ne', img: '' },
-        { type: 'choice', context: '朋友跟你說謝謝，你應該說什麼？(A friend says "Thank you", you reply:)', q: '____。<br><span class="pinyin">(____.)</span>', options: ['不客氣 (búkèqi)', '對不起 (duìbùqǐ)', '請問 (qǐngwèn)', '好喝 (hǎohē)'], ans: 0, cite: '第一課 生詞：不客氣', img: '' },
-        { type: 'sort', context: '有人問你喜歡喝什麼，你回答：(Someone asks what you like to drink, you answer:)', q: '請重組句子：(Please rearrange the words)', words: ['喜歡<br>(xǐhuān)', '我<br>(wǒ)', '喝<br>(hē)', '茶<br>(chá)'], ans: '我<br>(wǒ)喜歡<br>(xǐhuān)喝<br>(hē)茶<br>(chá)', cite: '第一課 生詞：喜歡喝茶', img: '' }
+        { type: 'choice', context: '你想確認對方是不是陳小姐。(You want to confirm if she is Miss Chen.)', q: '請問你是陳小姐____？<br><span class="pinyin">(Qǐngwèn nǐ shì Chén xiǎojiě ____?)</span>', options: ['的 (de)', '嗎 (ma)', '呢 (ne)', '不 (bù)'], ans: 1, cite: '第一課 語法：嗎 ma', explain: '嗎：放在句子最後面，用來表示這是一個問句。', img: '' },
+        { type: 'choice', context: '你不喝咖啡，想告訴朋友。(You don\'t drink coffee, tell your friend.)', q: '謝謝，我____喝咖啡。<br><span class="pinyin">(Xièxie, wǒ ____ hē kāfēi.)</span>', options: ['很 (hěn)', '是 (shì)', '什麼 (shénme)', '不 (bù)'], ans: 3, cite: '第一課 語法：不 bù', explain: '不：表示否定，代表「沒有」或「拒絕」做這件事。', img: '' },
+        { type: 'choice', context: '你想問朋友想喝什麼。(You ask your friend what they want to drink.)', q: '你____喝烏龍茶？<br><span class="pinyin">(Nǐ ____ hē wūlóngchá?)</span>', options: ['要不要 (yào bú yào)', '是不是 (shì bú shì)', '好不好 (hǎo bù hǎo)', '來不來 (lái bù lái)'], ans: 0, cite: '第一課 語法：A-not-A (要不要)', explain: 'A不A：這是一種問問題的方法，提供對方「要」或「不要」兩種選擇。', img: '' },
+        { type: 'choice', context: '朋友請你喝臺灣的茶，你覺得味道不錯。(The tea tastes very good.)', q: '這個烏龍茶____好喝。<br><span class="pinyin">(Zhège wūlóngchá ____ hǎohē.)</span>', options: ['不 (bù)', '嗎 (ma)', '很 (hěn)', '呢 (ne)'], ans: 2, cite: '第一課 語法：很 hěn', explain: '很：程度副詞，放在形容詞前面，表示程度高。', img: '' },
+        { type: 'sort', context: '在機場，你看到新朋友，上前歡迎她。(At the airport, you welcome your new friend.)', q: '請重組句子：(Please rearrange the words)', words: ['歡迎<br>(huānyíng)', '你<br>(nǐ)', '來<br>(lái)', '臺灣<br>(Táiwān)'], ans: '歡迎<br>(huānyíng)你<br>(nǐ)來<br>(lái)臺灣<br>(Táiwān)', cite: '第一課 生詞：歡迎來臺灣', explain: '歡迎：表示非常高興地迎接客人來到這個地方。', img: '' },
+        { type: 'choice', context: '你想問這位新朋友來自哪裡。(You want to ask where this friend is from.)', q: '對不起，請問你是____國人？<br><span class="pinyin">(Duìbùqǐ, qǐngwèn nǐ shì ____ guó rén?)</span>', options: ['哪 (nǎ)', '什麼 (shénme)', '呢 (ne)', '嗎 (ma)'], ans: 0, cite: '第一課 生詞：哪國人', explain: '哪：疑問詞，用來詢問屬於眾多事物中的哪一個特定對象。', img: '' },
+        { type: 'choice', context: '你向別人介紹自己的名字。(You introduce yourself.)', q: '你好，我____王，叫開文。<br><span class="pinyin">(Nǐ hǎo, wǒ ____ Wáng, jiào Kāiwén.)</span>', options: ['是 (shì)', '姓 (xìng)', '叫 (jiào)', '來 (lái)'], ans: 1, cite: '第一課 生詞：姓 xìng', explain: '姓：代表家族的字號，在中文裡「姓」會放在名字的最前面。', img: '' },
+        { type: 'choice', context: '你是美國人，想問對方是不是也一樣。(You are American, you ask about them.)', q: '我是美國人，你____？<br><span class="pinyin">(Wǒ shì Měiguó rén, nǐ ____?)</span>', options: ['什麼 (shénme)', '哪 (nǎ)', '嗎 (ma)', '呢 (ne)'], ans: 3, cite: '第一課 語法：呢 ne', explain: '呢：放在句子結尾，用來將剛剛提過的問題反問對方。', img: '' },
+        { type: 'choice', context: '朋友跟你說謝謝，你應該說什麼？(A friend says "Thank you", you reply:)', q: '____。<br><span class="pinyin">(____.)</span>', options: ['不客氣 (búkèqi)', '對不起 (duìbùqǐ)', '請問 (qǐngwèn)', '好喝 (hǎohē)'], ans: 0, cite: '第一課 生詞：不客氣', explain: '不客氣：這是當別人對你說「謝謝」時，最標準禮貌的回答。', img: '' },
+        { type: 'sort', context: '有人問你喜歡喝什麼，你回答：(Someone asks what you like to drink, you answer:)', q: '請重組句子：(Please rearrange the words)', words: ['喜歡<br>(xǐhuān)', '我<br>(wǒ)', '喝<br>(hē)', '茶<br>(chá)'], ans: '我<br>(wǒ)喜歡<br>(xǐhuān)喝<br>(hē)茶<br>(chá)', cite: '第一課 生詞：喜歡喝茶', explain: '喜歡：表示對某人或某事物感到滿意、有好感。', img: '' }
     ];
 
-    // --- 2. 中級資料庫 (Intermediate) ---
+    // --- 2. 中級 (Intermediate) ---
+    // 中級要求：只有「情境(context)」有拼音，其他純漢字。
     let defaultIntermediate = [
-        { type: 'choice', context: '期中考快到了，你看到同學小明連假日都不休息。', q: '他每天都在圖書館讀書，非常____。', options: ['原來', '用功', '反對', '嚴'], ans: 1, cite: '頁面 2：生詞', img: '' },
-        { type: 'choice', context: '你跟朋友約好去夜唱，但家人覺得半夜出門很不安全。', q: '爸爸____我晚上太晚回家。', options: ['原來', '反對', '用功', '累'], ans: 1, cite: '頁面 16：練習', img: '' },
-        { type: 'choice', context: '剛剛出大太陽，突然又下起大雨了。', q: '台北的天氣真奇怪，說下雨____下雨。', options: ['都', '就', '也', '還'], ans: 1, cite: '頁面 6：語法', img: '' },
-        { type: 'sort', context: '你的朋友是個愛喝手搖杯的人，一看到飲料店就控制不住。', q: '請重組句子：', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '頁面 6：語法', img: '' },
-        { type: 'choice', context: '博物館有規定，所有的參觀者，包含小孩和老人，都需要購票進場。', q: '參觀這個博物館，不管____，都要買票。', options: ['誰想去', '什麼人', '哪裡好玩', '想不想買'], ans: 1, cite: '頁面 14：語法練習', img: '' },
-        { type: 'choice', context: '老師完全不先通知，一進教室就發考卷。', q: '李老師很嚴，常常說考試____考試。', options: ['都', '就', '也', '又'], ans: 1, cite: '頁面 9：語法練習', img: '' },
-        { type: 'choice', context: '你跟新朋友介紹你以前住的地方。', q: '我原來在____工作，現在搬來台北了。', options: ['美國', '照相', '用功', '不管'], ans: 0, cite: '頁面 4：生詞', img: '' },
-        { type: 'choice', context: '冬天很冷，你想吃熱熱的東西，不想等別人同意。', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...', '雖然...但是...'], ans: 0, cite: '頁面 8：語法練習', img: '' },
-        { type: 'sort', context: '小美對學中文非常有熱忱，每天下班不管身體狀況如何都堅持上課。', q: '請重組句子：', words: ['不管', '累不累', '她', '都會來', '上課'], ans: '不管累不累她都會來上課', cite: '頁面 15：語法練習', img: '' },
-        { type: 'choice', context: '你跟朋友約好去海邊玩，即使下雨也不改變計畫。', q: '不管天氣____，我都要去海邊。', options: ['好不好', '怎麼樣', '好還是壞', '以上皆可'], ans: 3, cite: '頁面 12：語法', img: '' }
+        { type: 'choice', context: '期中考快到了，你看到同學小明連假日都不休息。<br><span class="pinyin">(Qízhōngkǎo kuài dàole, nǐ kàndào tóngxué Xiǎomíng lián jiàrì dōu bù xiūxí.)</span>', q: '他每天都在圖書館讀書，非常____。', options: ['原來', '用功', '反對', '嚴'], ans: 1, cite: '頁面 2：生詞', explain: '用功：意思是花很多時間與精力在讀書或學習上。', img: '' },
+        { type: 'choice', context: '你跟朋友約好去夜唱，但家人覺得半夜出門很不安全。<br><span class="pinyin">(Nǐ gēn péngyǒu yuē hǎo qù yèchàng, dàn jiārén juéde bànyè chūmén hěn bù ānquán.)</span>', q: '爸爸____我晚上太晚回家。', options: ['原來', '反對', '用功', '累'], ans: 1, cite: '頁面 16：練習', explain: '反對：不贊成某件事情，甚至會出面阻止。', img: '' },
+        { type: 'choice', context: '剛剛出大太陽，突然又下起大雨了。<br><span class="pinyin">(Gānggāng chū dà tàiyáng, túrán yòu xià qǐ dà yǔ le.)</span>', q: '台北的天氣真奇怪，說下雨____下雨。', options: ['都', '就', '也', '還'], ans: 1, cite: '頁面 6：語法', explain: '說...就...：表示事情發生得非常突然，一提到馬上就發生了。', img: '' },
+        { type: 'sort', context: '你的朋友是個愛喝手搖杯的人，一看到飲料店就控制不住。<br><span class="pinyin">(Nǐ de péngyǒu shì ge ài hē shǒuyáobēi de rén...)</span>', q: '請重組句子：', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '頁面 6：語法', explain: '說買就買：表示沒有經過太多考慮，馬上就掏錢購買的行為。', img: '' },
+        { type: 'choice', context: '博物館有規定，所有的參觀者都需要購票進場。<br><span class="pinyin">(Bówùguǎn yǒu guīdìng, suǒyǒu de cānguānzhě dōu xūyào gòupiào jìnchǎng.)</span>', q: '參觀這個博物館，不管____，都要買票。', options: ['誰想去', '什麼人', '哪裡好玩', '想不想買'], ans: 1, cite: '頁面 14：語法練習', explain: '不管...都...：無論前面的條件或身分是什麼，後面的結果皆相同。', img: '' },
+        { type: 'choice', context: '老師完全不先通知，一進教室就發考卷。<br><span class="pinyin">(Lǎoshī wánquán bù xiān tōngzhī, yí jìn jiàoshì jiù fā kǎojuàn.)</span>', q: '李老師很嚴，常常說考試____考試。', options: ['都', '就', '也', '又'], ans: 1, cite: '頁面 9：語法練習', explain: '說考試就考試：形容老師非常嚴格，考試不給學生準備的緩衝時間。', img: '' },
+        { type: 'choice', context: '你跟新朋友介紹你以前住的地方。<br><span class="pinyin">(Nǐ gēn xīn péngyǒu jièshào nǐ yǐqián zhù de dìfāng.)</span>', q: '我原來在____工作，現在搬來台北了。', options: ['美國', '照相', '用功', '不管'], ans: 0, cite: '頁面 4：生詞', explain: '原來：在這裡表示「以前、起初」的狀態，後來發生了改變。', img: '' },
+        { type: 'choice', context: '冬天很冷，你想吃熱熱的東西，不想等別人同意。<br><span class="pinyin">(Dōngtiān hěn lěng, nǐ xiǎng chī rèrè de dōngxī...)</span>', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...', '雖然...但是...'], ans: 0, cite: '頁面 8：語法練習', explain: '說吃火鍋就吃火鍋：想到要吃火鍋，立刻就決定去吃，行動力極高。', img: '' },
+        { type: 'sort', context: '小美對學中文非常有熱忱，堅持上課。<br><span class="pinyin">(Xiǎoměi duì xué zhōngwén fēicháng yǒu rèchén, jiānchí shàngkè.)</span>', q: '請重組句子：', words: ['不管', '累不累', '她', '都會來', '上課'], ans: '不管累不累她都會來上課', cite: '頁面 15：語法練習', explain: '不管累不累：這是一個包含正反面疑問的條件（累或不累），但都不影響她上課的決心。', img: '' },
+        { type: 'choice', context: '你跟朋友約好去海邊玩，即使下雨也不改變計畫。<br><span class="pinyin">(Nǐ gēn péngyǒu yuē hǎo qù hǎibiān wán, jíshǐ xiàyǔ yě bù gǎibiàn jìhuà.)</span>', q: '不管天氣____，我都要去海邊。', options: ['好不好', '怎麼樣', '好還是壞', '以上皆可'], ans: 3, cite: '頁面 12：語法', explain: '不管後面常接「疑問詞」或「正反問法」，因此以上選項皆符合語法。', img: '' }
     ];
 
-    // --- 3. 高級資料庫 (Advanced) ---
+    // --- 3. 高級 (Advanced) ---
+    // 加入了圖片中的新題型 (為A而A, A為B負責)
     let defaultAdvanced = [
-        { type: 'choice', context: '討論「自由廣場」的命名涵義與人民權益。', q: '自由廣場，____，就是一個讓人民自由表達意見的地方。', options: ['顧名思義', '胡作非為', '無理取鬧', '一來一往'], ans: 0, cite: '高級 第一課：顧名思義', img: '' },
-        { type: 'choice', context: '探討法律的公平性與司法判決的適用範圍。', q: '法律之前，人人平等，____。', options: ['即使是總統也不例外', '也就是總統不例外', '即使是總統就例外', '即使總統才例外'], ans: 0, cite: '高級 第一課：即使...也...', img: '' },
-        { type: 'sort', context: '描述網路不實謠言傳播的特性與危險性。', q: '請重組句子：', words: ['一旦', '網路謠言', '散播出去', '就很難停止'], ans: '一旦網路謠言散播出去就很難停止', cite: '高級 第一課：一旦...就...', img: '' },
-        { type: 'choice', context: '探討媒體在監督政府施政上扮演的角色。', q: '政府的決策如果缺乏人民的監督，官員就很可能____。', options: ['越辯越明', '胡作非為', '顧名思義', '無理取鬧'], ans: 1, cite: '高級 第一課：胡作非為', img: '' },
-        { type: 'choice', context: '批評某些政客在議會上的負面表現與立場盲點。', q: '他們如果只是____，根本無法好好溝通，這對政策毫無幫助。', options: ['為反對而反對', '因為反對而反對', '為了反對就反對', '為反對才反對'], ans: 0, cite: '高級 第一課：為 A 而 A', img: '' },
-        { type: 'choice', context: '面對網路酸民的霸凌與仇恨言論時的應對態度。', q: '面對酸民的____，他選擇冷靜講理，相信真理終究會越辯越明。', options: ['無理取鬧', '顧名思義', '一來一往', '胡作非為'], ans: 0, cite: '高級 第一課：無理取鬧、越辯越明', img: '' },
-        { type: 'sort', context: '探討言論自由與法律規範的真實關係。', q: '請重組句子：', words: ['有些人以為', '言論過於自由', '事實上', '法律早有規範'], ans: '有些人以為言論過於自由事實上法律早有規範', cite: '高級 第一課：事實上', img: '' },
-        { type: 'choice', context: '探討政治人物決策的責任歸屬與價值觀。', q: '污染、教育等問題都脫離不了政治，所以政府得____。', options: ['為自己的政策負責', '負責自己的政策', '為政策自己負責', '自己為政策的負責'], ans: 0, cite: '高級 第一課：A 為 B 負責', img: '' },
-        { type: 'choice', context: '威權政府應對民眾抗議與洗腦的常見手段。', q: '因為這件事會讓人民抗議，所以政府打算先____，不讓媒體報導。', options: ['封住媒體的嘴', '蒙住媒體的眼', '抓住媒體的手', '擋住媒體的路'], ans: 0, cite: '高級 第一課：封住...的嘴', img: '' },
-        { type: 'choice', context: '描述一場激烈但理性的司法辯論會。', q: '在這場辯論中，雙方____地互相指正，最後終於達成了共識。', options: ['一來一往', '顧名思義', '胡作非為', '無理取鬧'], ans: 0, cite: '高級 第一課：一來一往', img: '' }
+        { type: 'choice', context: '討論「自由廣場」的命名涵義與人民權益。', q: '自由廣場，____，就是一個讓人民自由表達意見的地方。', options: ['顧名思義', '胡作非為', '無理取鬧', '一來一往'], ans: 0, cite: '高級 第一課：顧名思義', explain: '顧名思義：看到事物或地方的名稱，就能聯想、明白它的含義。', img: '' },
+        { type: 'choice', context: '探討法律的公平性與司法判決的適用範圍。', q: '法律之前，人人平等，____。', options: ['即使是總統也不例外', '也就是總統不例外', '即使是總統就例外', '即使總統才例外'], ans: 0, cite: '高級 第一課：即使...也...', explain: '即使...也...：表示一種極端的假設讓步，強調在任何情況下規則都不會改變。', img: '' },
+        { type: 'sort', context: '描述網路不實謠言傳播的特性與危險性。', q: '請重組句子：', words: ['一旦', '網路謠言', '散播出去', '就很難停止'], ans: '一旦網路謠言散播出去就很難停止', cite: '高級 第一課：一旦...就...', explain: '一旦...就...：萬一發生了前面的情況，就會無可避免地導致後面的結果。', img: '' },
+        { type: 'choice', context: '探討媒體在監督政府施政上扮演的角色。', q: '政府的決策如果缺乏人民的監督，官員就很可能____。', options: ['越辯越明', '胡作非為', '顧名思義', '無理取鬧'], ans: 1, cite: '高級 第一課：胡作非為', explain: '胡作非為：不顧法律和道德規範，隨心所欲地做壞事。', img: '' },
+        { type: 'choice', context: '批評某些政客在議會上的負面表現與立場盲點。', q: '他們如果只是____，根本無法好好溝通，這對政策毫無幫助。', options: ['為反對而反對', '因為反對而反對', '為了反對就反對', '為反對才反對'], ans: 0, cite: '高級 第一課：為 A 而 A', explain: '為反對而反對：並非因為政策不好，而純粹把「反對」當作目的來執行。', img: '' },
+        { type: 'choice', context: '面對網路酸民的霸凌與仇恨言論時的應對態度。', q: '面對酸民的____，他選擇冷靜講理，相信真理終究會越辯越明。', options: ['無理取鬧', '顧名思義', '一來一往', '胡作非為'], ans: 0, cite: '高級 第一課：無理取鬧、越辯越明', explain: '無理取鬧：毫無道理卻故意吵鬧、找麻煩。越辯越明：道理經過辯論會越來越清楚。', img: '' },
+        { type: 'sort', context: '探討言論自由與法律規範的真實關係。', q: '請重組句子：', words: ['有些人以為', '言論過於自由', '事實上', '法律早有規範'], ans: '有些人以為言論過於自由事實上法律早有規範', cite: '高級 第一課：事實上', explain: '事實上：用來澄清、說明真實的客觀情況，常與前文提到的錯誤認知相反。', img: '' },
+        { type: 'choice', context: '威權政府應對民眾抗議與洗腦的常見手段。', q: '因為這件事會讓人民抗議，所以政府打算先____，不讓媒體報導。', options: ['封住媒體的嘴', '蒙住媒體的眼', '抓住媒體的手', '擋住媒體的路'], ans: 0, cite: '高級 第一課：封住...的嘴', explain: '封住...的嘴：利用權力或威脅的手段，不讓他人發表意見或報導事實。', img: '' },
+        // 新增題型 1: 為A而A (根據圖片)
+        { type: 'choice', context: '教育的真正目的不在於應付測驗。', q: '考試只是要讓師生知道還有哪裡需要加強，別____，請為了學習而學習。', options: ['為考試而學習', '因為考試才學習', '為了考試去學習', '為考試做學習'], ans: 0, cite: '高級 第一課：為 A 而 A', explain: '為A而A：為了某個特定的目的(A)而去做某個行為(A)。這裡指「不要把學習當成只是應付考試的手段」。', img: '' },
+        // 新增題型 2: A為B負責 (根據圖片)
+        { type: 'choice', context: '成年人必須對自己的行為承擔後果。', q: '你不再是小孩了，你得____。', options: ['為自己說過的話、做過的事負責', '負責自己說過的話', '為自己說負責', '對自己負責做過的事'], ans: 0, cite: '高級 第一課：A 為 B 負責', explain: 'A為B負責：某個事件或結果(B)是A造成的，必須由A來承擔責任。', img: '' }
     ];
 
-    // 從 LocalStorage 載入資料
-    let qBeginner = JSON.parse(localStorage.getItem('huayuDataBeginner')) || defaultBeginner;
-    let qIntermediate = JSON.parse(localStorage.getItem('huayuDataIntermediate')) || defaultIntermediate;
-    let qAdvanced = JSON.parse(localStorage.getItem('huayuDataAdvanced')) || defaultAdvanced;
+    // ================== 系統核心變數 ==================
+    let config = JSON.parse(localStorage.getItem('huayuConfigV2')) || { banner: 'https://study.mdnkids.com/CH/images/main.jpg', theme: 'classic', displayMode: 'both' };
+    let qBeginner = JSON.parse(localStorage.getItem('huayuDataBeginnerV2')) || defaultBeginner;
+    let qIntermediate = JSON.parse(localStorage.getItem('huayuDataIntermediateV2')) || defaultIntermediate;
+    let qAdvanced = JSON.parse(localStorage.getItem('huayuDataAdvancedV2')) || defaultAdvanced;
 
-    // 遊戲狀態變數
     let currentData = []; 
     let currentQ = 0, score = 0, combo = 0, attempts = 0, maxAttempts = 2;
     let userSort = [], playerName = "", playerLevel = "", displayLevelText = "";
     
+    let timerId;
+    let timeLeft = 15;
+    
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
+    // ================== 初始化與設定載入 ==================
+    window.onload = function() {
+        applySettings();
+    };
+
+    function applySettings() {
+        // 套用橫幅
+        if(config.banner) document.getElementById('top-banner').style.backgroundImage = `url('${config.banner}')`;
+        // 套用主題
+        document.documentElement.setAttribute('data-theme', config.theme);
+        // 設定選單同步
+        document.getElementById('setting-banner').value = config.banner || '';
+        document.getElementById('setting-theme').value = config.theme;
+        document.getElementById('setting-display').value = config.displayMode;
+    }
+
+    // ================== 聲音與 TTS ==================
     function playSound(isCorrect) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -189,11 +306,11 @@
         }
     }
 
-    // ⭐ 強力過濾器：將 HTML 標籤、所有括號內的內容（拼音/英文）、以及獨立英文字母全部濾除
+    // ⭐ 語音淨化：濾除 HTML、括號(拼音/英文)、英文字母
     function cleanTextForSpeech(text) {
-        let cleanText = text.replace(/<[^>]*>?/gm, ''); // 移除 HTML 標籤
-        cleanText = cleanText.replace(/\([^)]*\)/g, ''); // 移除所有括號()及其內部內容
-        cleanText = cleanText.replace(/[a-zA-Z]/g, ''); // 移除所有英文字母
+        let cleanText = text.replace(/<[^>]*>?/gm, ''); 
+        cleanText = cleanText.replace(/\([^)]*\)/g, ''); 
+        cleanText = cleanText.replace(/[a-zA-Z]/g, ''); 
         return cleanText;
     }
 
@@ -204,13 +321,13 @@
     
     function speak(txt) { 
         window.speechSynthesis.cancel(); 
-        const cleanTxt = cleanTextForSpeech(txt); // 確保朗讀的字串是乾淨的純中文
+        const cleanTxt = cleanTextForSpeech(txt); 
         const m = new SpeechSynthesisUtterance(cleanTxt); 
         m.lang = 'zh-TW'; 
         window.speechSynthesis.speak(m); 
     }
 
-    // 啟動遊戲：根據選擇的層級載入不同的題庫
+    // ================== 遊戲主邏輯 ==================
     function startGame() {
         const nameInput = document.getElementById('player-name').value;
         if(!nameInput) return alert('請輸入名字喔！(Please enter your name)');
@@ -218,28 +335,85 @@
         playerName = nameInput;
         playerLevel = document.getElementById('player-level').value;
         
-        // 判斷題庫與標題
         if (playerLevel === "beginner") {
-            currentData = qBeginner;
-            displayLevelText = "初級學習者";
+            currentData = qBeginner; displayLevelText = "初級學習者";
             document.getElementById('main-game-title').innerText = "第一課：歡迎你來臺灣！";
         } else if (playerLevel === "intermediate") {
-            currentData = qIntermediate;
-            displayLevelText = "中級學習者";
+            currentData = qIntermediate; displayLevelText = "中級學習者";
             document.getElementById('main-game-title').innerText = "第一課：開學了！情境挑戰";
         } else if (playerLevel === "advanced") {
-            currentData = qAdvanced;
-            displayLevelText = "高級學習者";
+            currentData = qAdvanced; displayLevelText = "高級學習者";
             document.getElementById('main-game-title').innerText = "第一課：言論自由的界線";
         }
         
-        document.getElementById('login-screen').classList.add('hidden');
+        // 依照全局設定決定是否顯示 Info/Score
         document.getElementById('player-info').innerText = `${displayLevelText}：${playerName}`;
-        document.getElementById('player-info').classList.remove('hidden');
-        document.getElementById('score-ui').classList.remove('hidden');
+        document.getElementById('top-bar').classList.remove('hidden');
+        
+        if(config.displayMode === 'none') {
+            document.getElementById('player-info').style.display = 'none';
+            document.getElementById('score-ui').style.display = 'none';
+        } else if (config.displayMode === 'nameOnly') {
+            document.getElementById('player-info').style.display = 'block';
+            document.getElementById('score-ui').style.display = 'none';
+        } else if (config.displayMode === 'scoreOnly') {
+            document.getElementById('player-info').style.display = 'none';
+            document.getElementById('score-ui').style.display = 'block';
+        } else {
+            document.getElementById('player-info').style.display = 'block';
+            document.getElementById('score-ui').style.display = 'block';
+        }
+        
+        document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('game-screen').classList.remove('hidden');
         
+        currentQ = 0; score = 0; combo = 0;
+        updateScoreUI();
         showQuestion();
+    }
+
+    function quitGame() {
+        if(confirm("確定要放棄目前的進度，返回首頁嗎？")) {
+            clearInterval(timerId);
+            window.speechSynthesis.cancel();
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('top-bar').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+    }
+
+    function startTimer() {
+        clearInterval(timerId);
+        timeLeft = 15;
+        document.getElementById('timer-display').innerText = `⏳ ${timeLeft}`;
+        document.getElementById('timer-display').style.color = "var(--edu-accent)";
+        
+        timerId = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer-display').innerText = `⏳ ${timeLeft}`;
+            if(timeLeft <= 5) document.getElementById('timer-display').style.color = "red";
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerId);
+                handleTimeout();
+            }
+        }, 1000);
+    }
+
+    function handleTimeout() {
+        attempts++;
+        const btns = document.querySelectorAll('#interactive-area .btn');
+        btns.forEach(b => b.disabled = true); // 鎖定按鈕避免時間到還點擊
+        
+        if(attempts >= maxAttempts) {
+            const q = currentData[currentQ];
+            let ansText = q.type === 'choice' ? q.options[q.ans].replace(/<[^>]*>?/gm, '') : q.ans.replace(/<br>/g, " ");
+            handleResult(false, `時間到！(Time's up!)<br>正確答案是：${ansText.replace(/\([^)]*\)/g, '')}`);
+        } else {
+            showHint(`時間到！剩 ${maxAttempts - attempts} 次機會！(Try again!)`);
+            startTimer(); // 重新給予15秒
+            btns.forEach(b => b.disabled = false); // 解鎖
+        }
     }
 
     function showQuestion() {
@@ -247,11 +421,9 @@
         const interactive = document.getElementById('interactive-area');
         const fb = document.getElementById('feedback');
         
-        // 依據題型調整機會次數
         maxAttempts = (q.type === 'sort') ? 4 : 2;
         attempts = 0; userSort = [];
         
-        // 載入情境與圖片
         document.getElementById('context-box').innerHTML = `💡 情境：${q.context}`;
         const imgEl = document.getElementById('q-img');
         if(q.img && q.img.trim() !== "") { imgEl.src = q.img; imgEl.classList.remove('hidden'); } 
@@ -266,12 +438,9 @@
             const grid = document.createElement('div'); grid.className = 'options-grid';
             q.options.forEach((opt, idx) => {
                 const b = document.createElement('button'); b.className = 'btn'; 
-                // 處理選項內的拼音樣式 (若有括號才處理)
-                if(opt.includes('(')) {
-                    b.innerHTML = opt.replace(/\(([^)]+)\)/, '<br><span class="pinyin">($1)</span>');
-                } else {
-                    b.innerHTML = opt;
-                }
+                if(opt.includes('(')) b.innerHTML = opt.replace(/\(([^)]+)\)/, '<br><span class="pinyin">($1)</span>');
+                else b.innerHTML = opt;
+                
                 b.onclick = () => { checkAns(idx, b); speak(opt); }; 
                 grid.appendChild(b);
             });
@@ -288,56 +457,69 @@
             const cBtn = document.createElement('button'); cBtn.className = 'btn btn-primary'; cBtn.innerText = '✅ 檢查句子 (Check)';
             cBtn.onclick = checkSort; interactive.appendChild(cBtn);
         }
+        
         replayQ();
+        startTimer(); // 開始15秒倒數
     }
 
     function updateSortDisplay() {
         const zone = document.getElementById('sort-zone'); zone.innerHTML = '';
         userSort.forEach((w, i) => {
             const t = document.createElement('div'); t.className = 'word-tile';
-            t.style.background = 'var(--edu-blue)'; t.style.color = 'white'; t.innerHTML = w;
+            t.style.background = 'var(--edu-primary)'; t.style.color = 'white'; t.innerHTML = w;
             t.onclick = () => { userSort.splice(i,1); updateSortDisplay(); }; zone.appendChild(t);
         });
     }
 
     function checkAns(idx, btn) {
+        clearInterval(timerId); // 停止計時
         const q = currentData[currentQ];
         if(idx === q.ans) { handleResult(true); }
         else {
             attempts++; btn.disabled = true;
             if(attempts >= maxAttempts) handleResult(false, `答案是 (Answer is)：<br>${q.options[q.ans].replace(/\([^)]*\)/g, '')}`);
-            else showHint(`答錯囉，剩 ${maxAttempts - attempts} 次機會！(Try again!)`);
+            else { showHint(`答錯囉，剩 ${maxAttempts - attempts} 次機會！(Try again!)`); startTimer(); }
         }
     }
 
     function checkSort() {
+        clearInterval(timerId); // 停止計時
         const q = currentData[currentQ];
         if(userSort.join('') === q.ans) handleResult(true);
         else {
             attempts++;
             if(attempts >= maxAttempts) handleResult(false, `正確句子是 (Correct order is)：<br><br>${q.ans.replace(/<br>/g, " ")}`);
-            else showHint(`句子不對喔，你還有 ${maxAttempts - attempts} 次機會修改！(Try again!)`);
+            else { showHint(`句子不對喔，你還有 ${maxAttempts - attempts} 次機會修改！(Try again!)`); startTimer(); }
         }
     }
 
     function handleResult(isCorrect, msg = "") {
+        clearInterval(timerId); // 確保停止計時
         const fb = document.getElementById('feedback');
+        const q = currentData[currentQ];
         fb.classList.remove('hidden');
+        
+        let explanationHTML = q.explain ? `<div class="explanation">💡 解析：${q.explain}</div>` : '';
+        
         if(isCorrect) {
             combo++; const addScore = combo * 100; score += addScore;
-            fb.innerHTML = `太棒了 (Great)！連續答對加 ${addScore} 分！🔥<br><small>📚 出處：${currentData[currentQ].cite}</small>`;
+            fb.innerHTML = `太棒了 (Great)！連續答對加 ${addScore} 分！🔥<br><small>📚 出處：${q.cite}</small>${explanationHTML}`;
             fb.className = 'correct'; playSound(true);
         } else {
             combo = 0;
-            fb.innerHTML = `機會用完啦 (Out of chances)。❌<br>${msg}<br><small>📚 出處：${currentData[currentQ].cite}</small>`;
+            fb.innerHTML = `機會用完啦 (Out of chances)。❌<br>${msg}<br><small>📚 出處：${q.cite}</small>${explanationHTML}`;
             fb.className = 'wrong'; playSound(false);
         }
-        document.getElementById('total-score').innerText = score;
-        document.getElementById('combo-display').innerText = `Combo x${combo}`;
+        updateScoreUI();
         document.getElementById('attempt-hint').innerText = "本題結束 (Question finished)";
         document.getElementById('next-btn').classList.remove('hidden');
         const btns = document.querySelectorAll('#interactive-area .btn'); 
         btns.forEach(b => b.disabled = true);
+    }
+    
+    function updateScoreUI() {
+        document.getElementById('total-score').innerText = score;
+        document.getElementById('combo-display').innerText = `Combo x${combo}`;
     }
 
     function showHint(txt) {
@@ -351,30 +533,54 @@
         if(currentQ < currentData.length) showQuestion();
         else {
             document.getElementById('game-screen').classList.add('hidden');
-            document.getElementById('score-ui').classList.add('hidden');
-            document.getElementById('player-info').classList.add('hidden');
+            document.getElementById('top-bar').classList.add('hidden');
             document.getElementById('end-screen').classList.remove('hidden');
             document.getElementById('end-player').innerText = `${displayLevelText}：${playerName}`;
             document.getElementById('final-score').innerText = `總得分：${score}`;
         }
     }
 
-    // --- 後台管理系統 ---
-    function openAdmin() {
-        const user = prompt("請輸入管理員帳號：");
-        const pass = prompt("請輸入密碼：");
+    // ================== 後台管理系統 ==================
+    function showAdminLoginModal() {
+        document.getElementById('admin-login-modal').classList.remove('hidden');
+    }
+    function closeAdminLoginModal() {
+        document.getElementById('admin-login-modal').classList.add('hidden');
+    }
+
+    function verifyAdmin() {
+        const user = document.getElementById('admin-usr').value;
+        const pass = document.getElementById('admin-pwd').value;
         if(user === "oscar" && pass === "12345678") {
+            closeAdminLoginModal();
+            clearInterval(timerId); // 進入後台停止遊戲計時
+            window.speechSynthesis.cancel();
+            
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('top-bar').classList.add('hidden');
+            
             document.getElementById('admin-screen').classList.remove('hidden');
-            renderAdminList(); 
+            switchAdminTab('global'); // 預設打開全局設定
         } else {
             alert("帳號或密碼錯誤！");
         }
     }
 
     function closeAdmin() { location.reload(); }
+
+    function switchAdminTab(tabName) {
+        document.getElementById('tab-global').classList.remove('active');
+        document.getElementById('tab-qbank').classList.remove('active');
+        document.getElementById('admin-global-sec').classList.add('hidden');
+        document.getElementById('admin-qbank-sec').classList.add('hidden');
+        
+        document.getElementById(`tab-${tabName}`).classList.add('active');
+        document.getElementById(`admin-${tabName}-sec`).classList.remove('hidden');
+        
+        if(tabName === 'qbank') renderAdminList();
+    }
 
     function renderAdminList() {
         const list = document.getElementById('admin-list');
@@ -398,20 +604,29 @@
         });
     }
 
-    function saveAdminData() {
+    function saveAdminSettings() {
+        // 儲存全局設定
+        config.banner = document.getElementById('setting-banner').value.trim();
+        config.theme = document.getElementById('setting-theme').value;
+        config.displayMode = document.getElementById('setting-display').value;
+        localStorage.setItem('huayuConfigV2', JSON.stringify(config));
+        
+        // 儲存當前正在編輯的題庫圖片
         const selectedLevel = document.getElementById('admin-level-select').value;
         let editData, storageKey;
 
-        if (selectedLevel === 'beginner') { editData = qBeginner; storageKey = 'huayuDataBeginner'; }
-        else if (selectedLevel === 'intermediate') { editData = qIntermediate; storageKey = 'huayuDataIntermediate'; }
-        else { editData = qAdvanced; storageKey = 'huayuDataAdvanced'; }
+        if (selectedLevel === 'beginner') { editData = qBeginner; storageKey = 'huayuDataBeginnerV2'; }
+        else if (selectedLevel === 'intermediate') { editData = qIntermediate; storageKey = 'huayuDataIntermediateV2'; }
+        else { editData = qAdvanced; storageKey = 'huayuDataAdvancedV2'; }
 
         editData.forEach((q, idx) => {
-            q.img = document.getElementById(`img-input-${idx}`).value.trim();
+            const el = document.getElementById(`img-input-${idx}`);
+            if(el) q.img = el.value.trim();
         });
-        
         localStorage.setItem(storageKey, JSON.stringify(editData));
-        alert("設定已儲存！(Saved successfully)");
+        
+        applySettings(); // 立即套用外觀
+        alert("設定已成功儲存！(Saved successfully)");
     }
 </script>
 </body>
