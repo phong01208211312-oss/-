@@ -3,87 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>簡單學華語 Let's Learn Mandarin</title>
+    <title>簡單學華語 Learn Taiwanese Mandarin</title>
     <style>
-        /* 預設主題變數 (應用於測驗畫面) */
+        /* 預設主題與變數 */
         :root { 
             --edu-primary: #4A90E2; --edu-secondary: #FFD200; --edu-accent: #FF5A5F; --edu-success: #20b2aa; 
             --text-dark: #333; --box-bg: #F0F7FF;
         }
+        [data-theme="wood"] { --edu-primary: #8D6E63; --edu-secondary: #FFE082; --edu-accent: #E53935; --edu-success: #66BB6A; --box-bg: #EFEBE0; }
+        [data-theme="nature"] { --edu-primary: #26A69A; --edu-secondary: #D4E157; --edu-accent: #FF7043; --edu-success: #4CAF50; --box-bg: #E0F2F1; }
 
-        /* 全域深色背景 (首頁風格) */
+        /* 全頁背景設定 */
         body { 
             font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; 
-            background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%); 
-            color: white; margin: 0; padding: 20px 10px; display: flex; justify-content: center; min-height: 100vh; align-items: flex-start; 
+            margin: 0; padding: 0; display: flex; justify-content: center; min-height: 100vh; align-items: flex-start;
+            background-color: #1e293b; /* 預設深色底 */
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            transition: background 0.5s;
         }
         
         #app { width: 100%; max-width: 900px; position: relative; min-height: 100vh; display: flex; flex-direction: column; }
         .hidden { display: none !important; }
         
-        /* ---------------- 首頁 (Login Screen) 專屬樣式 ---------------- */
-        #login-screen { text-align: center; margin-top: 5vh; }
-        .emoji-row { font-size: 1.8rem; margin-bottom: 15px; letter-spacing: 5px; }
-        .main-title { font-family: 'Kaiti TC', 'KaiTi', serif; font-size: 3.5rem; color: #F6D365; margin: 0 0 5px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); letter-spacing: 3px; }
-        .sub-title { font-size: 1rem; color: #94a3b8; margin-bottom: 30px; letter-spacing: 1px; }
+        /* ---------------- 首頁 (Login Screen) 沉浸式設計 ---------------- */
+        #login-screen { text-align: center; margin-top: 8vh; padding: 20px; }
+        .emoji-row { font-size: 1.8rem; margin-bottom: 10px; letter-spacing: 5px; }
+        .main-title { font-family: 'Kaiti TC', 'KaiTi', serif; font-size: 3.8rem; color: #F6D365; margin: 0 0 5px 0; text-shadow: 2px 2px 6px rgba(0,0,0,0.6); letter-spacing: 3px; }
+        .sub-title { font-size: 1.1rem; color: #cbd5e1; margin-bottom: 35px; letter-spacing: 1px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
         
+        /* 毛玻璃卡片 */
         .login-card {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-radius: 20px;
             padding: 35px 30px;
-            max-width: 450px;
+            max-width: 480px;
             margin: 0 auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             text-align: left;
         }
         
         .login-card label { color: #e2e8f0; font-size: 0.95rem; font-weight: bold; margin-bottom: 8px; display: block; }
         .login-card input, .login-card select {
-            width: 100%; padding: 12px 15px; margin-bottom: 20px;
+            width: 100%; padding: 14px 15px; margin-bottom: 25px;
             background: rgba(15, 23, 42, 0.6); color: white;
             border: 1px solid #475569; border-radius: 10px;
-            font-size: 1rem; box-sizing: border-box; outline: none; transition: 0.3s;
+            font-size: 1.05rem; box-sizing: border-box; outline: none; transition: 0.3s;
         }
-        .login-card input:focus, .login-card select:focus { border-color: #F6D365; background: rgba(15, 23, 42, 0.8); }
+        .login-card input:focus, .login-card select:focus { border-color: #F6D365; background: rgba(15, 23, 42, 0.9); }
         .login-card input::placeholder { color: #64748b; }
         
-        .btn-start-main { background: linear-gradient(45deg, #FF512F, #DD2476); color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; box-shadow: 0 4px 15px rgba(221, 36, 118, 0.4); }
+        /* 修正按鈕斷行問題：加入 white-space: nowrap */
+        .btn-start-main { white-space: nowrap; flex: 1; background: linear-gradient(45deg, #FF512F, #DD2476); color: white; border: none; padding: 15px 5px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(221, 36, 118, 0.4); }
         .btn-start-main:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(221, 36, 118, 0.6); }
         
-        .btn-start-mini { background: linear-gradient(45deg, #11998e, #38ef7d); color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4); }
+        .btn-start-mini { white-space: nowrap; flex: 1; background: linear-gradient(45deg, #11998e, #38ef7d); color: white; border: none; padding: 15px 5px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4); }
         .btn-start-mini:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(17, 153, 142, 0.6); }
 
-        .lb-toggle-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #cbd5e1; padding: 8px 20px; border-radius: 20px; cursor: pointer; margin-top: 30px; transition: 0.3s; }
-        .lb-toggle-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+        .lb-toggle-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; padding: 8px 20px; border-radius: 20px; cursor: pointer; margin-top: 30px; transition: 0.3s; font-weight: bold;}
+        .lb-toggle-btn:hover { background: rgba(255,255,255,0.15); color: white; }
 
-        /* ---------------- 測驗區 (明亮白底卡片) ---------------- */
+        /* 排行榜深色版面 */
+        .leaderboard-box { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 15px; padding: 20px; margin-top: 20px; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px);}
+        .leaderboard-tabs { display: flex; gap: 5px; margin-bottom: 10px; }
+        .lb-tab-mode { flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1rem; color: #ccc; }
+        .lb-tab-mode.active { background: #F6D365; color: #1e293b; }
+        .lb-tab { flex: 1; padding: 8px; background: rgba(255,255,255,0.05); border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.9rem; color: #aaa; }
+        .lb-tab.active { background: var(--edu-success); color: white; }
+        .lb-list { list-style: none; padding: 0; margin: 0; }
+        .lb-list li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; color: white;}
+        .lb-list li:first-child { font-weight: bold; color: #F6D365; font-size: 1.1rem; }
+
+        /* ---------------- 測驗區/後台區 (明亮白底卡片) ---------------- */
         .white-card {
             background: white; color: var(--text-dark);
-            border-radius: 25px; padding: 25px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-            position: relative; margin-top: 10px;
+            border-radius: 25px; padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            margin: 30px 15px;
         }
-        
+
+        /* 左右分欄 版面佈局 */
         .game-layout { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; }
         .side-panel { flex: 0 0 160px; display: flex; flex-direction: column; gap: 10px; }
         .left-panel { align-items: flex-start; }
         .right-panel { align-items: flex-end; }
         .center-panel { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; }
 
-        .back-btn { background: white; border: 2px solid var(--edu-primary); color: var(--edu-primary); font-weight: bold; padding: 8px 15px; border-radius: 20px; cursor: pointer; transition: 0.2s; }
+        .back-btn { background: white; border: 2px solid var(--edu-primary); color: var(--edu-primary); font-weight: bold; padding: 8px 15px; border-radius: 20px; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .back-btn:hover { background: var(--edu-primary); color: white; }
-        .info-pill { background: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; border: 2px solid var(--edu-primary); color: var(--edu-primary); text-align: center;}
+        .info-pill { background: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; border: 2px solid var(--edu-primary); color: var(--edu-primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;}
         
         .score-pill { border-color: var(--edu-accent); color: var(--edu-primary); }
         .combo-text { color: var(--edu-accent); font-size: 1.1rem; display: block; margin-top: 5px; }
-        .timer-display { font-size: 1.6rem; font-weight: bold; color: var(--edu-accent); background: #FFF0F0; padding: 8px 20px; border-radius: 20px; border: 2px solid var(--edu-accent); }
+        .timer-display { font-size: 1.6rem; font-weight: bold; color: var(--edu-accent); background: #FFF0F0; padding: 8px 20px; border-radius: 20px; border: 2px solid var(--edu-accent); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
+        /* 主測驗區 UI */
         .game-title { color: var(--edu-primary); margin: 0 0 15px 0; font-size: 1.5rem; text-align: center; width: 100%; border-bottom: 2px dashed #eee; padding-bottom: 10px; }
         .context-box { width: 100%; background: #FFF9C4; padding: 12px; border-radius: 10px; border-left: 5px solid var(--edu-secondary); margin-bottom: 15px; font-weight: bold; color: #555; text-align: left; line-height: 1.5; box-sizing: border-box; }
-        .q-image { max-width: 100%; border-radius: 10px; margin-bottom: 15px; max-height: 250px; object-fit: cover; }
+        .q-image { max-width: 100%; border-radius: 10px; margin-bottom: 15px; max-height: 250px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .sentence-display { width: 100%; box-sizing: border-box; font-size: 1.4rem; margin: 0 0 20px 0; padding: 20px; background: var(--box-bg); border-radius: 15px; border-left: 8px solid var(--edu-primary); line-height: 1.6; }
         .pinyin { font-size: 1rem; color: #7f8c8d; display: block; margin-top: 5px; font-weight: normal; }
         .audio-btn { cursor: pointer; color: var(--edu-primary); margin-left: 10px; font-size: 1.2rem; }
@@ -91,10 +113,10 @@
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
         .btn { padding: 12px; border: 2px solid var(--edu-primary); background: white; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; color: var(--edu-primary); font-size: 1.1rem; line-height: 1.4; }
         .btn-primary { background: var(--edu-primary); color: white; width: 100%; margin-top: 10px; }
-        .btn:hover:not(:disabled) { background: var(--edu-primary); color: white; transform: translateY(-2px); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn:hover:not(:disabled) { background: var(--edu-primary); color: white; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
         
-        .word-tile { padding: 10px 15px; background: var(--edu-secondary); border-radius: 8px; cursor: pointer; margin: 5px; display: inline-block; font-weight: bold; color: #333; line-height: 1.4; }
+        .word-tile { padding: 10px 15px; background: var(--edu-secondary); border-radius: 8px; cursor: pointer; margin: 5px; display: inline-block; font-weight: bold; color: #333; line-height: 1.4; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .sort-zone { width: 100%; box-sizing: border-box; min-height: 60px; border: 3px dashed var(--edu-primary); margin: 15px 0; padding: 10px; border-radius: 15px; background: #FFFDF0; }
         
         #feedback { width: 100%; box-sizing: border-box; margin-top: 15px; padding: 15px; border-radius: 12px; font-weight: bold; line-height: 1.5; text-align: left;}
@@ -104,7 +126,7 @@
         
         /* 迷你遊戲專用 UI */
         .mg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; margin-top: 20px; }
-        .mg-card { background: white; border: 2px solid var(--edu-primary); border-radius: 10px; height: 100px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; font-weight: bold; cursor: pointer; text-align: center; padding: 5px; flex-direction: column; transition: 0.3s; }
+        .mg-card { background: white; border: 2px solid var(--edu-primary); border-radius: 10px; height: 100px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; font-weight: bold; cursor: pointer; text-align: center; padding: 5px; flex-direction: column; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .mg-card img { max-width: 100%; max-height: 50px; object-fit: cover; border-radius: 5px; }
         .mg-card.matched { background: var(--edu-success); color: white; border-color: var(--edu-success); pointer-events: none; opacity: 0.7; }
         .mg-card.flipped { background: var(--edu-secondary); color: var(--text-dark); border-color: var(--edu-secondary); }
@@ -121,8 +143,8 @@
         .ig-btn {
             background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
             color: white; border: none; padding: 15px 25px; border-radius: 12px; font-size: 1.2rem; font-weight: bold;
-            cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
-            box-shadow: 0 4px 10px rgba(220,39,67,0.3); transition: transform 0.2s; flex: 1; justify-content: center;
+            cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 4px 10px rgba(220,39,67,0.3); transition: transform 0.2s; flex: 1; min-width: 250px;
         }
         .ig-btn:hover { transform: scale(1.05); }
         .ig-icon { width: 24px; height: 24px; fill: white; }
@@ -132,21 +154,10 @@
         .input-group label { display: block; font-weight: bold; margin-bottom: 6px; color: var(--edu-primary); }
         .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
         
-        .leaderboard-box { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-top: 15px; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px);}
-        .leaderboard-tabs { display: flex; gap: 5px; margin-bottom: 10px; }
-        .lb-tab-mode { flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1rem; color: #ccc; }
-        .lb-tab-mode.active { background: #F6D365; color: #1e293b; }
-        .lb-tab { flex: 1; padding: 8px; background: rgba(255,255,255,0.05); border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.9rem; color: #aaa; }
-        .lb-tab.active { background: var(--edu-success); color: white; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .modal-box { background: white; color: var(--text-dark); padding: 30px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         
-        .lb-list { list-style: none; padding: 0; margin: 0; }
-        .lb-list li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; color: white;}
-        .lb-list li:first-child { font-weight: bold; color: #F6D365; font-size: 1.1rem; }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .modal-box { background: white; padding: 30px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); color: #333;}
-        
-        .admin-entry-btn { position: fixed; bottom: 20px; right: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px); color: white; border-radius: 30px; padding: 10px 20px; font-size: 0.9rem; cursor: pointer; transition: 0.3s; z-index: 100; display: flex; align-items: center; gap: 8px; }
+        .admin-entry-btn { position: fixed; bottom: 20px; right: 20px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(8px); color: white; border-radius: 30px; padding: 10px 20px; font-size: 0.9rem; cursor: pointer; transition: 0.3s; z-index: 100; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);}
         .admin-entry-btn:hover { background: rgba(255,255,255,0.3); }
         
         .admin-panel { background: #f9f9f9; padding: 20px; border-radius: 10px; text-align: left; max-height: 500px; overflow-y: auto; border: 1px solid #ddd; margin-bottom:15px; }
@@ -163,8 +174,8 @@
 <div id="yt-player" style="display:none;"></div>
 
 <div id="app">
-    <div id="login-screen" style="width: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 5vh;">
-        <div class="emoji-row">🇹🇼 🏮 🧋 📝</div>
+    <div id="login-screen">
+        <div class="emoji-row">🇹🇼 🏮 🧋 🎎</div>
         <h1 class="main-title">簡單學華語</h1>
         <div class="sub-title">Learn Taiwanese Mandarin Easily</div>
         
@@ -189,10 +200,10 @@
         
         <button class="lb-toggle-btn" onclick="document.getElementById('lb-container').classList.toggle('hidden')">🏆 查看英雄榜 Leaderboard 🏆</button>
         
-        <div id="lb-container" class="leaderboard-box hidden" style="width: 90%;">
+        <div id="lb-container" class="leaderboard-box hidden">
             <div class="leaderboard-tabs" style="margin-bottom: 5px;">
-                <button class="lb-tab-mode active" onclick="switchLbModeView('main', this)">生詞&語法</button>
-                <button class="lb-tab-mode" onclick="switchLbModeView('mini', this)">遊戲學習</button>
+                <button class="lb-tab-mode active" onclick="switchLbModeView('main', this)">生詞&語法練習</button>
+                <button class="lb-tab-mode" onclick="switchLbModeView('mini', this)">遊戲帶你學華語</button>
             </div>
             <div class="leaderboard-tabs">
                 <button class="lb-tab active" id="lb-tab-beg" onclick="showLeaderboard('beginner', this)">初級</button>
@@ -203,7 +214,7 @@
         </div>
     </div>
 
-    <div id="game-screen" class="white-card hidden" style="width: 95%; max-width: 850px; margin: 20px auto;">
+    <div id="game-screen" class="white-card hidden">
         <div class="game-layout">
             <div class="side-panel left-panel" id="ui-left-panel">
                 <button class="back-btn" onclick="quitGame()">⬅ 返回首頁</button>
@@ -244,13 +255,13 @@
         </div>
     </div>
 
-    <div id="end-screen" class="white-card hidden" style="width: 90%; max-width: 600px; margin: 50px auto; text-align: center;">
+    <div id="end-screen" class="white-card hidden" style="max-width: 600px; text-align: center;">
         <h2>🎊 挑戰結束 (Finished)</h2>
         <h3 id="end-player" style="color: var(--edu-primary);"></h3>
         <div style="font-size: 3.5rem; margin: 20px 0; color: var(--edu-success); font-weight: bold;" id="final-score"></div>
         
         <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
-            <button class="btn btn-primary" style="font-size:1.2rem; padding:15px; flex: 1;" onclick="location.reload()">🏠 返回首頁 (Home)</button>
+            <button class="btn btn-primary" style="font-size:1.2rem; padding:15px; flex: 1; min-width:250px;" onclick="location.reload()">🏠 返回首頁 (Home)</button>
             <button class="ig-btn" onclick="shareToInstagram()">
                 <svg class="ig-icon" viewBox="0 0 448 448" xmlns="http://www.w3.org/2000/svg">
                     <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/>
@@ -260,10 +271,10 @@
         </div>
     </div>
 
-    <div id="admin-screen" class="white-card hidden" style="width: 95%; max-width: 800px; margin: 20px auto;">
+    <div id="admin-screen" class="white-card hidden">
         <h2 style="color: #333; margin-top:0;">⚙️ 系統管理後台</h2>
         <div class="admin-tabs">
-            <button class="admin-tab active" id="tab-global" onclick="switchAdminTab('global')">音樂設定</button>
+            <button class="admin-tab active" id="tab-global" onclick="switchAdminTab('global')">全局與音樂設定</button>
             <button class="admin-tab" id="tab-qbank" onclick="switchAdminTab('qbank')">測驗題庫</button>
             <button class="admin-tab" id="tab-mg" onclick="switchAdminTab('mg')">遊戲詞庫</button>
             <button class="admin-tab" id="tab-lb" onclick="switchAdminTab('lb')">排行管理</button>
@@ -271,18 +282,39 @@
 
         <div id="admin-global-sec" class="admin-panel">
             <div class="input-group">
+                <label>全頁背景圖片 (Background URL)：</label>
+                <input type="text" id="setting-bg-image" placeholder="貼上全頁背景圖片網址">
+            </div>
+            <div class="input-group">
                 <label>背景音樂 YouTube 影片 ID：(預設 nRy0W3jpk7Q)</label>
                 <input type="text" id="setting-bgm-id" placeholder="輸入 YouTube 影片 ID">
             </div>
             <div class="input-group">
-                <label>背景音樂 YouTube 播放清單 ID：(預設 PL0SpIPXG4xRwg5I5YpvBniXdXXNQ4IByy)</label>
+                <label>背景音樂 YouTube 播放清單 ID：(可選，預設 PL0SpIPXG4xRwg5I5YpvBniXdXXNQ4IByy)</label>
                 <input type="text" id="setting-bgm-list" placeholder="輸入 YouTube 播放清單 ID">
             </div>
             <div class="input-group">
                 <label>背景音樂音量 (0-100，建議 10-15 不干擾語音)：</label>
                 <input type="number" id="setting-bgm-vol" min="0" max="100" value="10">
             </div>
-            <button class="btn btn-primary" onclick="saveGlobalSettings()">💾 儲存音樂設定</button>
+            <div class="input-group">
+                <label>選擇介面風格 (Theme)：</label>
+                <select id="setting-theme">
+                    <option value="classic">🔵 經典活力藍 (預設)</option>
+                    <option value="wood">🟤 木質溫暖風</option>
+                    <option value="nature">🟢 自然清新綠</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>左右兩側資訊 (名稱/積分) 顯示權限：</label>
+                <select id="setting-display">
+                    <option value="both">顯示「名稱」與「積分」</option>
+                    <option value="nameOnly">只顯示「名稱」</option>
+                    <option value="scoreOnly">只顯示「積分」</option>
+                    <option value="none">完全隱藏</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="saveGlobalSettings()">💾 儲存全局設定</button>
         </div>
 
         <div id="admin-qbank-sec" class="admin-panel hidden">
@@ -354,7 +386,7 @@
     </div>
 </div>
 
-<button class="admin-entry-btn" onclick="showAdminLoginModal()">⚙️</button>
+<button class="admin-entry-btn" onclick="showAdminLoginModal()">⚙️ 管理員登錄</button>
 
 <script>
     // ================== 動態載入 YouTube IFrame API ==================
@@ -363,7 +395,7 @@
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    // ================== 資料庫定義區 (每級 15 題，完美保留與擴充) ==================
+    // ================== 資料庫定義區 (每級 15 題) ==================
     let defaultBeginner = [
         { type: 'choice', context: '你想確認對方是不是陳小姐。(You want to confirm if she is Miss Chen.)', q: '請問你是陳小姐____？<br><span class="pinyin">(Qǐngwèn nǐ shì Chén xiǎojiě ____?)</span>', options: ['的 (de)', '嗎 (ma)', '呢 (ne)', '不 (bù)'], ans: 1, cite: '語法：嗎 ma', explain: '嗎：放在句子最後面，表示這是一個問句。', img: '' },
         { type: 'choice', context: '你不喝咖啡，想告訴朋友。(You don\'t drink coffee, tell your friend.)', q: '謝謝，我____喝咖啡。<br><span class="pinyin">(Xièxie, wǒ ____ hē kāfēi.)</span>', options: ['很 (hěn)', '是 (shì)', '什麼 (shénme)', '不 (bù)'], ans: 3, cite: '語法：不 bù', explain: '不：表示否定，代表「沒有」或「拒絕」。', img: '' },
@@ -460,40 +492,36 @@
         ]
     };
 
-    // ================== 儲存與系統變數 (V6 金鑰，保證更新並解決共享問題) ==================
-    // 將所有 localStorage 的 key 更新為 V6，確保每個人都能讀到最新的資料結構
-    let config = JSON.parse(localStorage.getItem('hyConfigV6')) || { 
-        banner: 'https://study.mdnkids.com/CH/images/main.jpg', 
+    // ================== 儲存與系統變數 (V7 金鑰，保證更新並解決共享問題) ==================
+    let config = JSON.parse(localStorage.getItem('hyConfigV7')) || { 
+        banner: 'https://study.mdnkids.com/CH/images/fb.jpg', 
         theme: 'classic', displayMode: 'both', 
         bgmId: 'nRy0W3jpk7Q', bgmList: 'PL0SpIPXG4xRwg5I5YpvBniXdXXNQ4IByy', bgmVol: 10 
     };
     
     let qdb = {
-        beginner: JSON.parse(localStorage.getItem('hyDB_Beg_V6')) || defaultBeginner,
-        intermediate: JSON.parse(localStorage.getItem('hyDB_Int_V6')) || defaultIntermediate,
-        advanced: JSON.parse(localStorage.getItem('hyDB_Adv_V6')) || defaultAdvanced
+        beginner: JSON.parse(localStorage.getItem('hyDB_Beg_V7')) || defaultBeginner,
+        intermediate: JSON.parse(localStorage.getItem('hyDB_Int_V7')) || defaultIntermediate,
+        advanced: JSON.parse(localStorage.getItem('hyDB_Adv_V7')) || defaultAdvanced
     };
-    let mgDB = JSON.parse(localStorage.getItem('hyMG_V6')) || defaultMiniGames;
+    let mgDB = JSON.parse(localStorage.getItem('hyMG_V7')) || defaultMiniGames;
     
-    // 排行榜雙軌制: main (主測驗) vs mini (小遊戲)
-    let leaderboard = JSON.parse(localStorage.getItem('hyLB_V6')) || {
+    let leaderboard = JSON.parse(localStorage.getItem('hyLB_V7')) || {
         main: { beginner: [], intermediate: [], advanced: [] },
         mini: { beginner: [], intermediate: [], advanced: [] }
     };
     
     let currentLbMode = 'main', currentLbLvl = 'beginner';
 
-    let gameMode = 'main'; // 'main' or 'mini'
+    let gameMode = 'main';
     let currentData = [], currentQ = 0, score = 0, combo = 0, attempts = 0, maxAttempts = 2;
     let userSort = [], playerName = "", playerLevel = "", levelKey = "", displayLevelText = "";
     
-    // Timer & Audio
     let timerId, timeLeft = 15;
-    let audioCtx = null; // 延遲初始化避免瀏覽器阻擋
+    let audioCtx = null; 
     let isYtReady = false;
     let ytPlayer = null;
 
-    // Mini Games Var
     let mgPhase = 1, mgSequence = []; 
     let memCards = [], flippedCards = [], matchedPairs = 0;
     let amWords = [], amAudio = [], selectedWord = null, selectedAudio = null;
@@ -537,7 +565,6 @@
     }
 
     function initAudio() {
-        // 在使用者點擊「開始遊戲」時才啟動 AudioContext 和 YouTube 播放，解決瀏覽器封鎖自動播放的問題
         if(!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
@@ -551,13 +578,15 @@
     }
 
     function applySettings() {
+        if(config.banner) document.body.style.backgroundImage = `url('${config.banner}')`;
         document.documentElement.setAttribute('data-theme', config.theme);
         
+        document.getElementById('setting-bg-image').value = config.banner || '';
+        document.getElementById('setting-theme').value = config.theme;
+        document.getElementById('setting-display').value = config.displayMode;
         document.getElementById('setting-bgm-id').value = config.bgmId || 'nRy0W3jpk7Q';
         document.getElementById('setting-bgm-list').value = config.bgmList || 'PL0SpIPXG4xRwg5I5YpvBniXdXXNQ4IByy';
         document.getElementById('setting-bgm-vol').value = config.bgmVol || 10;
-        document.getElementById('setting-theme').value = config.theme;
-        document.getElementById('setting-display').value = config.displayMode;
     }
 
     function playSound(isCorrect) {
@@ -587,7 +616,7 @@
         playerName = document.getElementById('player-name').value;
         if(!playerName) return alert('請輸入名字喔！');
         
-        initAudio(); // 點擊時啟動音效與背景音樂
+        initAudio(); 
         
         levelKey = document.getElementById('player-level').value;
         gameMode = mode;
@@ -701,7 +730,7 @@
         else {
             attempts++; btn.disabled = true;
             if(attempts >= maxAttempts) handleMainResult(false, `正確答案：<br>${q.options[q.ans].replace(/\([^)]*\)/g, '')}`);
-            else { showHint(`答錯囉，剩 ${maxAttempts - attempts} 次機會！`); startTimer(15, handleTimeout); } // handleTimeout will wrap
+            else { showHint(`答錯囉，剩 ${maxAttempts - attempts} 次機會！`); startTimer(15, handleTimeout); }
         }
     }
 
@@ -760,7 +789,6 @@
         else if(step.type === 'speech') renderSpeechGame(step.data);
     }
 
-    // --- 翻牌配對遊戲 ---
     function renderMatchGame(dataList) {
         document.getElementById('mg-instruction').innerText = "🃏 記憶配對：找出單字與對應的拼音/圖片/意思！";
         const content = document.getElementById('mg-content');
@@ -791,7 +819,7 @@
         flippedCards.push({ el: cardEl, data: cardData });
         
         if(flippedCards.length === 2) {
-            if(flippedCards[0].data.id === flippedCards[1].data.id) { // Match!
+            if(flippedCards[0].data.id === flippedCards[1].data.id) {
                 setTimeout(() => {
                     flippedCards[0].el.classList.add('matched'); flippedCards[1].el.classList.add('matched');
                     flippedCards[0].el.classList.remove('flipped'); flippedCards[1].el.classList.remove('flipped');
@@ -799,7 +827,7 @@
                     matchedPairs++; flippedCards = [];
                     if(matchedPairs === (memCards.length/2)) { document.getElementById('next-btn').classList.remove('hidden'); }
                 }, 500);
-            } else { // No match
+            } else {
                 combo = 0; updateScoreUI(); playSound(false);
                 setTimeout(() => {
                     flippedCards[0].el.innerHTML = "❓"; flippedCards[1].el.innerHTML = "❓";
@@ -810,7 +838,6 @@
         }
     }
 
-    // --- 聽音辨字遊戲 ---
     function renderAudioGame(dataList) {
         document.getElementById('mg-instruction').innerText = "🎧 聽音辨字：聽系統發音，點擊對應單字！";
         const content = document.getElementById('mg-content');
@@ -844,7 +871,7 @@
 
     function checkAudioMatch() {
         if(!selectedWord || !selectedAudio) return;
-        if(selectedWord.w === selectedAudio.w) { // Match
+        if(selectedWord.w === selectedAudio.w) {
             document.querySelector('#am-words .selected').classList.add('matched');
             document.querySelector('#am-audio .selected').classList.add('matched');
             playSound(true); combo++; score += (combo*50); updateScoreUI(); matchedPairs++;
@@ -859,7 +886,6 @@
         }
     }
 
-    // --- 口說挑戰 ---
     function renderSpeechGame(wordData) {
         document.getElementById('mg-instruction').innerText = "🎤 口說挑戰：請大聲唸出這個詞彙！";
         maxAttempts = 3; attempts = 0;
@@ -931,7 +957,6 @@
         document.getElementById('end-player').innerText = `${displayLevelText}：${playerName}`;
         document.getElementById('final-score').innerText = `總得分：${score}`;
         
-        // 儲存到正確的榜單
         leaderboard[gameMode][levelKey].push({ name: playerName, score: score });
         leaderboard[gameMode][levelKey].sort((a,b) => b.score - a.score);
         localStorage.setItem('hyLB_V6', JSON.stringify(leaderboard));
@@ -939,7 +964,7 @@
 
     function shareToInstagram() {
         const modeText = gameMode === 'main' ? '生詞&語法練習' : '遊戲帶你學華語';
-        const shareText = `我在「學華語 Let's Learn Mandarin」的【${modeText} - ${displayLevelText}】獲得了 ${score} 分！🎉\n\n快來跟我一起挑戰中文吧！ 📚✨\n#學華語 #MandarinLearning #Taiwan`;
+        const shareText = `我在「簡單學華語 Let's Learn Mandarin」的【${modeText} - ${displayLevelText}】獲得了 ${score} 分！🎉\n\n快來跟我一起挑戰中文吧！ 📚✨\n#學華語 #MandarinLearning #Taiwan`;
         
         if (navigator.share && /mobile|android|iphone|ipad/i.test(navigator.userAgent.toLowerCase())) {
             navigator.share({
@@ -1017,13 +1042,16 @@
     }
 
     function saveGlobalSettings() {
-        config.theme = document.getElementById('setting-theme').value;
-        config.displayMode = document.getElementById('setting-display').value;
+        config.banner = document.getElementById('setting-bg-image').value.trim();
         config.bgmId = document.getElementById('setting-bgm-id').value.trim();
         config.bgmList = document.getElementById('setting-bgm-list').value.trim();
         config.bgmVol = parseInt(document.getElementById('setting-bgm-vol').value) || 10;
-        localStorage.setItem('hyConfigV6', JSON.stringify(config));
-        applySettings(); alert("全局與音樂設定已儲存！(若更改音樂需重整網頁)");
+        config.theme = document.getElementById('setting-theme').value;
+        config.displayMode = document.getElementById('setting-display').value;
+        localStorage.setItem('hyConfigV7', JSON.stringify(config));
+        applySettings(); 
+        alert("全局與音樂設定已儲存！將自動重新載入網頁套用最新背景。");
+        location.reload();
     }
 
     // --- 主測驗編輯 ---
@@ -1069,7 +1097,7 @@
         });
         const lvl = document.getElementById('admin-level-select').value;
         qdb[lvl] = editingDB;
-        localStorage.setItem(lvl === 'beginner' ? 'hyDB_Beg_V6' : (lvl === 'intermediate' ? 'hyDB_Int_V6' : 'hyDB_Adv_V6'), JSON.stringify(qdb[lvl]));
+        localStorage.setItem(lvl === 'beginner' ? 'hyDB_Beg_V7' : (lvl === 'intermediate' ? 'hyDB_Int_V7' : 'hyDB_Adv_V7'), JSON.stringify(qdb[lvl]));
         alert("主測驗題庫儲存成功！");
     }
 
@@ -1100,7 +1128,7 @@
         });
         const key = document.getElementById('admin-mg-select').value;
         mgDB[key] = editingMG;
-        localStorage.setItem('hyMG_V6', JSON.stringify(mgDB));
+        localStorage.setItem('hyMG_V7', JSON.stringify(mgDB));
         alert("遊戲詞庫儲存成功！");
     }
 
@@ -1122,12 +1150,12 @@
         leaderboard[mode][lvl][i].name = document.getElementById(`lb-name-${mode}-${lvl}-${i}`).value;
         leaderboard[mode][lvl][i].score = parseInt(document.getElementById(`lb-score-${mode}-${lvl}-${i}`).value);
         leaderboard[mode][lvl].sort((a,b) => b.score - a.score);
-        localStorage.setItem('hyLB_V6', JSON.stringify(leaderboard)); alert("成績已更新！"); renderAdminLB();
+        localStorage.setItem('hyLB_V7', JSON.stringify(leaderboard)); alert("成績已更新！"); renderAdminLB();
     }
     function clearLB() {
         const mode = document.getElementById('admin-lb-mode-select').value;
         const lvl = document.getElementById('admin-lb-lvl-select').value;
-        if(confirm("確定清空此層級紀錄？")) { leaderboard[mode][lvl] = []; localStorage.setItem('hyLB_V6', JSON.stringify(leaderboard)); renderAdminLB(); }
+        if(confirm("確定清空此層級紀錄？")) { leaderboard[mode][lvl] = []; localStorage.setItem('hyLB_V7', JSON.stringify(leaderboard)); renderAdminLB(); }
     }
 </script>
 </body>
