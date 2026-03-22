@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>學華語 Let's Learn Mandarin - 終極旗艦版</title>
+    <title>學華語 Let's Learn Mandarin - 專業分享版</title>
     <style>
         /* 預設主題：經典活力藍 */
         :root { 
@@ -20,8 +20,9 @@
         .content { padding: 25px; text-align: center; flex-grow: 1; position: relative; }
         .hidden { display: none !important; }
         
-        /* 左右分欄 版面佈局 */
+        /* 左右分欄 全新介面佈局 */
         .game-layout { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; margin-top: 10px; }
+        
         .side-panel { flex: 0 0 160px; display: flex; flex-direction: column; gap: 10px; }
         .left-panel { align-items: flex-start; }
         .right-panel { align-items: flex-end; }
@@ -70,40 +71,30 @@
         .am-item.selected { border-color: var(--edu-primary); background: var(--box-bg); }
         .am-item.matched { background: var(--edu-success); color: white; border-color: var(--edu-success); pointer-events: none; }
         
-        .speech-btn { background: var(--edu-accent); color: white; border: none; padding: 20px; border-radius: 50%; font-size: 2rem; cursor: pointer; margin: 20px 0; box-shadow: 0 4px 10px rgba(255,90,95,0.4); transition: 0.2s;}
+        .speech-btn { background: var(--edu-accent); color: white; border: none; padding: 20px; border-radius: 50%; font-size: 2rem; cursor: pointer; margin: 20px 0; box-shadow: 0 4px 10px rgba(255,90,95,0.4); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
         
-        /* Instagram 分享按鈕 */
-        .ig-btn {
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            color: white; border: none; padding: 15px 25px; border-radius: 12px; font-size: 1.2rem; font-weight: bold;
-            cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
-            box-shadow: 0 4px 10px rgba(220,39,67,0.3); transition: transform 0.2s; flex: 1; justify-content: center;
-        }
-        .ig-btn:hover { transform: scale(1.05); }
-        .ig-icon { width: 24px; height: 24px; fill: white; }
+        /* 排行榜 */
+        .leaderboard-box { background: #f9f9f9; border: 2px solid #eee; border-radius: 12px; padding: 15px; margin-top: 20px; text-align: left; }
+        .leaderboard-tabs { display: flex; gap: 5px; margin-bottom: 10px; }
+        .lb-tab { flex: 1; padding: 8px; background: #ddd; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
+        .lb-tab.active { background: var(--edu-success); color: white; }
+        .lb-list { list-style: none; padding: 0; margin: 0; }
+        .lb-list li { padding: 8px 0; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;}
+        .lb-list li:first-child { font-weight: bold; color: var(--edu-accent); font-size: 1.1rem; }
 
-        /* 表單與後台 */
+        /* 其他表單與後台 */
         .input-group { margin-bottom: 15px; text-align: left; width: 100%; box-sizing: border-box;}
         .input-group label { display: block; font-weight: bold; margin-bottom: 6px; color: var(--edu-primary); }
         .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
         
-        .leaderboard-box { background: #f9f9f9; border: 2px solid #eee; border-radius: 12px; padding: 15px; margin-top: 20px; text-align: left; }
-        .leaderboard-tabs { display: flex; gap: 5px; margin-bottom: 10px; }
-        .lb-tab-mode { flex: 1; padding: 10px; background: #ddd; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1rem; }
-        .lb-tab-mode.active { background: var(--edu-primary); color: white; }
-        .lb-tab { flex: 1; padding: 8px; background: #eee; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
-        .lb-tab.active { background: var(--edu-success); color: white; }
-        
-        .lb-list { list-style: none; padding: 0; margin: 0; }
-        .lb-list li { padding: 8px 0; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; }
-        .lb-list li:first-child { font-weight: bold; color: var(--edu-accent); font-size: 1.1rem; }
-
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; display: flex; justify-content: center; align-items: center; }
         .modal-box { background: white; padding: 30px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         
         .admin-entry-btn { position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.75); color: white; border: none; border-radius: 30px; padding: 10px 20px; font-size: 1rem; cursor: pointer; transition: 0.3s; z-index: 100; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .admin-entry-btn:hover { background: var(--text-dark); transform: scale(1.05); }
         
+        /* 後台版面 */
         .admin-panel { background: #f9f9f9; padding: 20px; border-radius: 10px; text-align: left; max-height: 500px; overflow-y: auto; border: 1px solid #ddd; margin-bottom:15px; }
         .admin-tabs { display: flex; margin-bottom: 15px; gap: 5px; flex-wrap: wrap; }
         .admin-tab { flex: 1; min-width: 80px; padding: 10px; background: #eee; border:none; border-radius: 8px; cursor: pointer; font-weight:bold; font-size: 0.9rem;}
@@ -113,8 +104,6 @@
     </style>
 </head>
 <body>
-
-<div id="yt-player" style="display:none;"></div>
 
 <div id="app">
     <div class="banner" id="top-banner" style="background-image: url('https://study.mdnkids.com/CH/images/main.jpg');"></div>
@@ -134,20 +123,16 @@
             </select>
         </div>
         <div style="display: flex; gap: 10px;">
-            <button class="btn btn-primary" style="padding: 15px; font-size: 1.1rem; flex: 1;" onclick="startGame('main')">📝 生詞&語法練習</button>
+            <button class="btn btn-primary" style="padding: 15px; font-size: 1.1rem; flex: 1;" onclick="startGame('main')">📝 進入主測驗</button>
             <button class="btn" style="padding: 15px; font-size: 1.1rem; flex: 1; background: var(--edu-success); color: white; border: none;" onclick="startGame('mini')">🎮 遊戲帶你學華語</button>
         </div>
         
         <div class="leaderboard-box">
             <h3 style="margin-top:0; color:var(--edu-success);">🏆 英雄榜 Leaderboard</h3>
-            <div class="leaderboard-tabs" style="margin-bottom: 5px;">
-                <button class="lb-tab-mode active" onclick="switchLbModeView('main', this)">生詞&語法練習</button>
-                <button class="lb-tab-mode" onclick="switchLbModeView('mini', this)">遊戲帶你學華語</button>
-            </div>
             <div class="leaderboard-tabs">
-                <button class="lb-tab active" id="lb-tab-beg" onclick="showLeaderboard('beginner', this)">初級</button>
-                <button class="lb-tab" id="lb-tab-int" onclick="showLeaderboard('intermediate', this)">中級</button>
-                <button class="lb-tab" id="lb-tab-adv" onclick="showLeaderboard('advanced', this)">高級</button>
+                <button class="lb-tab active" onclick="showLeaderboard('beginner', this)">初級</button>
+                <button class="lb-tab" onclick="showLeaderboard('intermediate', this)">中級</button>
+                <button class="lb-tab" onclick="showLeaderboard('advanced', this)">高級</button>
             </div>
             <ul class="lb-list" id="lb-display-list"></ul>
         </div>
@@ -155,7 +140,7 @@
 
     <div id="game-screen" class="content hidden">
         <div class="game-layout">
-            <div class="side-panel left-panel" id="ui-left-panel">
+            <div class="side-panel left-panel">
                 <button class="back-btn" onclick="quitGame()">⬅ 返回首頁</button>
                 <div class="info-pill" id="player-info" style="margin-top:10px;"></div>
             </div>
@@ -176,7 +161,6 @@
 
                 <div id="mini-game-area" class="hidden" style="width: 100%;">
                     <h3 id="mg-instruction" style="color: var(--edu-primary); margin-top:0;"></h3>
-                    <div id="mg-attempt-hint" style="color: var(--edu-accent); font-weight: bold; margin-bottom: 10px; text-align: left; width: 100%;"></div>
                     <div id="mg-content" style="width: 100%;"></div>
                 </div>
 
@@ -184,7 +168,7 @@
                 <button id="next-btn" class="btn btn-primary hidden" onclick="nextQuestion()">下一題 (Next)</button>
             </div>
             
-            <div class="side-panel right-panel" id="ui-right-panel">
+            <div class="side-panel right-panel">
                 <div class="timer-display" id="timer-display">⏳ 15</div>
                 <div class="info-pill score-pill" id="score-ui" style="margin-top:10px;">
                     <div>總分: <span id="total-score">0</span></div>
@@ -195,17 +179,14 @@
     </div>
 
     <div id="end-screen" class="content hidden">
+        <canvas id="share-canvas" width="600" height="400" style="display:none;"></canvas>
         <h2>🎊 挑戰結束 (Finished)</h2>
         <h3 id="end-player" style="color: var(--edu-primary);"></h3>
         <div style="font-size: 3.5rem; margin: 20px 0; color: var(--edu-success); font-weight: bold;" id="final-score"></div>
-        
-        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
-            <button class="btn btn-primary" style="font-size:1.2rem; padding:15px; flex: 1;" onclick="location.reload()">🏠 返回首頁 (Home)</button>
-            <button class="ig-btn" onclick="shareToInstagram()">
-                <svg class="ig-icon" viewBox="0 0 448 448" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/>
-                </svg>
-                分享至 Instagram
+        <div style="display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 400px; margin: 0 auto;">
+            <button class="btn btn-primary" style="font-size:1.2rem; padding:15px;" onclick="location.reload()">返回首頁 (Home)</button>
+            <button class="btn" style="font-size:1.1rem; padding:12px; background:#E1306C; color:white; border:none; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="prepareScorecard(true)">
+                📸 分享至 Instagram 限時動態 (及下載圖片)
             </button>
         </div>
     </div>
@@ -213,8 +194,8 @@
     <div id="admin-screen" class="content hidden">
         <h2 style="color: #333; margin-top:0;">⚙️ 系統管理後台</h2>
         <div class="admin-tabs">
-            <button class="admin-tab active" id="tab-global" onclick="switchAdminTab('global')">全局與音樂設定</button>
-            <button class="admin-tab" id="tab-qbank" onclick="switchAdminTab('qbank')">測驗題庫</button>
+            <button class="admin-tab active" id="tab-global" onclick="switchAdminTab('global')">全局設定</button>
+            <button class="admin-tab" id="tab-qbank" onclick="switchAdminTab('qbank')">主測驗編輯</button>
             <button class="admin-tab" id="tab-mg" onclick="switchAdminTab('mg')">遊戲詞庫</button>
             <button class="admin-tab" id="tab-lb" onclick="switchAdminTab('lb')">排行管理</button>
         </div>
@@ -223,18 +204,6 @@
             <div class="input-group">
                 <label>更換上方橫幅圖片 (Banner URL)：</label>
                 <input type="text" id="setting-banner" placeholder="貼上圖片網址">
-            </div>
-            <div class="input-group">
-                <label>背景音樂 YouTube 影片 ID：(預設 nRy0W3jpk7Q)</label>
-                <input type="text" id="setting-bgm-id" placeholder="輸入 YouTube 影片 ID">
-            </div>
-            <div class="input-group">
-                <label>背景音樂 YouTube 播放清單 ID：(預設 PL0SpIPXG4xRwg5I5YpvBniXdXXNQ4IByy)</label>
-                <input type="text" id="setting-bgm-list" placeholder="輸入 YouTube 播放清單 ID">
-            </div>
-            <div class="input-group">
-                <label>背景音樂音量 (0-100，建議 10-15 不干擾語音)：</label>
-                <input type="number" id="setting-bgm-vol" min="0" max="100" value="10">
             </div>
             <div class="input-group">
                 <label>選擇介面風格 (Theme)：</label>
@@ -258,47 +227,38 @@
 
         <div id="admin-qbank-sec" class="admin-panel hidden">
             <div class="input-group">
-                <label>請選擇要編輯的【主測驗】題庫：</label>
+                <label>請選擇要編輯的題庫：</label>
                 <select id="admin-level-select" onchange="renderAdminQList()">
-                    <option value="beginner">🟢 初級 (Beginner) - 15題</option>
-                    <option value="intermediate">🟡 中級 (Intermediate) - 15題</option>
-                    <option value="advanced">🔴 高級 (Advanced) - 15題</option>
+                    <option value="beginner">🟢 初級 (Beginner)</option>
+                    <option value="intermediate">🟡 中級 (Intermediate)</option>
+                    <option value="advanced">🔴 高級 (Advanced)</option>
                 </select>
             </div>
             <button class="btn" style="background:var(--edu-success); color:white; margin-bottom:15px; width:100%; border:none;" onclick="addNewQuestion()">➕ 新增題目</button>
             <div id="admin-q-list"></div>
-            <button class="btn btn-primary" onclick="saveAdminQBank()">💾 儲存主測驗題庫</button>
+            <button class="btn btn-primary" onclick="saveAdminQBank()">💾 儲存題庫變更</button>
         </div>
 
         <div id="admin-mg-sec" class="admin-panel hidden">
             <div class="input-group">
-                <label>請選擇要編輯的【小遊戲】詞庫：</label>
+                <label>請選擇要編輯的遊戲詞庫：</label>
                 <select id="admin-mg-select" onchange="renderAdminMGList()">
                     <option value="beg_match">🟢 初級：翻牌配對 (10詞)</option>
                     <option value="int_audio">🟡 中級：聽音辨字 (10詞)</option>
                     <option value="int_speech">🟡 中級：口說挑戰 (15詞)</option>
-                    <option value="adv_match">🔴 高級：成語配對 (5詞)</option>
-                    <option value="adv_speech">🔴 高級：口說挑戰 (5詞)</option>
                 </select>
             </div>
             <div id="admin-mg-list"></div>
-            <button class="btn btn-primary" onclick="saveAdminMG()">💾 儲存小遊戲詞庫</button>
+            <button class="btn btn-primary" onclick="saveAdminMG()">💾 儲存遊戲詞庫</button>
         </div>
 
         <div id="admin-lb-sec" class="admin-panel hidden">
             <div class="input-group">
-                <label>選擇排行榜類別：</label>
-                <select id="admin-lb-mode-select" onchange="renderAdminLB()">
-                    <option value="main">📝 生詞&語法練習</option>
-                    <option value="mini">🎮 遊戲帶你學華語</option>
-                </select>
-            </div>
-            <div class="input-group">
                 <label>選擇排行榜層級：</label>
-                <select id="admin-lb-lvl-select" onchange="renderAdminLB()">
-                    <option value="beginner">🟢 初級</option>
-                    <option value="intermediate">🟡 中級</option>
-                    <option value="advanced">🔴 高級</option>
+                <select id="admin-lb-select" onchange="renderAdminLB()">
+                    <option value="beginner">🟢 初級 (Beginner)</option>
+                    <option value="intermediate">🟡 中級 (Intermediate)</option>
+                    <option value="advanced">🔴 高級 (Advanced)</option>
                 </select>
             </div>
             <ul class="lb-list" id="admin-lb-list" style="background:white; padding:10px; border-radius:8px;"></ul>
@@ -328,67 +288,30 @@
 <button class="admin-entry-btn" onclick="showAdminLoginModal()">⚙️ 管理員登錄</button>
 
 <script>
-    // ================== 動態載入 YouTube IFrame API ==================
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-    // ================== 資料庫定義區 (每級 15 題，完美保留與擴充) ==================
+    // ================== 資料庫保留區 (V4 舊版金鑰) ==================
+    // 雖然擴充了遊戲，但為了保留您 V4 版本編輯的資料，這裡沿用舊資料。
     let defaultBeginner = [
-        { type: 'choice', context: '你想確認對方是不是陳小姐。(You want to confirm if she is Miss Chen.)', q: '請問你是陳小姐____？<br><span class="pinyin">(Qǐngwèn nǐ shì Chén xiǎojiě ____?)</span>', options: ['的 (de)', '嗎 (ma)', '呢 (ne)', '不 (bù)'], ans: 1, cite: '語法：嗎 ma', explain: '嗎：放在句子最後面，表示這是一個問句。', img: '' },
-        { type: 'choice', context: '你不喝咖啡，想告訴朋友。(You don\'t drink coffee, tell your friend.)', q: '謝謝，我____喝咖啡。<br><span class="pinyin">(Xièxie, wǒ ____ hē kāfēi.)</span>', options: ['很 (hěn)', '是 (shì)', '什麼 (shénme)', '不 (bù)'], ans: 3, cite: '語法：不 bù', explain: '不：表示否定，代表「沒有」或「拒絕」。', img: '' },
-        { type: 'choice', context: '你想問朋友想喝什麼。(You ask your friend what they want to drink.)', q: '你____喝烏龍茶？<br><span class="pinyin">(Nǐ ____ hē wūlóngchá?)</span>', options: ['要不要 (yào bú yào)', '是不是 (shì bú shì)', '好不好 (hǎo bù hǎo)', '來不來 (lái bù lái)'], ans: 0, cite: '語法：A不A', explain: 'A不A：這是一種問問題的方法，提供對方兩種選擇。', img: '' },
-        { type: 'choice', context: '朋友請你喝臺灣的茶，你覺得味道不錯。(The tea tastes very good.)', q: '這個烏龍茶____好喝。<br><span class="pinyin">(Zhège wūlóngchá ____ hǎohē.)</span>', options: ['不 (bù)', '嗎 (ma)', '很 (hěn)', '呢 (ne)'], ans: 2, cite: '語法：很 hěn', explain: '很：程度副詞，放在形容詞前面。', img: '' },
-        { type: 'sort', context: '在機場，你看到新朋友，上前歡迎她。(At the airport, you welcome your new friend.)', q: '請重組句子：', words: ['歡迎<br>(huānyíng)', '你<br>(nǐ)', '來<br>(lái)', '臺灣<br>(Táiwān)'], ans: '歡迎<br>(huānyíng)你<br>(nǐ)來<br>(lái)臺灣<br>(Táiwān)', cite: '生詞：歡迎來臺灣', explain: '歡迎：表示非常高興地迎接客人。', img: '' },
-        { type: 'choice', context: '你想問這位新朋友來自哪裡。(You want to ask where this friend is from.)', q: '對不起，請問你是____國人？<br><span class="pinyin">(Duìbùqǐ, qǐngwèn nǐ shì ____ guó rén?)</span>', options: ['哪 (nǎ)', '什麼 (shénme)', '呢 (ne)', '嗎 (ma)'], ans: 0, cite: '生詞：哪國人', explain: '哪：疑問詞，用來詢問特定對象。', img: '' },
-        { type: 'choice', context: '你向別人介紹自己的名字。(You introduce yourself.)', q: '你好，我____王，叫開文。<br><span class="pinyin">(Nǐ hǎo, wǒ ____ Wáng, jiào Kāiwén.)</span>', options: ['是 (shì)', '姓 (xìng)', '叫 (jiào)', '來 (lái)'], ans: 1, cite: '生詞：姓 xìng', explain: '姓：代表家族的字號，會放在名字的最前面。', img: '' },
-        { type: 'choice', context: '你是美國人，想問對方是不是也一樣。(You are American, you ask about them.)', q: '我是美國人，你____？<br><span class="pinyin">(Wǒ shì Měiguó rén, nǐ ____?)</span>', options: ['什麼 (shénme)', '哪 (nǎ)', '嗎 (ma)', '呢 (ne)'], ans: 3, cite: '語法：呢 ne', explain: '呢：放在句子結尾，用來將問題反問對方。', img: '' },
-        { type: 'choice', context: '朋友跟你說謝謝，你應該說什麼？(A friend says "Thank you", you reply:)', q: '____。<br><span class="pinyin">(____.)</span>', options: ['不客氣 (búkèqi)', '對不起 (duìbùqǐ)', '請問 (qǐngwèn)', '好喝 (hǎohē)'], ans: 0, cite: '生詞：不客氣', explain: '不客氣：對別人說「謝謝」時的標準回答。', img: '' },
-        { type: 'sort', context: '有人問你喜歡喝什麼，你回答：(Someone asks what you like to drink, you answer:)', q: '請重組句子：', words: ['喜歡<br>(xǐhuān)', '我<br>(wǒ)', '喝<br>(hē)', '茶<br>(chá)'], ans: '我<br>(wǒ)喜歡<br>(xǐhuān)喝<br>(hē)茶<br>(chá)', cite: '生詞：喜歡喝茶', explain: '喜歡：表示對某事物有好感。', img: '' },
-        { type: 'choice', context: '你想問這位新朋友的名字。(You want to ask for this new friend\'s name.)', q: '請問你____什麼名字？<br><span class="pinyin">(Qǐngwèn nǐ ____ shénme míngzì?)</span>', options: ['叫 (jiào)', '姓 (xìng)', '嗎 (ma)', '呢 (ne)'], ans: 0, cite: '生詞：叫 jiào', explain: '叫：後面通常接人的稱呼或名字。', img: '' },
-        { type: 'choice', context: '你向別人介紹你的朋友王先生。(You introduce your friend Mr. Wang.)', q: '____是王先生。<br><span class="pinyin">(____ shì Wáng xiānshēng.)</span>', options: ['這 (zhè)', '那 (nà)', '哪 (nǎ)', '什麼 (shénme)'], ans: 0, cite: '生詞：這 zhè', explain: '這：用來指代離自己較近的人或事物。', img: '' },
-        { type: 'choice', context: '別人以為他是日本人，但你想澄清。(Others think he is Japanese, but you clarify.)', q: '他____日本人。<br><span class="pinyin">(Tā ____ Rìběn rén.)</span>', options: ['不 (bù)', '不是 (bú shì)', '沒有 (méiyǒu)', '嗎 (ma)'], ans: 1, cite: '語法：不是 bú shì', explain: '不是：用來否定一個身分或事實。', img: '' },
-        { type: 'choice', context: '你想表達臺灣人對茶的熱愛。(You express Taiwanese people\'s love for tea.)', q: '臺灣人很____喝茶。<br><span class="pinyin">(Táiwān rén hěn ____ hē chá.)</span>', options: ['喜歡 (xǐhuān)', '歡迎 (huānyíng)', '客氣 (kèqì)', '是 (shì)'], ans: 0, cite: '生詞：喜歡 xǐhuān', explain: '喜歡：表達內心對某件事情的喜愛。', img: '' },
-        { type: 'choice', context: '客人來到家裡，你端茶給他。(A guest arrives, you serve tea.)', q: '____喝茶。<br><span class="pinyin">(____ hē chá.)</span>', options: ['請 (qǐng)', '要 (yào)', '很 (hěn)', '呢 (ne)'], ans: 0, cite: '生詞：請 qǐng', explain: '請：一種禮貌地邀請別人做某事的用法。', img: '' }
+        { type: 'choice', context: '你想確認對方是不是陳小姐。', q: '請問你是陳小姐____？<br><span class="pinyin">(Qǐngwèn nǐ shì Chén xiǎojiě ____?)</span>', options: ['的 (de)', '嗎 (ma)', '呢 (ne)', '不 (bù)'], ans: 1, cite: '語法：嗎 ma', explain: '嗎：放在句子最後面，用來表示這是一個問句。', img: '' },
+        { type: 'choice', context: '你不喝咖啡，想告訴朋友。', q: '謝謝，我____喝咖啡。<br><span class="pinyin">(Xièxie, wǒ ____ hē kāfēi.)</span>', options: ['很 (hěn)', '是 (shì)', '什麼 (shénme)', '不 (bù)'], ans: 3, cite: '語法：不 bù', explain: '不：表示否定，代表「沒有」或「拒絕」做這件事。', img: '' },
+        { type: 'sort', context: '在機場，你看到新朋友，上前歡迎她。', q: '請重組句子：', words: ['歡迎<br>(huānyíng)', '你<br>(nǐ)', '來<br>(lái)', '臺灣<br>(Táiwān)'], ans: '歡迎<br>(huānyíng)你<br>(nǐ)來<br>(lái)臺灣<br>(Táiwān)', cite: '生詞：歡迎來臺灣', explain: '歡迎：表示非常高興地迎接客人來到這個地方。', img: '' },
+        { type: 'choice', context: '朋友跟你說謝謝，你應該說什麼？', q: '____。<br><span class="pinyin">(____.)</span>', options: ['不客氣 (búkèqi)', '對不起 (duìbùqǐ)', '請問 (qǐngwèn)', '好喝 (hǎohē)'], ans: 0, cite: '生詞：不客氣', explain: '不客氣：這是當別人對你說「謝謝」時，最標準禮貌的回答。', img: '' }
     ];
 
     let defaultIntermediate = [
         { type: 'choice', context: '期中考快到了，你看到同學小明連假日都不休息。<br><span class="pinyin">(Qízhōngkǎo kuài dàole...)</span>', q: '他每天都在圖書館讀書，非常____。', options: ['原來', '用功', '反對', '嚴'], ans: 1, cite: '生詞：用功', explain: '用功：意思是花很多時間與精力在讀書或學習上。', img: 'https://picsum.photos/seed/library/400/200' },
-        { type: 'choice', context: '你跟朋友約好去夜唱，但家人覺得半夜出門很不安全。<br><span class="pinyin">(Nǐ gēn péngyǒu yuē hǎo qù yèchàng...)</span>', q: '爸爸____我晚上太晚回家。', options: ['原來', '反對', '用功', '累'], ans: 1, cite: '生詞：反對', explain: '反對：不贊成某件事情，甚至會出面阻止。', img: 'https://picsum.photos/seed/night/400/200' },
-        { type: 'choice', context: '剛剛出大太陽，突然又下起大雨了。<br><span class="pinyin">(Gānggāng chū dà tàiyáng...)</span>', q: '台北的天氣真奇怪，說下雨____下雨。', options: ['都', '就', '也', '還'], ans: 1, cite: '語法：說...就...', explain: '說...就...：表示事情發生得非常突然。', img: 'https://picsum.photos/seed/rain/400/200' },
-        { type: 'sort', context: '你的朋友是個愛喝手搖杯的人，一看到飲料店就控制不住。<br><span class="pinyin">(Nǐ de péngyǒu shì ge ài hē shǒuyáobēi de rén...)</span>', q: '請重組句子：', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '語法：說...就...', explain: '說買就買：沒有經過太多考慮，馬上就購買。', img: 'https://picsum.photos/seed/tea/400/200' },
-        { type: 'choice', context: '博物館有規定，所有的參觀者都需要購票。<br><span class="pinyin">(Bówùguǎn yǒu guīdìng...)</span>', q: '參觀這個博物館，不管____，都要買票。', options: ['誰想去', '什麼人', '哪裡好玩', '想不想買'], ans: 1, cite: '語法：不管...都...', explain: '不管...都...：無論條件或身分為何，結果皆相同。', img: 'https://picsum.photos/seed/museum/400/200' },
-        { type: 'choice', context: '老師完全不先通知，一進教室就發考卷。<br><span class="pinyin">(Lǎoshī wánquán bù xiān tōngzhī...)</span>', q: '李老師很嚴，常常說考試____考試。', options: ['都', '就', '也', '又'], ans: 1, cite: '語法：說...就...', explain: '說考試就考試：形容考試發生得非常突然。', img: 'https://picsum.photos/seed/exam/400/200' },
-        { type: 'choice', context: '你跟新朋友介紹你以前住的地方。<br><span class="pinyin">(Nǐ gēn xīn péngyǒu jièshào nǐ yǐqián zhù de dìfāng.)</span>', q: '我原來在____工作，現在搬來台北了。', options: ['美國', '照相', '用功', '不管'], ans: 0, cite: '生詞：原來', explain: '原來：表示「以前、起初」的狀態。', img: 'https://picsum.photos/seed/usa/400/200' },
-        { type: 'choice', context: '冬天很冷，你想吃熱熱的東西，不想等別人同意。<br><span class="pinyin">(Dōngtiān hěn lěng...)</span>', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...', '雖然...但是...'], ans: 0, cite: '語法：說...就...', explain: '說吃火鍋就吃火鍋：行動力極高，立刻執行。', img: 'https://picsum.photos/seed/hotpot/400/200' },
-        { type: 'sort', context: '小美對學中文非常有熱忱，堅持上課。<br><span class="pinyin">(Xiǎoměi duì xué zhōngwén fēicháng yǒu rèchén...)</span>', q: '請重組句子：', words: ['不管', '累不累', '她', '都會來', '上課'], ans: '不管累不累她都會來上課', cite: '語法：不管...都...', explain: '不管累不累：正反疑問條件都不影響結果。', img: 'https://picsum.photos/seed/study/400/200' },
-        { type: 'choice', context: '你跟朋友約好去海邊玩，即使下雨也不改變計畫。<br><span class="pinyin">(Nǐ gēn péngyǒu yuē hǎo qù hǎibiān wán...)</span>', q: '不管天氣____，我都要去海邊。', options: ['好不好', '怎麼樣', '好還是壞', '以上皆可'], ans: 3, cite: '語法：不管...都...', explain: '不管後面常接「疑問詞」或「正反問法」。', img: 'https://picsum.photos/seed/beach/400/200' },
-        { type: 'choice', context: '看到朋友拍出很棒的照片，你覺得很驚訝。<br><span class="pinyin">(Kàndào péngyǒu pāi chū hěn bàng de zhàopiàn...)</span>', q: '____你會照相！我以前不知道。', options: ['原來', '用功', '反對', '不管'], ans: 0, cite: '生詞：原來', explain: '原來：用在突然發現事實真相時的驚嘆。', img: 'https://picsum.photos/seed/camera/400/200' },
-        { type: 'choice', context: '老師每天都安排考試，你覺得壓力很大。<br><span class="pinyin">(Lǎoshī měitiān dōu ānpái kǎoshì...)</span>', q: '我____老師每天都筆試。', options: ['反對', '原來', '用功', '累'], ans: 0, cite: '生詞：反對', explain: '反對：不贊同並拒絕接受某種做法。', img: 'https://picsum.photos/seed/protest/400/200' },
-        { type: 'choice', context: '你的朋友個性很急，做決定非常快。<br><span class="pinyin">(Nǐ de péngyǒu gèxìng hěn jí...)</span>', q: '他決定的事情，說走____走。', options: ['就', '都', '也', '還'], ans: 0, cite: '語法：說...就...', explain: '說走就走：一說出口馬上就採取行動。', img: 'https://picsum.photos/seed/run/400/200' },
-        { type: 'choice', context: '小明非常聰明，每次測驗都能拿高分。<br><span class="pinyin">(Xiǎomíng fēicháng cōngmíng...)</span>', q: '不管____，他都拿第一名。', options: ['什麼考試', '誰在說話', '哪裡好玩', '什麼時候'], ans: 0, cite: '語法：不管...都...', explain: '不管什麼考試：表示任何種類的測驗都不影響他拿第一的結果。', img: 'https://picsum.photos/seed/medal/400/200' },
-        { type: 'sort', context: '你的朋友很喜歡購物，看到喜歡的東西就馬上付錢。<br><span class="pinyin">(Nǐ de péngyǒu hěn xǐhuān gòuwù...)</span>', q: '請重組句子：', words: ['看到', '喜歡的衣服', '說買', '就買'], ans: '看到喜歡的衣服說買就買', cite: '語法：說...就...', explain: '看到就買：形容衝動消費的行為。', img: 'https://picsum.photos/seed/shopping/400/200' }
+        { type: 'sort', context: '你的朋友是個愛喝手搖杯的人，一看到飲料店就控制不住。<br><span class="pinyin">(Nǐ de péngyǒu shì ge ài hē shǒuyáobēi de rén...)</span>', q: '請重組句子：', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '語法：說...就...', explain: '說買就買：表示沒有經過太多考慮，馬上就掏錢購買的行為。', img: 'https://picsum.photos/seed/tea/400/200' },
+        { type: 'choice', context: '你跟新朋友介紹你以前住的地方。<br><span class="pinyin">(Nǐ gēn xīn péngyǒu jièshào nǐ yǐqián zhù de dìfāng.)</span>', q: '我原來在____工作，現在搬來台北了。', options: ['美國', '照相', '用功', '不管'], ans: 0, cite: '生詞：原來', explain: '原來：在這裡表示「以前、起初」的狀態，後來發生了改變。', img: 'https://picsum.photos/seed/usa/400/200' },
+        { type: 'choice', context: '冬天很冷，你想吃熱熱的東西，不想等別人同意。<br><span class="pinyin">(Dōngtiān hěn lěng...)</span>', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...', '雖然...但是...'], ans: 0, cite: '語法：說...就...', explain: '說吃火鍋就吃火鍋：想到要吃火鍋，立刻就決定去吃，行動力極高。', img: 'https://picsum.photos/seed/hotpot/400/200' }
     ];
 
     let defaultAdvanced = [
-        { type: 'choice', context: '討論「自由廣場」的命名涵義與人民權益。<br><span class="pinyin">(Tǎolùn Zìyóu Guǎngchǎng de mìngmíng hányì yǔ rénmín quányì.)</span>', q: '自由廣場，____，就是一個讓人民自由表達意見的地方。', options: ['顧名思義', '胡作非為', '無理取鬧', '一來一往'], ans: 0, cite: '四字格：顧名思義', explain: '顧名思義：看到事物或地方的名稱，就能聯想、明白它的含義。', img: '' },
-        { type: 'choice', context: '探討法律的公平性與司法判決的適用範圍。<br><span class="pinyin">(Tàntǎo fǎlǜ de gōngpíngxìng yǔ sīfǎ pànjué de shìyòng fànwéi.)</span>', q: '法律之前，人人平等，____。', options: ['即使是總統也不例外', '也就是總統不例外', '即使是總統就例外', '即使總統才例外'], ans: 0, cite: '語法：即使...也...', explain: '即使...也...：表示極端的假設讓步，強調任何情況下規則不變。', img: '' },
-        { type: 'sort', context: '描述網路不實謠言傳播的特性與危險性。<br><span class="pinyin">(Miáoshù wǎngluò bùshí yáoyán chuánbō de tèxìng yǔ wéixiǎnxìng.)</span>', q: '請重組句子：', words: ['一旦', '網路謠言', '散播出去', '就很難停止'], ans: '一旦網路謠言散播出去就很難停止', cite: '語法：一旦...就...', explain: '一旦...就...：萬一發生了前面的情況，就會無可避免地導致後果。', img: '' },
-        { type: 'choice', context: '探討媒體在監督政府施政上扮演的角色。<br><span class="pinyin">(Tàntǎo méitǐ zài jiāndū zhèngfǔ shīzhèng shàng bànyǎn de juésè.)</span>', q: '政府的決策如果缺乏人民的監督，官員就很可能____。', options: ['越辯越明', '胡作非為', '顧名思義', '無理取鬧'], ans: 1, cite: '四字格：胡作非為', explain: '胡作非為：不顧法律和道德規範，隨心所欲地做壞事。', img: '' },
-        { type: 'choice', context: '批評某些政客在議會上的負面表現。<br><span class="pinyin">(Pīpíng mǒuxiē zhèngkè zài yìhuì shàng de fùmiàn biǎoxiàn.)</span>', q: '他們如果只是____，根本無法好好溝通，這對政策毫無幫助。', options: ['為反對而反對', '因為反對而反對', '為了反對就反對', '為反對才反對'], ans: 0, cite: '語法：為 A 而 A', explain: '為反對而反對：純粹把「反對」當作目的來執行。', img: '' },
-        { type: 'choice', context: '面對網路酸民的霸凌與仇恨言論時的態度。<br><span class="pinyin">(Miànduì wǎngluò suānmín de bàlíng yǔ chóuhèn yánlùn shí de tàidù.)</span>', q: '面對酸民的____，他選擇冷靜講理，相信真理終究會越辯越明。', options: ['無理取鬧', '顧名思義', '一來一往', '胡作非為'], ans: 0, cite: '四字格：無理取鬧', explain: '無理取鬧：毫無道理卻故意吵鬧、找麻煩。', img: '' },
-        { type: 'sort', context: '探討言論自由與法律規範的真實關係。<br><span class="pinyin">(Tàntǎo yánlùn zìyóu yǔ fǎlǜ guīfàn de zhēnshí guānxì.)</span>', q: '請重組句子：', words: ['有些人以為', '言論過於自由', '事實上', '法律早有規範'], ans: '有些人以為言論過於自由事實上法律早有規範', cite: '語法：事實上', explain: '事實上：用來澄清、說明真實的客觀情況。', img: '' },
-        { type: 'choice', context: '探討政治人物決策的責任歸屬。<br><span class="pinyin">(Tàntǎo zhèngzhì rénwù juécè de zérèn guīshǔ.)</span>', q: '污染、教育等問題都脫離不了政治，所以政府得____。', options: ['為自己的政策負責', '負責自己的政策', '為政策自己負責', '自己為政策的負責'], ans: 0, cite: '語法：A 為 B 負責', explain: 'A為B負責：某個結果是由A造成的，必須由A來承擔責任。', img: '' },
-        { type: 'choice', context: '威權政府應對民眾抗議的常見手段。<br><span class="pinyin">(Wēiquán zhèngfǔ yìngduì mínzhòng kàngyì de chángjiàn shǒuduàn.)</span>', q: '因為這件事會讓人民抗議，所以政府打算先____，不讓媒體報導。', options: ['封住媒體的嘴', '蒙住媒體的眼', '抓住媒體的手', '擋住媒體的路'], ans: 0, cite: '語法：封住...的嘴', explain: '封住...的嘴：利用權力或威脅，不讓他人發表意見。', img: '' },
-        { type: 'choice', context: '描述一場激烈但理性的司法辯論會。<br><span class="pinyin">(Miáoshù yīchǎng jīliè dàn lǐxìng de sīfǎ biànlùn huì.)</span>', q: '在這場辯論中，雙方____地互相指正，最後終於達成了共識。', options: ['一來一往', '顧名思義', '胡作非為', '無理取鬧'], ans: 0, cite: '四字格：一來一往', explain: '一來一往：形容雙方有來有往，互相交流或辯論的過程。', img: '' },
-        { type: 'choice', context: '探討某些行業的辛勞與無休假現象。<br><span class="pinyin">(Tàntǎo mǒuxiē hángyè de xīnláo yǔ wú xiūjià xiànxiàng.)</span>', q: '為了服務客戶，該公司員工幾乎沒有自己的假期，____。', options: ['即使是過年也不例外', '也就是過年不例外', '因為過年也不例外', '只有過年才例外'], ans: 0, cite: '語法：即使...也...', explain: '即使是過年也不例外：強調服務的極致程度。', img: '' },
-        { type: 'choice', context: '討論過度沉迷網路遊戲所帶來的負面影響。<br><span class="pinyin">(Tǎolùn guòdù chénmí wǎngluò yóuxì suǒ dàilái de fùmiàn yǐngxiǎng.)</span>', q: '玩網路遊戲要有限制，____。', options: ['因為一旦上癮就停不下來了', '雖然一旦上癮就停了', '只有一旦上癮才停了', '所以一旦上癮也不停'], ans: 0, cite: '語法：一旦...就...', explain: '一旦上癮就停不下來：說明成癮後的嚴重不可逆後果。', img: '' },
-        { type: 'choice', context: '給予年輕人關於婚姻與感情的忠告。<br><span class="pinyin">(Jǐyǔ niánqīng rén guānyú hūnyīn yǔ gǎnqíng de zhōnggào.)</span>', q: '結婚是人生大事，____，否則你一定會後悔。', options: ['千萬別為了結婚而結婚', '千萬別為了結婚才結婚', '一定要為了結婚而結婚', '可以為了結婚而結婚'], ans: 0, cite: '語法：為 A 而 A', explain: '千萬別為了結婚而結婚：婚姻不該只是一種盲目的目的。', img: '' },
-        { type: 'choice', context: '揭露某份看似輕鬆的工作背後的真相。<br><span class="pinyin">(Jiēlù mǒu fèn kànsì qīngsōng de gōngzuò bèihòu de zhēnxiàng.)</span>', q: '許多人以為這份工作很輕鬆，____。', options: ['事實上壓力非常大', '即使壓力非常大', '一旦壓力非常大', '顧名思義壓力很大'], ans: 0, cite: '語法：事實上', explain: '事實上：帶出與大眾認知相反的真相。', img: '' },
-        { type: 'choice', context: '教育的真正目的不在於應付測驗。<br><span class="pinyin">(Jiàoyù de zhēnzhèng mùdì bù zàiyú yìngfù cèyàn.)</span>', q: '考試只是要讓師生知道還有哪裡需要加強，別____，請為了學習而學習。', options: ['為考試而學習', '因為考試才學習', '為了考試去學習', '為考試做學習'], ans: 0, cite: '語法：為 A 而 A', explain: '為考試而學習：指把學習當成應付考試的手段，而非真正吸收知識。', img: '' }
+        { type: 'choice', context: '討論「自由廣場」的命名涵義與人民權益。', q: '自由廣場，____，就是一個讓人民自由表達意見的地方。', options: ['顧名思義', '胡作非為', '無理取鬧', '一來一往'], ans: 0, cite: '四字格：顧名思義', explain: '顧名思義：看到事物或地方的名稱，就能聯想、明白它的含義。', img: '' },
+        { type: 'sort', context: '描述網路不實謠言傳播的特性與危險性。', q: '請重組句子：', words: ['一旦', '網路謠言', '散播出去', '就很難停止'], ans: '一旦網路謠言散播出去就很難停止', cite: '語法：一旦...就...', explain: '一旦...就...：萬一發生了前面的情況，就會無可避免地導致後面的結果。', img: '' },
+        { type: 'choice', context: '探討媒體在監督政府施政上扮演的角色。', q: '政府的決策如果缺乏人民的監督，官員就很可能____。', options: ['越辯越明', '胡作非為', '顧名思義', '無理取鬧'], ans: 1, cite: '四字格：胡作非為', explain: '胡作非為：不顧法律和道德規範，隨心所欲地做壞事。', img: '' },
+        { type: 'choice', context: '教育的真正目的不在於應付測驗。', q: '考試只是要讓師生知道還有哪裡需要加強，別____，請為了學習而學習。', options: ['為考試而學習', '因為考試才學習', '為了考試去學習', '為考試做學習'], ans: 0, cite: '句型：為 A 而 A', explain: '為A而A：為了某個特定的目的(A)而去做某個行為(A)。', img: '' }
     ];
 
+    // ================== 迷你遊戲詞庫 (全新 V5 金鑰) ==================
     let defaultMiniGames = {
         beg_match: [
             { w: '歡迎', p: 'huānyíng', m: 'welcome', img: 'https://picsum.photos/seed/welcome/100' },
@@ -403,71 +326,45 @@
             { w: '哪國', p: 'nǎ guó', m: 'which country', img: 'https://picsum.photos/seed/country/100' }
         ],
         int_audio: [
-            { w: '用功', p: 'yònggōng', m: '是花很多時間讀書、學習。' }, { w: '反對', p: 'fǎnduì', m: '不贊成、不同意。' },
-            { w: '原來', p: 'yuánlái', m: '發現了以前不知道的真實情況。' }, { w: '奇怪', p: 'qíguài', m: '跟平常不一樣。' },
-            { w: '經過', p: 'jīngguò', m: '路過某個地方。' }, { w: '奶茶', p: 'nǎichá', m: '加入牛奶的茶。' },
-            { w: '博物館', p: 'bówùguǎn', m: '展覽歷史物品的地方。' }, { w: '嚴格', p: 'yángé', m: '要求很高，不放寬標準。' },
-            { w: '壓力', p: 'yālì', m: '心理上的負擔。' }, { w: '火鍋', p: 'huǒguō', m: '放進滾湯中煮熟的料理。' }
+            { w: '用功', p: 'yònggōng', m: 'study hard' }, { w: '反對', p: 'fǎnduì', m: 'oppose' },
+            { w: '原來', p: 'yuánlái', m: 'originally' }, { w: '奇怪', p: 'qíguài', m: 'strange' },
+            { w: '經過', p: 'jīngguò', m: 'pass by' }, { w: '奶茶', p: 'nǎichá', m: 'milk tea' },
+            { w: '博物館', p: 'bówùguǎn', m: 'museum' }, { w: '嚴格', p: 'yángé', m: 'strict' },
+            { w: '壓力', p: 'yālì', m: 'pressure' }, { w: '火鍋', p: 'huǒguō', m: 'hotpot' }
         ],
         int_speech: [
-            { w: '考試', p: 'kǎoshì', m: '測驗學習成果的方法。' }, { w: '天氣', p: 'tiānqì', m: '氣候的狀況。' },
-            { w: '朋友', p: 'péngyǒu', m: '交情好的同伴。' }, { w: '選擇', p: 'xuǎnzé', m: '從多個事物中挑出一個。' },
-            { w: '衣服', p: 'yīfú', m: '穿在身上保暖或裝飾的布料。' }, { w: '隨便', p: 'suíbiàn', m: '不加限制、不在乎。' },
-            { w: '決定', p: 'juédìng', m: '對事情做出最後的判斷。' }, { w: '變化', p: 'biànhuà', m: '事物產生新的情況。' },
-            { w: '影響', p: 'yǐngxiǎng', m: '對他人或事物起作用。' }, { w: '總是', p: 'zǒngshì', m: '一直、一向如此。' },
-            { w: '習慣', p: 'xíguàn', m: '長期養成的一種行為模式。' }, { w: '擔心', p: 'dānxīn', m: '心裡不放心、有顧慮。' },
-            { w: '放棄', p: 'fàngqì', m: '丟掉原有的權利或主張。' }, { w: '堅持', p: 'jiānchí', m: '堅決保持不改變。' },
-            { w: '成功', p: 'chénggōng', m: '達到預期的目標。' }
-        ],
-        adv_match: [
-            { w: '顧名思義', p: '', m: '指看到名稱，就聯想到它的含義。', img: '' }, { w: '胡作非為', p: '', m: '不顧法紀和道德，隨心所欲地做壞事。', img: '' },
-            { w: '無理取鬧', p: '', m: '毫無道理卻故意吵鬧、找麻煩。', img: '' }, { w: '越辯越明', p: '', m: '道理經過辯論會越來越清楚。', img: '' },
-            { w: '一來一往', p: '', m: '形容雙方動作或言語互相交替。', img: '' }
-        ],
-        adv_speech: [
-            { w: '言論自由', p: '', m: '人民有表達意見的權利，不受政府非法限制。' }, { w: '司法判決', p: '', m: '法院根據法律對案件作出的裁定。' },
-            { w: '網路霸凌', p: '', m: '透過網路對他人進行攻擊。' }, { w: '負責', p: '', m: '承擔責任。' },
-            { w: '價值', p: '', m: '事物所具備的正面意義與重要性。' }
+            { w: '考試', p: 'kǎoshì', m: 'exam' }, { w: '雖然', p: 'suīrán', m: 'although' },
+            { w: '但是', p: 'dànshì', m: 'but' }, { w: '選擇', p: 'xuǎnzé', m: 'choose' },
+            { w: '只要', p: 'zhǐyào', m: 'as long as' }, { w: '隨便', p: 'suíbiàn', m: 'casual' },
+            { w: '決定', p: 'juédìng', m: 'decide' }, { w: '變化', p: 'biànhuà', m: 'change' },
+            { w: '影響', p: 'yǐngxiǎng', m: 'influence' }, { w: '總是', p: 'zǒngshì', m: 'always' },
+            { w: '習慣', p: 'xíguàn', m: 'habit' }, { w: '擔心', p: 'dānxīn', m: 'worry' },
+            { w: '放棄', p: 'fàngqì', m: 'give up' }, { w: '堅持', p: 'jiānchí', m: 'persist' },
+            { w: '成功', p: 'chénggōng', m: 'success' }
         ]
     };
 
-    // ================== 儲存與系統變數 (V6 金鑰，保證更新並解決共享問題) ==================
-    let config = JSON.parse(localStorage.getItem('hyConfigV6')) || { 
-        banner: 'https://study.mdnkids.com/CH/images/main.jpg', 
-        theme: 'classic', displayMode: 'both', 
-        bgmId: 'nRy0W3jpk7Q', bgmList: 'PL0SpIPXG4xRwg5I5YpvBniXdXXNQ4IByy', bgmVol: 10 
-    };
-    
+    // ================== 系統狀態 ==================
+    let config = JSON.parse(localStorage.getItem('hyConfigV4')) || { banner: 'https://study.mdnkids.com/CH/images/main.jpg', theme: 'classic', displayMode: 'both' };
     let qdb = {
-        beginner: JSON.parse(localStorage.getItem('hyDB_Beg_V6')) || defaultBeginner,
-        intermediate: JSON.parse(localStorage.getItem('hyDB_Int_V6')) || defaultIntermediate,
-        advanced: JSON.parse(localStorage.getItem('hyDB_Adv_V6')) || defaultAdvanced
+        beginner: JSON.parse(localStorage.getItem('hyDBBeginnerV4')) || defaultBeginner,
+        intermediate: JSON.parse(localStorage.getItem('hyDBInterV4')) || defaultIntermediate,
+        advanced: JSON.parse(localStorage.getItem('hyDBAdvV4')) || defaultAdvanced
     };
-    let mgDB = JSON.parse(localStorage.getItem('hyMG_V6')) || defaultMiniGames;
-    
-    // 排行榜雙軌制: main (主測驗) vs mini (小遊戲)
-    let leaderboard = JSON.parse(localStorage.getItem('hyLB_V6')) || {
-        main: { beginner: [], intermediate: [], advanced: [] },
-        mini: { beginner: [], intermediate: [], advanced: [] }
-    };
-    
-    let currentLbMode = 'main', currentLbLvl = 'beginner';
+    let mgDB = JSON.parse(localStorage.getItem('hyMiniGamesV5')) || defaultMiniGames;
+    let leaderboard = JSON.parse(localStorage.getItem('hyLeaderboardV4')) || { beginner: [], intermediate: [], advanced: [] };
 
-    let gameMode = 'main'; // 'main' or 'mini'
+    let gameMode = 'main'; // 'main' 或 'mini'
     let currentData = [], currentQ = 0, score = 0, combo = 0, attempts = 0, maxAttempts = 2;
     let userSort = [], playerName = "", playerLevel = "", levelKey = "", displayLevelText = "";
-    
-    // Timer & Audio
     let timerId, timeLeft = 15;
-    let audioCtx = null; // 延遲初始化避免瀏覽器阻擋
-    let isYtReady = false;
-    let ytPlayer = null;
-
-    // Mini Games Var
-    let mgPhase = 1, mgSequence = []; 
+    
+    // 迷你遊戲專用變數
+    let mgSequence = []; 
     let memCards = [], flippedCards = [], matchedPairs = 0;
     let amWords = [], amAudio = [], selectedWord = null, selectedAudio = null;
     
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition;
     if(SpeechRecognition) {
@@ -477,63 +374,23 @@
         recognition.interimResults = false;
     }
 
-    // ================== 初始化與 YouTube API ==================
+    // ================== 初始化與音效 ==================
     window.onload = function() {
         applySettings();
-        showLeaderboard('beginner', document.getElementById('lb-tab-beg'));
+        showLeaderboard('beginner', document.querySelector('.lb-tab'));
     };
-
-    function onYouTubeIframeAPIReady() {
-        let playerParams = {
-            'autoplay': 0, 'loop': 1, 'controls': 0, 'origin': window.location.origin
-        };
-        if (config.bgmList && config.bgmList.trim() !== '') {
-            playerParams['listType'] = 'playlist';
-            playerParams['list'] = config.bgmList.trim();
-        }
-
-        ytPlayer = new YT.Player('yt-player', {
-            height: '0', width: '0',
-            videoId: config.bgmId || 'nRy0W3jpk7Q',
-            playerVars: playerParams,
-            events: { 
-                'onReady': (event) => { 
-                    isYtReady = true;
-                    event.target.setVolume(parseInt(config.bgmVol) || 10); 
-                },
-                'onError': (e) => { console.warn("YouTube Player Error:", e.data); }
-            }
-        });
-    }
-
-    function initAudio() {
-        // 在使用者點擊「開始遊戲」時才啟動 AudioContext 和 YouTube 播放，解決瀏覽器封鎖自動播放的問題
-        if(!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if(audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-        if(isYtReady && ytPlayer && typeof ytPlayer.playVideo === 'function') {
-            ytPlayer.setVolume(parseInt(config.bgmVol) || 10);
-            ytPlayer.playVideo();
-        }
-    }
 
     function applySettings() {
         if(config.banner) document.getElementById('top-banner').style.backgroundImage = `url('${config.banner}')`;
         document.documentElement.setAttribute('data-theme', config.theme);
         
+        // 更新後台欄位
         document.getElementById('setting-banner').value = config.banner || '';
         document.getElementById('setting-theme').value = config.theme;
         document.getElementById('setting-display').value = config.displayMode;
-        document.getElementById('setting-bgm-id').value = config.bgmId || 'nRy0W3jpk7Q';
-        document.getElementById('setting-bgm-list').value = config.bgmList || 'PL0SpIPXG4xRwg5I5YpvBniXdXXNQ4IByy';
-        document.getElementById('setting-bgm-vol').value = config.bgmVol || 10;
     }
 
     function playSound(isCorrect) {
-        if(!audioCtx) return;
         const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
         osc.connect(gain); gain.connect(audioCtx.destination);
         if(isCorrect) {
@@ -547,19 +404,134 @@
     }
 
     function cleanTextForSpeech(text) { return text.replace(/<[^>]*>?/gm, '').replace(/\([^)]*\)/g, '').replace(/[a-zA-Z]/g, ''); }
-    function replayQ() { if(gameMode === 'main') speak(cleanTextForSpeech(currentData[currentQ].context) + " " + cleanTextForSpeech(currentData[currentQ].q)); }
+    function replayQ() { 
+        if(gameMode === 'main') speak(cleanTextForSpeech(currentData[currentQ].context) + " " + cleanTextForSpeech(currentData[currentQ].q)); 
+    }
     function speak(txt) { 
         window.speechSynthesis.cancel(); 
         const m = new SpeechSynthesisUtterance(cleanTextForSpeech(txt)); m.lang = 'zh-TW'; 
         window.speechSynthesis.speak(m); 
     }
 
-    // ================== 遊戲啟動 ==================
+    // ================== 成績分享功能 (仿 Duolingo 版) ==================
+    // 核心邏輯：當用戶點擊分享時，我們準備檔案並調用系統原生分享。
+    // 在行動裝置上，這會下載圖片並彈出分享選單。使用者需自行在選單中選擇「Instagram Stories」。
+
+    function prepareScorecard(andShare = false) {
+        const canvas = document.getElementById('share-canvas');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // 仿 Duolingo 樣式：綠色漸層底，帶有淡出的環形動態線條圖騰。
+        const grd = ctx.createLinearGradient(0, 0, 0, height);
+        grd.addColorStop(0, "#2B9E6A"); 
+        grd.addColorStop(1, "#18774F"); 
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, width, height);
+
+        // 裝飾環 (簡化版)
+        ctx.strokeStyle = "rgba(255,255,255,0.1)";
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(width * 0.2, height * 0.8, 100, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(width * 0.8, height * 0.2, 150, 0, Math.PI * 2); ctx.stroke();
+
+        // 仿 Duolingo 卡片：白色圓角卡片。
+        const cardX = 20, cardY = 20, cardW = width - 40, cardH = height - 40;
+        ctx.fillStyle = "white";
+        roundRect(ctx, cardX, cardY, cardW, cardH, 20, true, false);
+
+        // 使用標準的臺灣旗幟 (使用 Canvas 繪製以防網址載入失敗)
+        drawTaiwanFlag(ctx, width / 2 - 40, cardY + 30, 80);
+
+        // 仿 Duolingo 字體排版：上方標註綠色字體「TAIWANESE MANDARIN」以及「成績分享 (SCORE SHARE)」。
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#18774F"; 
+        ctx.font = "bold 24px 'PingFang TC', 'Microsoft JhengHei', sans-serif"; 
+        ctx.fillText("TAIWANESE MANDARIN", width / 2, cardY + 140);
+        
+        ctx.fillStyle = "#666"; 
+        ctx.font = "20px 'PingFang TC', sans-serif"; 
+        ctx.fillText("成績分享 (SCORE SHARE)", width / 2, cardY + 170);
+
+        // 中央使用超大、加粗的加粗綠色字體顯示「您的總分：XXXX 分」
+        ctx.fillStyle = "#18774F"; 
+        ctx.font = "bold 48px 'PingFang TC', sans-serif";
+        ctx.fillText(`${playerName} 的總分`, width / 2, cardY + 240);
+
+        ctx.font = "bold 72px 'PingFang TC', sans-serif";
+        ctx.fillText(`${score} 分`, width / 2, cardY + 310);
+
+        // 下方加上日期。
+        ctx.fillStyle = "#999"; 
+        ctx.font = "18px sans-serif";
+        ctx.fillText(new Date().toLocaleDateString(), width / 2, cardH - 10);
+
+        // 轉為 Blob 檔案並處理
+        canvas.toBlob((blob) => {
+            const file = new File([blob], `HyMandarin-Score-${playerName}.png`, { type: "image/png" });
+            
+            // 處理：在按進去是同時下載和分享
+            if(andShare) {
+                downloadImage(canvas); // 下載圖片
+                shareImage(file);       // 嘗試觸發系統分享
+            }
+        }, "image/png");
+    }
+
+    // 輔助：下載圖片
+    function downloadImage(canvas) {
+        const link = document.createElement("a");
+        link.download = `HyMandarin-Score-${playerName}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    }
+
+    // 輔助：執行系統原生分享
+    async function shareImage(file) {
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                // 這會彈出行動裝置的原生分享選單，學習者需在此菜單中選擇 Instagram。
+                await navigator.share({
+                    files: [file],
+                    title: 'HyMandarin 成績分享',
+                    text: `我在 HyMandarin 完成了華語挑戰，我的總分是 ${score} 分！`
+                });
+            } catch (error) {
+                console.log("分享取消或失敗:", error);
+            }
+        } else {
+            alert("您的瀏覽器不支援自動分享圖片。圖片已下載至您的相簿，請手動上傳至 Instagram。");
+        }
+    }
+
+    // 輔助：繪製圓角矩形
+    function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+        if (typeof radius === "undefined") radius = 5;
+        if (typeof radius === "number") radius = {tl: radius, tr: radius, br: radius, bl: radius};
+        else { var defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0}; for (var side in defaultRadius) radius[side] = radius[side] || defaultRadius[side]; }
+        ctx.beginPath(); ctx.moveTo(x + radius.tl, y); ctx.lineTo(x + width - radius.tr, y); ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr); ctx.lineTo(x + width, y + height - radius.br); ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height); ctx.lineTo(x + radius.bl, y + height); ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl); ctx.lineTo(x, y + radius.tl); ctx.quadraticCurveTo(x, y, x + radius.tl, y); ctx.close();
+        if (fill) ctx.fill(); if (stroke) ctx.stroke();
+    }
+
+    // 輔助：繪製臺灣旗幟 (簡化版)
+    function drawTaiwanFlag(ctx, x, y, size) {
+        const h = size, w = size * 1.5;
+        // 紅底
+        ctx.fillStyle = "#FF0000"; ctx.fillRect(x, y, w, h);
+        // 藍四分之一
+        ctx.fillStyle = "#000095"; ctx.fillRect(x, y, w/2, h/2);
+        // 白日
+        const cX = x + w/4, cY = y + h/4, r1 = h/8, r2 = h/4;
+        ctx.fillStyle = "white"; ctx.beginPath(); ctx.arc(cX, cY, r1, 0, Math.PI * 2); ctx.fill();
+        ctx.lineWidth = h/20; ctx.strokeStyle = "white";
+        for (let i = 0; i < 12; i++) { ctx.beginPath(); ctx.moveTo(cX, cY); ctx.lineTo(cX + Math.cos(i * Math.PI / 6) * r2, cY + Math.sin(i * Math.PI / 6) * r2); ctx.stroke(); }
+    }
+
+    // ================== 遊戲啟動與主邏輯 (左右分欄) ==================
     function startGame(mode) {
         playerName = document.getElementById('player-name').value;
         if(!playerName) return alert('請輸入名字喔！');
-        
-        initAudio(); // 點擊時啟動音效與背景音樂
         
         levelKey = document.getElementById('player-level').value;
         gameMode = mode;
@@ -568,11 +540,13 @@
         else if (levelKey === "intermediate") { displayLevelText = "中級"; } 
         else { displayLevelText = "高級"; }
         
-        document.getElementById('main-game-title').innerText = gameMode === 'main' ? `📝 生詞&語法練習 - ${displayLevelText}` : `🎮 遊戲帶你學華語 - ${displayLevelText}`;
+        document.getElementById('main-game-title').innerText = gameMode === 'main' ? `📝 主測驗 - ${displayLevelText}` : `🎮 遊戲帶你學華語 - ${displayLevelText}`;
         
+        // 左右分欄資訊設定
         document.getElementById('player-info').innerText = `${displayLevelText}：${playerName}`;
+        document.getElementById('top-bar').classList.remove('hidden');
         
-        const lp = document.getElementById('ui-left-panel'), rp = document.getElementById('ui-right-panel');
+        const lp = document.querySelector('.left-panel'), rp = document.querySelector('.right-panel');
         if(config.displayMode === 'none') { lp.style.visibility = 'hidden'; rp.style.visibility = 'hidden'; }
         else if (config.displayMode === 'nameOnly') { lp.style.visibility = 'visible'; rp.style.visibility = 'hidden'; }
         else if (config.displayMode === 'scoreOnly') { lp.style.visibility = 'hidden'; rp.style.visibility = 'visible'; }
@@ -599,28 +573,36 @@
         if(confirm("確定要返回首頁嗎？進度將會遺失。")) {
             clearInterval(timerId); window.speechSynthesis.cancel();
             document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('top-bar').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
-            showLeaderboard(levelKey || 'beginner', document.getElementById('lb-tab-beg'));
+            showLeaderboard(levelKey || 'beginner', document.querySelector('.lb-tab'));
         }
     }
 
-    function startTimer(seconds = 15, timeoutCallback) {
-        clearInterval(timerId); timeLeft = seconds;
+    function startTimer() {
+        clearInterval(timerId); timeLeft = 15;
         const td = document.getElementById('timer-display');
-        td.innerText = `⏳ ${timeLeft}`; td.style.background = "#FFF0F0"; td.style.color = "var(--edu-accent)";
+        td.innerText = `⏳ ${timeLeft}`; td.style.color = "var(--edu-accent)";
         timerId = setInterval(() => {
             timeLeft--; td.innerText = `⏳ ${timeLeft}`;
-            if(timeLeft <= 5) { td.style.background = "var(--edu-accent)"; td.style.color = "white"; }
-            if (timeLeft <= 0) { clearInterval(timerId); timeoutCallback(); }
+            if(timeLeft <= 5) td.style.color = "red";
+            if (timeLeft <= 0) { clearInterval(timerId); handleTimeout(); }
         }, 1000);
     }
 
-    function updateScoreUI() { 
-        document.getElementById('total-score').innerText = score; 
-        document.getElementById('combo-display').innerText = `Combo x${combo}`; 
+    function handleTimeout() {
+        attempts++;
+        const btns = document.querySelectorAll('#interactive-area .btn'); btns.forEach(b => b.disabled = true); 
+        if(attempts >= maxAttempts) {
+            const q = currentData[currentQ];
+            let ansTxt = q.type === 'choice' ? q.options[q.ans].replace(/<[^>]*>?/gm, '') : q.ans.replace(/<br>/g, "");
+            handleResult(false, `時間到！<br>正確答案：${ansTxt.replace(/\([^)]*\)/g, '')}`);
+        } else {
+            showHint(`時間到！剩 ${maxAttempts - attempts} 次機會！`);
+            startTimer(); btns.forEach(b => b.disabled = false);
+        }
     }
 
-    // ================== 1. 主測驗邏輯 (Main Quiz) ==================
     function showQuestion() {
         const q = currentData[currentQ], area = document.getElementById('interactive-area'), fb = document.getElementById('feedback');
         maxAttempts = (q.type === 'sort') ? 4 : 2; attempts = 0; userSort = [];
@@ -651,12 +633,7 @@
             area.appendChild(pool);
             const cBtn = document.createElement('button'); cBtn.className = 'btn btn-primary'; cBtn.innerText = '✅ 檢查句子'; cBtn.onclick = checkSort; area.appendChild(cBtn);
         }
-        replayQ(); 
-        startTimer(15, () => {
-            attempts++; document.querySelectorAll('#interactive-area .btn').forEach(b => b.disabled = true);
-            if(attempts >= maxAttempts) handleMainResult(false, `時間到！<br>正確答案：${q.type === 'choice' ? q.options[q.ans].replace(/<[^>]*>?/gm, '') : q.ans.replace(/<br>/g, "")}`);
-            else { showHint(`時間到！剩 ${maxAttempts - attempts} 次機會！`); startTimer(15, arguments.callee); document.querySelectorAll('#interactive-area .btn').forEach(b => b.disabled = false); }
-        });
+        replayQ(); startTimer();
     }
 
     function updateSortDisplay() {
@@ -669,43 +646,69 @@
 
     function checkAns(idx, btn) {
         clearInterval(timerId); const q = currentData[currentQ];
-        if(idx === q.ans) handleMainResult(true);
+        if(idx === q.ans) handleResult(true);
         else {
             attempts++; btn.disabled = true;
-            if(attempts >= maxAttempts) handleMainResult(false, `正確答案：<br>${q.options[q.ans].replace(/\([^)]*\)/g, '')}`);
-            else { showHint(`答錯囉，剩 ${maxAttempts - attempts} 次機會！`); startTimer(15, handleTimeout); }
+            if(attempts >= maxAttempts) handleResult(false, `正確答案：<br>${q.options[q.ans].replace(/\([^)]*\)/g, '')}`);
+            else { showHint(`答錯囉，剩 ${maxAttempts - attempts} 次機會！`); startTimer(); }
         }
     }
 
     function checkSort() {
         clearInterval(timerId); const q = currentData[currentQ];
-        if(userSort.join('') === q.ans) handleMainResult(true);
+        if(userSort.join('') === q.ans) handleResult(true);
         else {
             attempts++;
-            if(attempts >= maxAttempts) handleMainResult(false, `正確順序：<br>${q.ans.replace(/<br>/g, " ")}`);
-            else { showHint(`順序不對喔，還有 ${maxAttempts - attempts} 次機會！`); startTimer(15, handleTimeout); }
+            if(attempts >= maxAttempts) handleResult(false, `正確順序：<br>${q.ans.replace(/<br>/g, " ")}`);
+            else { showHint(`順序不對喔，還有 ${maxAttempts - attempts} 次機會！`); startTimer(); }
         }
     }
 
-    function handleMainResult(isCorrect, msg = "") {
+    function handleResult(isCorrect, msg = "") {
         clearInterval(timerId); const fb = document.getElementById('feedback'), q = currentData[currentQ];
         fb.classList.remove('hidden');
-        let exp = q.explain ? `<div class="explanation">💡 <b>解析：</b>${q.explain}</div>` : '';
+        let exp = q.explain ? `<div class="explanation">💡 解析：${q.explain}</div>` : '';
         
         if(isCorrect) {
             combo++; const addScore = combo * 100; score += addScore;
-            fb.innerHTML = `正確！加 ${addScore} 分！🔥<br><small>出處：${q.cite}</small>${exp}`; fb.className = 'correct'; playSound(true);
+            fb.innerHTML = `正確！加 ${addScore} 分！🔥<br><small>出處：${q.cite}</small>${exp}`;
+            fb.className = 'correct'; playSound(true);
         } else {
-            combo = 0; fb.innerHTML = `機會用完。❌<br>${msg}<br><small>出處：${q.cite}</small>${exp}`; fb.className = 'wrong'; playSound(false);
+            combo = 0; fb.innerHTML = `機會用完。❌<br>${msg}<br><small>出處：${q.cite}</small>${exp}`;
+            fb.className = 'wrong'; playSound(false);
         }
         updateScoreUI(); document.getElementById('attempt-hint').innerText = "本題結束";
         document.getElementById('next-btn').classList.remove('hidden');
         document.querySelectorAll('#interactive-area .btn').forEach(b => b.disabled = true);
     }
     
+    function updateScoreUI() { document.getElementById('total-score').innerText = score; document.getElementById('combo-display').innerText = `Combo x${combo}`; }
     function showHint(txt) { const fb = document.getElementById('feedback'); document.getElementById('attempt-hint').innerText = `剩餘機會：${maxAttempts - attempts}`; fb.innerHTML = txt; fb.className = 'wrong'; fb.classList.remove('hidden'); }
 
-    // ================== 2. 迷你遊戲邏輯 (Mini Games) ==================
+    function nextQuestion() {
+        if(gameMode === 'main') {
+            currentQ++; if(currentQ < currentData.length) showQuestion(); else endGame();
+        } else {
+            currentQ++; if(currentQ < mgSequence.length) loadMiniGamePhase(); else endGame();
+        }
+    }
+
+    function endGame() {
+        clearInterval(timerId);
+        document.getElementById('timer-display').innerText = "⏳ --";
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+        document.getElementById('top-bar').classList.add('hidden');
+        document.getElementById('end-player').innerText = `${displayLevelText}：${playerName}`;
+        document.getElementById('final-score').innerText = `總得分：${score}`;
+        
+        // 儲存至排行榜
+        leaderboard[levelKey].push({ name: playerName, score: score });
+        leaderboard[levelKey].sort((a,b) => b.score - a.score);
+        localStorage.setItem('hyLeaderboardV4', JSON.stringify(leaderboard));
+    }
+
+    // ================== 小遊戲邏輯 (Mini Games) ==================
     function startMiniGame() {
         mgSequence = []; currentQ = 0;
         if(levelKey === 'beginner') {
@@ -714,8 +717,7 @@
             mgSequence.push({ type: 'audio', data: mgDB.int_audio });
             for(let i=0; i<mgDB.int_speech.length; i++) mgSequence.push({ type: 'speech', data: mgDB.int_speech[i] });
         } else {
-            mgSequence.push({ type: 'match', data: mgDB.adv_match });
-            for(let i=0; i<mgDB.adv_speech.length; i++) mgSequence.push({ type: 'speech', data: mgDB.adv_speech[i] });
+            alert("此層級尚無小遊戲。"); quitGame(); return;
         }
         loadMiniGamePhase();
     }
@@ -724,17 +726,16 @@
         const step = mgSequence[currentQ];
         document.getElementById('feedback').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
-        document.getElementById('mg-attempt-hint').innerText = "";
-        clearInterval(timerId); document.getElementById('timer-display').innerText = "⏳ --";
+        document.getElementById('attempt-hint').innerText = "";
 
         if(step.type === 'match') renderMatchGame(step.data);
         else if(step.type === 'audio') renderAudioGame(step.data);
         else if(step.type === 'speech') renderSpeechGame(step.data);
     }
 
-    // --- 翻牌配對遊戲 ---
+    // --- 1. 翻牌配對遊戲 ---
     function renderMatchGame(dataList) {
-        document.getElementById('mg-instruction').innerText = "🃏 記憶配對：找出單字與對應的拼音/圖片/意思！";
+        document.getElementById('mg-instruction').innerText = "🃏 記憶配對：找出單字與對應的拼音/圖片！";
         const content = document.getElementById('mg-content');
         content.innerHTML = '<div class="mg-grid" id="mg-grid"></div>';
         const grid = document.getElementById('mg-grid');
@@ -742,7 +743,7 @@
         memCards = []; flippedCards = []; matchedPairs = 0;
         dataList.forEach((item, idx) => {
             memCards.push({ id: idx, html: item.w, type: 'word' });
-            let display = item.p ? `<span style="color:#666;">${item.p}</span>` : item.m;
+            let display = `<span style="color:#666;">${item.p}</span>`;
             if(item.img) display += `<br><img src="${item.img}">`;
             memCards.push({ id: idx, html: display, type: 'def' });
         });
@@ -782,7 +783,7 @@
         }
     }
 
-    // --- 聽音辨字遊戲 ---
+    // --- 2. 聽音辨字遊戲 ---
     function renderAudioGame(dataList) {
         document.getElementById('mg-instruction').innerText = "🎧 聽音辨字：聽系統發音，點擊對應單字！";
         const content = document.getElementById('mg-content');
@@ -805,11 +806,7 @@
         });
         amAudio.forEach(item => {
             const btn = document.createElement('div'); btn.className = 'am-item'; btn.innerHTML = "🔊 播放語音";
-            btn.onclick = () => { 
-                speak(item.w); 
-                document.querySelectorAll('#am-audio .am-item').forEach(e=>e.classList.remove('selected')); 
-                btn.classList.add('selected'); selectedAudio = item; checkAudioMatch(); 
-            };
+            btn.onclick = () => { speak(item.w); document.querySelectorAll('#am-audio .am-item').forEach(e=>e.classList.remove('selected')); btn.classList.add('selected'); selectedAudio = item; checkAudioMatch(); };
             aCol.appendChild(btn);
         });
     }
@@ -831,22 +828,22 @@
         }
     }
 
-    // --- 口說挑戰 ---
+    // --- 3. 口說挑戰 ---
     function renderSpeechGame(wordData) {
         document.getElementById('mg-instruction').innerText = "🎤 口說挑戰：請大聲唸出這個詞彙！";
         maxAttempts = 3; attempts = 0;
         const content = document.getElementById('mg-content');
         
         content.innerHTML = `
-            <div style="font-size:3.5rem; font-weight:bold; color:var(--edu-primary); margin: 30px 0;">${wordData.w}</div>
-            <button id="record-btn" class="speech-btn" onclick="startRecording('${wordData.w}', '${wordData.p}', '${wordData.m}')">🎙️ 點擊開始說話</button>
+            <div style="font-size:3rem; font-weight:bold; color:var(--edu-primary); margin: 30px 0;">${wordData.w}</div>
+            <button id="record-btn" class="speech-btn" onclick="startRecording('${wordData.w}', '${wordData.p}', '${wordData.m}')">🎙️ 按住說話</button>
             <div id="speech-result" style="font-size:1.2rem; color:#666; margin-top:10px;"></div>
         `;
-        document.getElementById('mg-attempt-hint').innerText = `剩餘機會：${maxAttempts}`;
+        document.getElementById('attempt-hint').innerText = `剩餘機會：${maxAttempts}`;
     }
 
     function startRecording(targetWord, pinyin, meaning) {
-        if(!recognition) return alert("您的瀏覽器不支援語音辨識功能（建議使用 Chrome）！");
+        if(!recognition) return alert("您的瀏覽器不支援語音辨識功能（請使用 Chrome）！");
         
         const btn = document.getElementById('record-btn');
         btn.innerText = "聆聽中..."; btn.style.background = "#333";
@@ -865,13 +862,13 @@
                     combo = 0; updateScoreUI(); playSound(false);
                     showSpeechResult(false, targetWord, pinyin, meaning);
                 } else {
-                    document.getElementById('mg-attempt-hint').innerText = `辨識錯誤，剩餘機會：${maxAttempts - attempts}`;
+                    document.getElementById('attempt-hint').innerText = `辨識錯誤，剩餘機會：${maxAttempts - attempts}`;
                     playSound(false);
                 }
             }
         };
         recognition.onerror = (event) => {
-            btn.innerText = "🎙️ 點擊開始說話"; btn.style.background = "var(--edu-accent)";
+            btn.innerText = "🎙️ 按住說話"; btn.style.background = "var(--edu-accent)";
             document.getElementById('speech-result').innerText = "沒有聽到聲音，請再試一次！";
         };
         recognition.start();
@@ -879,81 +876,21 @@
 
     function showSpeechResult(isCorrect, w, p, m) {
         document.getElementById('record-btn').disabled = true;
-        document.getElementById('mg-attempt-hint').innerText = "本題結束";
+        document.getElementById('attempt-hint').innerText = "本題結束";
         
         const fb = document.getElementById('feedback'); fb.classList.remove('hidden');
-        let pyHTML = p ? `<b>拼音：</b>${p}<br>` : "";
-        fb.innerHTML = `${isCorrect ? '✅ 發音標準！' : '❌ 機會用盡！'}<br><br><b>單字：</b>${w}<br>${pyHTML}<b>解釋：</b>${m}`;
+        fb.innerHTML = `${isCorrect ? '✅ 發音標準！' : '❌ 機會用盡！'}<br><br><b>${w}</b><br>拼音：${p}<br>解釋：${m}`;
         fb.className = isCorrect ? 'correct' : 'wrong';
         document.getElementById('next-btn').classList.remove('hidden');
     }
 
-    // ================== 結算與 Instagram 分享 ==================
-    function nextQuestion() {
-        if(gameMode === 'main') {
-            currentQ++; if(currentQ < currentData.length) showQuestion(); else endGame();
-        } else {
-            currentQ++; if(currentQ < mgSequence.length) loadMiniGamePhase(); else endGame();
-        }
-    }
-
-    function endGame() {
-        document.getElementById('game-screen').classList.add('hidden');
-        document.getElementById('end-screen').classList.remove('hidden');
-        document.getElementById('end-player').innerText = `${displayLevelText}：${playerName}`;
-        document.getElementById('final-score').innerText = `總得分：${score}`;
-        
-        // 儲存到正確的榜單
-        leaderboard[gameMode][levelKey].push({ name: playerName, score: score });
-        leaderboard[gameMode][levelKey].sort((a,b) => b.score - a.score);
-        localStorage.setItem('hyLB_V6', JSON.stringify(leaderboard));
-    }
-
-    function shareToInstagram() {
-        const modeText = gameMode === 'main' ? '生詞&語法練習' : '遊戲帶你學華語';
-        const shareText = `我在「學華語 Let's Learn Mandarin」的【${modeText} - ${displayLevelText}】獲得了 ${score} 分！🎉\n\n快來跟我一起挑戰中文吧！ 📚✨\n#學華語 #MandarinLearning #Taiwan`;
-        
-        if (navigator.share && /mobile|android|iphone|ipad/i.test(navigator.userAgent.toLowerCase())) {
-            navigator.share({
-                title: '學華語成績分享',
-                text: shareText
-            }).catch(err => {
-                fallbackCopy(shareText);
-            });
-        } else {
-            fallbackCopy(shareText);
-        }
-    }
-
-    function fallbackCopy(text) {
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert("✅ 成績與評論已複製到剪貼簿！\n即將為您打開 Instagram，您可以直接貼上分享您的成就！");
-                window.open('https://www.instagram.com/', '_blank');
-            }).catch(err => {
-                alert("請手動複製以下文字分享：\n\n" + text);
-            });
-        } else {
-            alert("請手動複製以下文字分享：\n\n" + text);
-        }
-    }
-
-    // ================== 排行榜顯示切換 ==================
-    function switchLbModeView(mode, btn) {
-        document.querySelectorAll('.lb-tab-mode').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        currentLbMode = mode;
-        showLeaderboard(currentLbLvl, document.querySelector(`.lb-tab.active`));
-    }
-
+    // ================== 後台管理系統 ==================
     function showLeaderboard(lvl, btn) {
         document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
         if(btn) btn.classList.add('active');
-        currentLbLvl = lvl;
-        
         const list = document.getElementById('lb-display-list');
         list.innerHTML = '';
-        const data = leaderboard[currentLbMode][lvl] || [];
+        const data = leaderboard[lvl] || [];
         if(data.length === 0) list.innerHTML = "<li>目前還沒有紀錄喔！</li>";
         else {
             data.slice(0,5).forEach((item, i) => {
@@ -962,7 +899,6 @@
         }
     }
 
-    // ================== 後台管理系統 ==================
     function showAdminLoginModal() { document.getElementById('admin-login-modal').classList.remove('hidden'); }
     function closeAdminLoginModal() { document.getElementById('admin-login-modal').classList.add('hidden'); }
 
@@ -970,7 +906,7 @@
         if(document.getElementById('admin-usr').value === "oscar" && document.getElementById('admin-pwd').value === "12345678") {
             closeAdminLoginModal(); clearInterval(timerId); window.speechSynthesis.cancel();
             document.getElementById('login-screen').classList.add('hidden'); document.getElementById('game-screen').classList.add('hidden');
-            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden'); document.getElementById('top-bar').classList.add('hidden');
             document.getElementById('admin-screen').classList.remove('hidden'); switchAdminTab('global');
         } else alert("帳號或密碼錯誤！");
     }
@@ -990,13 +926,10 @@
 
     function saveGlobalSettings() {
         config.banner = document.getElementById('setting-banner').value.trim();
-        config.bgmId = document.getElementById('setting-bgm-id').value.trim();
-        config.bgmList = document.getElementById('setting-bgm-list').value.trim();
-        config.bgmVol = parseInt(document.getElementById('setting-bgm-vol').value) || 10;
         config.theme = document.getElementById('setting-theme').value;
         config.displayMode = document.getElementById('setting-display').value;
-        localStorage.setItem('hyConfigV6', JSON.stringify(config));
-        applySettings(); alert("全局與音樂設定已儲存！(若更改音樂需重整網頁)");
+        localStorage.setItem('hyConfigV4', JSON.stringify(config));
+        applySettings(); alert("全局設定已儲存！");
     }
 
     // --- 主測驗編輯 ---
@@ -1011,14 +944,13 @@
                                      `<div class="input-group"><label>重組字塊 (半形逗號分隔):</label><input type="text" id="q-words-${i}" value="${q.words.join(',')}"></div>`;
             list.innerHTML += `
                 <div class="admin-item">
-                    <button class="delete-btn" onclick="deleteQ(${i})">🗑️ 刪除</button>
+                    <button class="delete-btn" onclick="deleteQ(${i})">🗑️ 刪除此題</button>
                     <h4 style="margin-top:0; color:var(--edu-primary);">主測驗題號 ${i+1}</h4>
-                    <div class="input-group"><label>情境:</label><textarea id="q-ctx-${i}" rows="2">${q.context}</textarea></div>
-                    <div class="input-group"><label>題目:</label><textarea id="q-text-${i}" rows="2">${q.q}</textarea></div>
+                    <div class="input-group"><label>情境:</label><textarea id="q-ctx-${i}">${q.context}</textarea></div>
+                    <div class="input-group"><label>題目:</label><textarea id="q-text-${i}">${q.q}</textarea></div>
                     ${optHTML}
-                    <div class="input-group"><label>正確答案 ${isChoice?'(輸入 0,1,2,3)':'(完整句子)'}:</label><input type="text" id="q-ans-${i}" value="${q.ans}"></div>
-                    <div class="input-group"><label>解析:</label><textarea id="q-exp-${i}" rows="2">${q.explain || ''}</textarea></div>
-                    <div class="input-group"><label>圖片網址 (可選):</label><input type="text" id="q-img-${i}" value="${q.img || ''}"></div>
+                    <div class="input-group"><label>正確答案 ${isChoice?'(輸入 0,1,2,3)':'(輸入完整正確句子)'}:</label><input type="text" id="q-ans-${i}" value="${q.ans}"></div>
+                    <div class="input-group"><label>解析:</label><input type="text" id="q-exp-${i}" value="${q.explain || ''}"></div>
                 </div>`;
         });
     }
@@ -1026,7 +958,7 @@
     function addNewQuestion() {
         const type = prompt("輸入 'choice' 為選擇題, 'sort' 為重組題", "choice");
         if(type === 'choice') editingDB.unshift({ type: 'choice', context: '新情境', q: '新題目', options: ['A','B','C','D'], ans: 0, cite: '', explain: '', img: '' });
-        else if (type === 'sort') editingDB.unshift({ type: 'sort', context: '新情境', q: '請重組句子', words: ['字1','字2'], ans: '字1字2', cite: '', explain: '', img: '' });
+        else if (type === 'sort') editingDB.unshift({ type: 'sort', context: '新情境', q: '請重組句子', words: ['字1','字2','字3'], ans: '字1字2字3', cite: '', explain: '', img: '' });
         renderAdminQList();
     }
 
@@ -1038,15 +970,14 @@
             if(q.type === 'choice') { q.options = document.getElementById(`q-opt-${i}`).value.split(','); q.ans = parseInt(document.getElementById(`q-ans-${i}`).value); } 
             else { q.words = document.getElementById(`q-words-${i}`).value.split(','); q.ans = document.getElementById(`q-ans-${i}`).value; }
             q.explain = document.getElementById(`q-exp-${i}`).value;
-            q.img = document.getElementById(`q-img-${i}`).value;
         });
         const lvl = document.getElementById('admin-level-select').value;
         qdb[lvl] = editingDB;
-        localStorage.setItem(lvl === 'beginner' ? 'hyDB_Beg_V6' : (lvl === 'intermediate' ? 'hyDB_Int_V6' : 'hyDB_Adv_V6'), JSON.stringify(qdb[lvl]));
+        localStorage.setItem(lvl === 'beginner' ? 'hyDBBeginnerV4' : (lvl === 'intermediate' ? 'hyDBInterV4' : 'hyDBAdvV4'), JSON.stringify(qdb[lvl]));
         alert("主測驗題庫儲存成功！");
     }
 
-    // --- 小遊戲詞庫編輯 ---
+    // --- 遊戲詞庫編輯 ---
     let editingMG = [];
     function renderAdminMGList() {
         const key = document.getElementById('admin-mg-select').value;
@@ -1055,10 +986,10 @@
         editingMG.forEach((item, i) => {
             list.innerHTML += `
                 <div class="admin-item">
-                    <h4 style="margin-top:0; color:var(--edu-success);">詞彙 ${i+1}</h4>
+                    <h4 style="margin-top:0; color:var(--edu-success);">遊戲詞彙 ${i+1}</h4>
                     <div class="input-group"><label>生詞 (Word):</label><input type="text" id="mg-w-${i}" value="${item.w}"></div>
-                    <div class="input-group"><label>拼音 (Pinyin):</label><input type="text" id="mg-p-${i}" value="${item.p || ''}"></div>
-                    <div class="input-group"><label>解釋 (Meaning):</label><textarea id="mg-m-${i}" rows="2">${item.m || ''}</textarea></div>
+                    <div class="input-group"><label>拼音 (Pinyin):</label><input type="text" id="mg-p-${i}" value="${item.p}"></div>
+                    <div class="input-group"><label>解釋/配對 (Def/Pair):</label><textarea id="mg-m-${i}">${item.m}</textarea></div>
                     <div class="input-group"><label>配對圖片 (URL):</label><input type="text" id="mg-img-${i}" value="${item.img || ''}"></div>
                 </div>`;
         });
@@ -1073,34 +1004,32 @@
         });
         const key = document.getElementById('admin-mg-select').value;
         mgDB[key] = editingMG;
-        localStorage.setItem('hyMG_V6', JSON.stringify(mgDB));
+        localStorage.setItem('hyMiniGamesV5', JSON.stringify(mgDB));
         alert("遊戲詞庫儲存成功！");
     }
 
-    // --- 排行榜雙軌編輯 ---
+    // --- 排行榜編輯 ---
     function renderAdminLB() {
-        const mode = document.getElementById('admin-lb-mode-select').value;
-        const lvl = document.getElementById('admin-lb-lvl-select').value;
+        const lvl = document.getElementById('admin-lb-select').value;
         const list = document.getElementById('admin-lb-list'); list.innerHTML = '';
-        const data = leaderboard[mode][lvl] || [];
+        const data = leaderboard[lvl] || [];
         data.forEach((item, i) => {
             list.innerHTML += `<li style="align-items:center;">
-                <span><input type="text" id="lb-name-${mode}-${lvl}-${i}" value="${item.name}" style="width:80px;"> 
-                <input type="number" id="lb-score-${mode}-${lvl}-${i}" value="${item.score}" style="width:60px;"> 分</span>
-                <button onclick="saveLBItem('${mode}', '${lvl}', ${i})" style="padding:5px 10px; cursor:pointer; background:var(--edu-success); color:white; border:none; border-radius:5px;">儲存</button>
+                <span>第 ${i+1} 名: <input type="text" id="lb-name-${lvl}-${i}" value="${item.name}" style="width:80px;"> 
+                <input type="number" id="lb-score-${lvl}-${i}" value="${item.score}" style="width:60px;"> 分</span>
+                <button onclick="saveLBItem('${lvl}', ${i})" style="padding:2px 5px; cursor:pointer;">💾</button>
             </li>`;
         });
     }
-    function saveLBItem(mode, lvl, i) {
-        leaderboard[mode][lvl][i].name = document.getElementById(`lb-name-${mode}-${lvl}-${i}`).value;
-        leaderboard[mode][lvl][i].score = parseInt(document.getElementById(`lb-score-${mode}-${lvl}-${i}`).value);
-        leaderboard[mode][lvl].sort((a,b) => b.score - a.score);
-        localStorage.setItem('hyLB_V6', JSON.stringify(leaderboard)); alert("成績已更新！"); renderAdminLB();
+    function saveLBItem(lvl, i) {
+        leaderboard[lvl][i].name = document.getElementById(`lb-name-${lvl}-${i}`).value;
+        leaderboard[lvl][i].score = parseInt(document.getElementById(`lb-score-${lvl}-${i}`).value);
+        leaderboard[lvl].sort((a,b) => b.score - a.score);
+        localStorage.setItem('hyLeaderboardV4', JSON.stringify(leaderboard)); alert("成績已更新！"); renderAdminLB();
     }
     function clearLB() {
-        const mode = document.getElementById('admin-lb-mode-select').value;
-        const lvl = document.getElementById('admin-lb-lvl-select').value;
-        if(confirm("確定清空此層級紀錄？")) { leaderboard[mode][lvl] = []; localStorage.setItem('hyLB_V6', JSON.stringify(leaderboard)); renderAdminLB(); }
+        const lvl = document.getElementById('admin-lb-select').value;
+        if(confirm("確定清空此層級紀錄？")) { leaderboard[lvl] = []; localStorage.setItem('hyLeaderboardV4', JSON.stringify(leaderboard)); renderAdminLB(); }
     }
 </script>
 </body>
