@@ -13,11 +13,11 @@
         [data-theme="wood"] { --edu-primary: #8D6E63; --edu-secondary: #FFE082; --edu-accent: #E53935; --edu-success: #66BB6A; --box-bg: #EFEBE0; }
         [data-theme="nature"] { --edu-primary: #26A69A; --edu-secondary: #D4E157; --edu-accent: #FF7043; --edu-success: #4CAF50; --box-bg: #E0F2F1; }
 
-        /* 全頁背景設定 */
+        /* 全頁背景設定：覆蓋最底層 */
         body { 
             font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; 
             margin: 0; padding: 0; display: flex; justify-content: center; min-height: 100vh; align-items: flex-start;
-            background-color: #1e293b; /* 預設深色底 */
+            background-color: #2c3e50;
             background-size: cover; 
             background-position: center; 
             background-attachment: fixed;
@@ -29,47 +29,73 @@
         .hidden { display: none !important; }
         
         /* ---------------- 首頁 (Login Screen) 沉浸式設計 ---------------- */
-        #login-screen { text-align: center; margin-top: 8vh; padding: 20px; }
-        .emoji-row { font-size: 1.8rem; margin-bottom: 10px; letter-spacing: 5px; }
-        .main-title { font-family: 'Kaiti TC', 'KaiTi', serif; font-size: 3.8rem; color: #F6D365; margin: 0 0 5px 0; text-shadow: 2px 2px 6px rgba(0,0,0,0.6); letter-spacing: 3px; }
-        .sub-title { font-size: 1.1rem; color: #cbd5e1; margin-bottom: 35px; letter-spacing: 1px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        #login-screen { text-align: center; margin-top: 5vh; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        
+        /* 3D立體風格標題 */
+        .main-title { 
+            font-family: 'Kaiti TC', 'KaiTi', serif; 
+            font-size: 4.5rem; 
+            color: #FFD700; 
+            margin: 0 0 10px 0; 
+            font-weight: bold;
+            letter-spacing: 4px;
+            text-shadow: 
+                2px 2px 0px #b8860b, 
+                4px 4px 0px #8b6508, 
+                6px 6px 15px rgba(0,0,0,0.7); 
+        }
+        .sub-title { font-size: 1.3rem; color: #f8fafc; margin-bottom: 35px; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); font-weight: bold;}
         
         /* 毛玻璃卡片 */
         .login-card {
             background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-radius: 20px;
             padding: 35px 30px;
+            width: 100%;
             max-width: 480px;
-            margin: 0 auto;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
             text-align: left;
         }
         
-        .login-card label { color: #e2e8f0; font-size: 0.95rem; font-weight: bold; margin-bottom: 8px; display: block; }
+        .login-card label { color: #e2e8f0; font-size: 1rem; font-weight: bold; margin-bottom: 8px; display: block; }
         .login-card input, .login-card select {
             width: 100%; padding: 14px 15px; margin-bottom: 25px;
-            background: rgba(15, 23, 42, 0.6); color: white;
-            border: 1px solid #475569; border-radius: 10px;
+            background: rgba(15, 23, 42, 0.7); color: white;
+            border: 1px solid #64748b; border-radius: 10px;
             font-size: 1.05rem; box-sizing: border-box; outline: none; transition: 0.3s;
         }
         .login-card input:focus, .login-card select:focus { border-color: #F6D365; background: rgba(15, 23, 42, 0.9); }
-        .login-card input::placeholder { color: #64748b; }
+        .login-card input::placeholder { color: #94a3b8; }
         
-        /* 修正按鈕斷行問題：加入 white-space: nowrap */
-        .btn-start-main { white-space: nowrap; flex: 1; background: linear-gradient(45deg, #FF512F, #DD2476); color: white; border: none; padding: 15px 5px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(221, 36, 118, 0.4); }
-        .btn-start-main:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(221, 36, 118, 0.6); }
+        /* 按鈕強制不斷行 */
+        .btn-start-main { white-space: nowrap; flex: 1; background: linear-gradient(45deg, #FF512F, #DD2476); color: white; border: none; padding: 15px 5px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(221, 36, 118, 0.5); }
+        .btn-start-main:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(221, 36, 118, 0.7); }
         
-        .btn-start-mini { white-space: nowrap; flex: 1; background: linear-gradient(45deg, #11998e, #38ef7d); color: white; border: none; padding: 15px 5px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4); }
-        .btn-start-mini:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(17, 153, 142, 0.6); }
+        .btn-start-mini { white-space: nowrap; flex: 1; background: linear-gradient(45deg, #11998e, #38ef7d); color: white; border: none; padding: 15px 5px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(17, 153, 142, 0.5); }
+        .btn-start-mini:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(17, 153, 142, 0.7); }
 
-        .lb-toggle-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; padding: 8px 20px; border-radius: 20px; cursor: pointer; margin-top: 30px; transition: 0.3s; font-weight: bold;}
-        .lb-toggle-btn:hover { background: rgba(255,255,255,0.15); color: white; }
+        /* 清晰版英雄榜按鈕 */
+        .lb-toggle-btn { 
+            background: rgba(0, 0, 0, 0.65); 
+            border: 2px solid rgba(255, 255, 255, 0.6); 
+            color: white; 
+            padding: 12px 30px; 
+            border-radius: 30px; 
+            cursor: pointer; 
+            margin-top: 30px; 
+            transition: 0.3s; 
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+        .lb-toggle-btn:hover { background: rgba(255, 255, 255, 0.2); border-color: white; transform: translateY(-2px);}
 
         /* 排行榜深色版面 */
-        .leaderboard-box { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 15px; padding: 20px; margin-top: 20px; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px);}
+        .leaderboard-box { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; padding: 20px; margin-top: 20px; text-align: left; width: 100%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); backdrop-filter: blur(10px);}
         .leaderboard-tabs { display: flex; gap: 5px; margin-bottom: 10px; }
         .lb-tab-mode { flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1rem; color: #ccc; }
         .lb-tab-mode.active { background: #F6D365; color: #1e293b; }
@@ -79,12 +105,14 @@
         .lb-list li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; color: white;}
         .lb-list li:first-child { font-weight: bold; color: #F6D365; font-size: 1.1rem; }
 
-        /* ---------------- 測驗區/後台區 (明亮白底卡片) ---------------- */
+        /* ---------------- 測驗區/後台區 (獨立白底防護卡片) ---------------- */
         .white-card {
             background: white; color: var(--text-dark);
             border-radius: 25px; padding: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-            margin: 30px 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            margin: 30px auto;
+            width: 95%;
+            max-width: 850px;
         }
 
         /* 左右分欄 版面佈局 */
@@ -94,18 +122,17 @@
         .right-panel { align-items: flex-end; }
         .center-panel { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; }
 
-        .back-btn { background: white; border: 2px solid var(--edu-primary); color: var(--edu-primary); font-weight: bold; padding: 8px 15px; border-radius: 20px; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .back-btn { background: white; border: 2px solid var(--edu-primary); color: var(--edu-primary); font-weight: bold; padding: 8px 15px; border-radius: 20px; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
         .back-btn:hover { background: var(--edu-primary); color: white; }
-        .info-pill { background: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; border: 2px solid var(--edu-primary); color: var(--edu-primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;}
+        .info-pill { background: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; border: 2px solid var(--edu-primary); color: var(--edu-primary); text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
         
         .score-pill { border-color: var(--edu-accent); color: var(--edu-primary); }
         .combo-text { color: var(--edu-accent); font-size: 1.1rem; display: block; margin-top: 5px; }
-        .timer-display { font-size: 1.6rem; font-weight: bold; color: var(--edu-accent); background: #FFF0F0; padding: 8px 20px; border-radius: 20px; border: 2px solid var(--edu-accent); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .timer-display { font-size: 1.6rem; font-weight: bold; color: var(--edu-accent); background: #FFF0F0; padding: 8px 20px; border-radius: 20px; border: 2px solid var(--edu-accent); box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
 
-        /* 主測驗區 UI */
         .game-title { color: var(--edu-primary); margin: 0 0 15px 0; font-size: 1.5rem; text-align: center; width: 100%; border-bottom: 2px dashed #eee; padding-bottom: 10px; }
-        .context-box { width: 100%; background: #FFF9C4; padding: 12px; border-radius: 10px; border-left: 5px solid var(--edu-secondary); margin-bottom: 15px; font-weight: bold; color: #555; text-align: left; line-height: 1.5; box-sizing: border-box; }
-        .q-image { max-width: 100%; border-radius: 10px; margin-bottom: 15px; max-height: 250px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .context-box { width: 100%; background: #FFF9C4; padding: 15px; border-radius: 10px; border-left: 5px solid var(--edu-secondary); margin-bottom: 15px; font-weight: bold; color: #555; text-align: left; line-height: 1.5; box-sizing: border-box; }
+        .q-image { max-width: 100%; border-radius: 10px; margin-bottom: 15px; max-height: 250px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.15);}
         .sentence-display { width: 100%; box-sizing: border-box; font-size: 1.4rem; margin: 0 0 20px 0; padding: 20px; background: var(--box-bg); border-radius: 15px; border-left: 8px solid var(--edu-primary); line-height: 1.6; }
         .pinyin { font-size: 1rem; color: #7f8c8d; display: block; margin-top: 5px; font-weight: normal; }
         .audio-btn { cursor: pointer; color: var(--edu-primary); margin-left: 10px; font-size: 1.2rem; }
@@ -113,10 +140,10 @@
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
         .btn { padding: 12px; border: 2px solid var(--edu-primary); background: white; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; color: var(--edu-primary); font-size: 1.1rem; line-height: 1.4; }
         .btn-primary { background: var(--edu-primary); color: white; width: 100%; margin-top: 10px; }
-        .btn:hover:not(:disabled) { background: var(--edu-primary); color: white; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn:hover:not(:disabled) { background: var(--edu-primary); color: white; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15);}
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow:none;}
         
-        .word-tile { padding: 10px 15px; background: var(--edu-secondary); border-radius: 8px; cursor: pointer; margin: 5px; display: inline-block; font-weight: bold; color: #333; line-height: 1.4; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .word-tile { padding: 10px 15px; background: var(--edu-secondary); border-radius: 8px; cursor: pointer; margin: 5px; display: inline-block; font-weight: bold; color: #333; line-height: 1.4; box-shadow: 0 2px 4px rgba(0,0,0,0.15);}
         .sort-zone { width: 100%; box-sizing: border-box; min-height: 60px; border: 3px dashed var(--edu-primary); margin: 15px 0; padding: 10px; border-radius: 15px; background: #FFFDF0; }
         
         #feedback { width: 100%; box-sizing: border-box; margin-top: 15px; padding: 15px; border-radius: 12px; font-weight: bold; line-height: 1.5; text-align: left;}
@@ -149,16 +176,12 @@
         .ig-btn:hover { transform: scale(1.05); }
         .ig-icon { width: 24px; height: 24px; fill: white; }
 
-        /* 表單與後台 */
-        .input-group { margin-bottom: 15px; text-align: left; width: 100%; box-sizing: border-box;}
-        .input-group label { display: block; font-weight: bold; margin-bottom: 6px; color: var(--edu-primary); }
-        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
-        
+        /* 後台管理與模態窗 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; justify-content: center; align-items: center; }
         .modal-box { background: white; color: var(--text-dark); padding: 30px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         
-        .admin-entry-btn { position: fixed; bottom: 20px; right: 20px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(8px); color: white; border-radius: 30px; padding: 10px 20px; font-size: 0.9rem; cursor: pointer; transition: 0.3s; z-index: 100; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);}
-        .admin-entry-btn:hover { background: rgba(255,255,255,0.3); }
+        .admin-entry-btn { position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(8px); color: white; border-radius: 30px; padding: 10px 20px; font-size: 0.9rem; cursor: pointer; transition: 0.3s; z-index: 100; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);}
+        .admin-entry-btn:hover { background: rgba(0,0,0,0.9); border-color: #F6D365;}
         
         .admin-panel { background: #f9f9f9; padding: 20px; border-radius: 10px; text-align: left; max-height: 500px; overflow-y: auto; border: 1px solid #ddd; margin-bottom:15px; }
         .admin-tabs { display: flex; margin-bottom: 15px; gap: 5px; flex-wrap: wrap; }
@@ -166,6 +189,10 @@
         .admin-tab.active { background: var(--edu-primary); color: white; }
         .admin-item { background: white; margin-bottom: 15px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; position: relative; }
         .delete-btn { background: var(--edu-accent); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; float: right; margin-bottom:10px;}
+        
+        .input-group { margin-bottom: 15px; text-align: left; width: 100%; box-sizing: border-box;}
+        .input-group label { display: block; font-weight: bold; margin-bottom: 6px; color: var(--edu-primary); }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
@@ -174,8 +201,8 @@
 <div id="yt-player" style="display:none;"></div>
 
 <div id="app">
+    
     <div id="login-screen">
-        <div class="emoji-row">🇹🇼 🏮 🧋 🎎</div>
         <h1 class="main-title">簡單學華語</h1>
         <div class="sub-title">Learn Taiwanese Mandarin Easily</div>
         
@@ -271,10 +298,10 @@
         </div>
     </div>
 
-    <div id="admin-screen" class="white-card hidden">
+    <div id="admin-screen" class="white-card hidden" style="max-width: 800px;">
         <h2 style="color: #333; margin-top:0;">⚙️ 系統管理後台</h2>
         <div class="admin-tabs">
-            <button class="admin-tab active" id="tab-global" onclick="switchAdminTab('global')">全局與音樂設定</button>
+            <button class="admin-tab active" id="tab-global" onclick="switchAdminTab('global')">背景與音樂設定</button>
             <button class="admin-tab" id="tab-qbank" onclick="switchAdminTab('qbank')">測驗題庫</button>
             <button class="admin-tab" id="tab-mg" onclick="switchAdminTab('mg')">遊戲詞庫</button>
             <button class="admin-tab" id="tab-lb" onclick="switchAdminTab('lb')">排行管理</button>
@@ -314,7 +341,7 @@
                     <option value="none">完全隱藏</option>
                 </select>
             </div>
-            <button class="btn btn-primary" onclick="saveGlobalSettings()">💾 儲存全局設定</button>
+            <button class="btn btn-primary" onclick="saveGlobalSettings()">💾 儲存背景與音樂設定</button>
         </div>
 
         <div id="admin-qbank-sec" class="admin-panel hidden">
@@ -366,7 +393,7 @@
             <button class="btn" style="width:100%; margin-top:10px; background:var(--edu-accent); color:white; border:none;" onclick="clearLB()">🗑️ 清空此層級紀錄</button>
         </div>
 
-        <button class="btn" onclick="closeAdmin()" style="width:100%; margin-top:10px;">⬅ 退出後台</button>
+        <button class="btn" onclick="closeAdmin()" style="width:100%; margin-top:10px; background:var(--text-dark); color:white; border:none;">⬅ 退出後台</button>
     </div>
 </div>
 
@@ -415,21 +442,21 @@
     ];
 
     let defaultIntermediate = [
-        { type: 'choice', context: '期中考快到了，你看到同學小明連假日都不休息。<br><span class="pinyin">(Qízhōngkǎo kuài dàole...)</span>', q: '他每天都在圖書館讀書，非常____。', options: ['原來', '用功', '反對', '嚴'], ans: 1, cite: '生詞：用功', explain: '用功：意思是花很多時間與精力在讀書或學習上。', img: 'https://picsum.photos/seed/library/400/200' },
-        { type: 'choice', context: '你跟朋友約好去夜唱，但家人覺得半夜出門很不安全。<br><span class="pinyin">(Nǐ gēn péngyǒu yuē hǎo qù yèchàng...)</span>', q: '爸爸____我晚上太晚回家。', options: ['原來', '反對', '用功', '累'], ans: 1, cite: '生詞：反對', explain: '反對：不贊成某件事情，甚至會出面阻止。', img: 'https://picsum.photos/seed/night/400/200' },
-        { type: 'choice', context: '剛剛出大太陽，突然又下起大雨了。<br><span class="pinyin">(Gānggāng chū dà tàiyáng...)</span>', q: '台北的天氣真奇怪，說下雨____下雨。', options: ['都', '就', '也', '還'], ans: 1, cite: '語法：說...就...', explain: '說...就...：表示事情發生得非常突然。', img: 'https://picsum.photos/seed/rain/400/200' },
-        { type: 'sort', context: '你的朋友是個愛喝手搖杯的人，一看到飲料店就控制不住。<br><span class="pinyin">(Nǐ de péngyǒu shì ge ài hē shǒuyáobēi de rén...)</span>', q: '請重組句子：', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '語法：說...就...', explain: '說買就買：沒有經過太多考慮，馬上就購買。', img: 'https://picsum.photos/seed/tea/400/200' },
-        { type: 'choice', context: '博物館有規定，所有的參觀者都需要購票。<br><span class="pinyin">(Bówùguǎn yǒu guīdìng...)</span>', q: '參觀這個博物館，不管____，都要買票。', options: ['誰想去', '什麼人', '哪裡好玩', '想不想買'], ans: 1, cite: '語法：不管...都...', explain: '不管...都...：無論條件或身分為何，結果皆相同。', img: 'https://picsum.photos/seed/museum/400/200' },
-        { type: 'choice', context: '老師完全不先通知，一進教室就發考卷。<br><span class="pinyin">(Lǎoshī wánquán bù xiān tōngzhī...)</span>', q: '李老師很嚴，常常說考試____考試。', options: ['都', '就', '也', '又'], ans: 1, cite: '語法：說...就...', explain: '說考試就考試：形容考試發生得非常突然。', img: 'https://picsum.photos/seed/exam/400/200' },
-        { type: 'choice', context: '你跟新朋友介紹你以前住的地方。<br><span class="pinyin">(Nǐ gēn xīn péngyǒu jièshào nǐ yǐqián zhù de dìfāng.)</span>', q: '我原來在____工作，現在搬來台北了。', options: ['美國', '照相', '用功', '不管'], ans: 0, cite: '生詞：原來', explain: '原來：表示「以前、起初」的狀態。', img: 'https://picsum.photos/seed/usa/400/200' },
-        { type: 'choice', context: '冬天很冷，你想吃熱熱的東西，不想等別人同意。<br><span class="pinyin">(Dōngtiān hěn lěng...)</span>', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...', '雖然...但是...'], ans: 0, cite: '語法：說...就...', explain: '說吃火鍋就吃火鍋：行動力極高，立刻執行。', img: 'https://picsum.photos/seed/hotpot/400/200' },
-        { type: 'sort', context: '小美對學中文非常有熱忱，堅持上課。<br><span class="pinyin">(Xiǎoměi duì xué zhōngwén fēicháng yǒu rèchén...)</span>', q: '請重組句子：', words: ['不管', '累不累', '她', '都會來', '上課'], ans: '不管累不累她都會來上課', cite: '語法：不管...都...', explain: '不管累不累：正反疑問條件都不影響結果。', img: 'https://picsum.photos/seed/study/400/200' },
-        { type: 'choice', context: '你跟朋友約好去海邊玩，即使下雨也不改變計畫。<br><span class="pinyin">(Nǐ gēn péngyǒu yuē hǎo qù hǎibiān wán...)</span>', q: '不管天氣____，我都要去海邊。', options: ['好不好', '怎麼樣', '好還是壞', '以上皆可'], ans: 3, cite: '語法：不管...都...', explain: '不管後面常接「疑問詞」或「正反問法」。', img: 'https://picsum.photos/seed/beach/400/200' },
-        { type: 'choice', context: '看到朋友拍出很棒的照片，你覺得很驚訝。<br><span class="pinyin">(Kàndào péngyǒu pāi chū hěn bàng de zhàopiàn...)</span>', q: '____你會照相！我以前不知道。', options: ['原來', '用功', '反對', '不管'], ans: 0, cite: '生詞：原來', explain: '原來：用在突然發現事實真相時的驚嘆。', img: 'https://picsum.photos/seed/camera/400/200' },
-        { type: 'choice', context: '老師每天都安排考試，你覺得壓力很大。<br><span class="pinyin">(Lǎoshī měitiān dōu ānpái kǎoshì...)</span>', q: '我____老師每天都筆試。', options: ['反對', '原來', '用功', '累'], ans: 0, cite: '生詞：反對', explain: '反對：不贊同並拒絕接受某種做法。', img: 'https://picsum.photos/seed/protest/400/200' },
-        { type: 'choice', context: '你的朋友個性很急，做決定非常快。<br><span class="pinyin">(Nǐ de péngyǒu gèxìng hěn jí...)</span>', q: '他決定的事情，說走____走。', options: ['就', '都', '也', '還'], ans: 0, cite: '語法：說...就...', explain: '說走就走：一說出口馬上就採取行動。', img: 'https://picsum.photos/seed/run/400/200' },
-        { type: 'choice', context: '小明非常聰明，每次測驗都能拿高分。<br><span class="pinyin">(Xiǎomíng fēicháng cōngmíng...)</span>', q: '不管____，他都拿第一名。', options: ['什麼考試', '誰在說話', '哪裡好玩', '什麼時候'], ans: 0, cite: '語法：不管...都...', explain: '不管什麼考試：表示任何種類的測驗都不影響他拿第一的結果。', img: 'https://picsum.photos/seed/medal/400/200' },
-        { type: 'sort', context: '你的朋友很喜歡購物，看到喜歡的東西就馬上付錢。<br><span class="pinyin">(Nǐ de péngyǒu hěn xǐhuān gòuwù...)</span>', q: '請重組句子：', words: ['看到', '喜歡的衣服', '說買', '就買'], ans: '看到喜歡的衣服說買就買', cite: '語法：說...就...', explain: '看到就買：形容衝動消費的行為。', img: 'https://picsum.photos/seed/shopping/400/200' }
+        { type: 'choice', context: '期中考快到了，你看到同學小明連假日都不休息。<br><span class="pinyin">(Qí zhōngkǎo kuài dàole, nǐ kàn dào tóngxué xiǎomíng lián jiàrì dōu bù xiūxí.)</span>', q: '他每天都在圖書館讀書，非常____。', options: ['原來', '用功', '反對', '嚴'], ans: 1, cite: '生詞：用功', explain: '用功：意思是花很多時間與精力在讀書或學習上。', img: 'http://5b0988e595225.cdn.sohucs.com/images/20181108/5499a1e95e174343a20cd12480995e8b.jpeg' },
+        { type: 'choice', context: '你跟朋友約好去夜唱，但家人覺得半夜出門很不安全。<br><span class="pinyin">(Nǐ gēn péngyǒu yuē hǎo qù yè chàng, dàn jiārén juédé bànyè chūmén hěn bù ānquán.)</span>', q: '爸爸____我晚上太晚回家。', options: ['原來', '反對', '用功', '累'], ans: 1, cite: '生詞：反對', explain: '反對：不贊成某件事情，甚至會出面阻止。', img: 'https://live.staticflickr.com/7576/16279773912_66ec00ec1e_b.jpg' },
+        { type: 'choice', context: '剛剛出大太陽，突然又下起大雨了。<br><span class="pinyin">(Gānggāng chū dà tàiyáng, túrán yòu xià qǐ dàyǔle.)</span>', q: '台北的天氣真奇怪，說下雨____下雨。', options: ['都', '就', '也', '還'], ans: 1, cite: '語法：說...就...', explain: '說...就...：表示事情發生得非常突然。', img: 'https://cdn.ftvnews.com.tw/manasystem/FileData/News/4982c1b4-d747-4479-95a9-eab82a98a34a.jpg' },
+        { type: 'sort', context: '你的朋友是個愛喝奶茶的人，一看到奶茶店就一定要喝。<br><span class="pinyin">(Nǐ de péngyǒu shìgè ài hē nǎichá de rén, yī kàn dào nǎichá diàn jiù yīdìng yào hē.)</span>', q: '請重組句子：', words: ['說買', '就買', '每次經過', '奶茶店'], ans: '每次經過奶茶店說買就買', cite: '語法：說...就...', explain: '說買就買：沒有經過太多考慮，馬上就購買。', img: 'https://cw-image-resizer.cwg.tw/resize/uri/https%3A%2F%2Fcdn-www.cw.com.tw%2Farticle%2F202002%2Farticle-5e5392f3c088a.jpg/?w=1600&format=webp' },
+        { type: 'choice', context: '博物館有規定，所有的參觀者都需要購票。<br><span class="pinyin">(Bówùguǎn yǒu guīdìng, suǒyǒu de cānguān zhě dōu xūyào gòu piào.)</span>', q: '參觀這個博物館，不管____，都要買票。', options: ['誰想去', '什麼人', '哪裡好玩', '想不想買'], ans: 1, cite: '語法：不管...都...', explain: '不管...都...：無論條件或身分為何，結果皆相同。', img: 'https://d3d9mb8xdsbq52.cloudfront.net/s3/240306/122457zda.jpg' },
+        { type: 'choice', context: '老師完全不先通知，一進教室就發考卷。<br><span class="pinyin">(Lǎoshī wánquán bù xiān tōngzhī, yí jìn jiàoshì jiù fā kǎojuàn.)</span>', q: '李老師很嚴，常常說考試____考試。', options: ['都', '就', '也', '又'], ans: 1, cite: '語法：說...就...', explain: '說考試就考試：形容考試發生得非常突然。', img: 'https://images.storm.mg/cloud/5288ce6efe5dced3e314312bcb627024e19c33ed.webp?url=s3%3A%2F%2Fnew-storm-public-resource%2Fgallery%2F2041835%2F20241126-054211_U29519_M1009893_92aa.jpg&g=sm&h=675&resize=fill&w=1200&format=webp' },
+        { type: 'choice', context: '你跟新朋友介紹你以前住的地方。<br><span class="pinyin">(Nǐ gēn xīn péngyǒu jièshào nǐ yǐqián zhù de dìfāng.)</span>', q: '我原來在____工作，現在搬來台北了。', options: ['美國', '照相', '用功', '不管'], ans: 0, cite: '生詞：原來', explain: '原來：表示「以前、起初」的狀態。', img: 'https://blog.tripbaa.com/wp-content/uploads/2020/10/plan_2020090317510925776_b.jpg' },
+        { type: 'choice', context: '冬天很冷，你想吃熱熱的東西，不想等別人同意。<br><span class="pinyin">(Dōngtiān hěn lěng, nǐ xiǎng chī rèrè de dōngxi, bù xiǎng děng biérén tóngyì.)</span>', q: '天氣冷的時候，____吃火鍋____吃火鍋。', options: ['說...就...', '不管...都...', '因為...所以...', '雖然...但是...'], ans: 0, cite: '語法：說...就...', explain: '說吃火鍋就吃火鍋：行動力極高，立刻執行。', img: 'https://i.epochtimes.com/assets/uploads/2021/01/Hot-Pot2-450x253.jpg' },
+        { type: 'sort', context: '小美對學中文非常有熱忱，堅持上課。<br><span class="pinyin">(Xiǎoměi duì xué zhōngwén fēicháng yǒu rèchén, jiānchí shàngkè.)</span>', q: '請重組句子：', words: ['不管', '累不累', '她', '都會來', '上課'], ans: '不管累不累她都會來上課', cite: '語法：不管...都...', explain: '不管累不累：正反疑問條件都不影響結果。', img: 'https://cw-image-resizer.cwg.tw/resize/uri/https%3A%2F%2Fcdn-cw1.cw.com.tw%2Fimages%2Farticle%2F201711%2Farticle-5a03d69a26d59.jpg/?w=1600&format=webp' },
+        { type: 'choice', context: '你跟朋友約好去海邊玩，即使下雨也不改變計畫。<br><span class="pinyin">(Nǐ gēn péngyǒu yuē hǎo qù hǎibiān wán, jíshǐ xiàyǔ yě bù gǎibiàn jìhuà.)</span>', q: '不管天氣____，我都要去海邊。', options: ['好不好', '怎麼樣', '好還是壞', '以上皆可'], ans: 3, cite: '語法：不管...都...', explain: '不管後面常接「疑問詞」或「正反問法」。', img: 'https://agirls.aottercdn.com/media/eac599e0-78b7-40e5-b44c-a39407266742.jpg' },
+        { type: 'choice', context: '看到朋友拍出很棒的照片，你覺得很驚訝。<br><span class="pinyin">(Kàndào péngyǒu pāi chū hěn bàng de zhàopiàn, nǐ juédé hěn jīngyà.)</span>', q: '____你會照相！我以前不知道。', options: ['原來', '用功', '反對', '不管'], ans: 0, cite: '生詞：原來', explain: '原來：用在突然發現事實真相時的驚嘆。', img: 'https://www.dace.com.tw/wp-content/smush-webp/2019/06/%E3%80%90%E6%8B%8D%E7%85%A7%E6%8A%80%E5%B7%A7%E3%80%91%E6%94%9D%E5%BD%B1%E5%B8%AB%E8%A6%96%E8%A7%92%EF%BC%9A%E4%B8%8D%E5%8F%AA%E6%87%82%E6%8B%8D%E7%85%A7%E6%8A%80%E5%B7%A7%EF%BC%8C%E6%9B%B4%E8%A6%81%E6%87%82%E5%BE%97%E5%A6%82%E4%BD%95%E8%A7%80%E7%9C%8B.jpg.webp' },
+        { type: 'choice', context: '老師每天都安排考試，你覺得壓力很大。<br><span class="pinyin">(Lǎoshī měitiān dōu ānpái kǎoshì, nǐ juédé yālì hěn dà.)</span>', q: '我____老師每天都筆試。', options: ['反對', '原來', '用功', '累'], ans: 0, cite: '生詞：反對', explain: '反對：不贊同並拒絕接受某種做法。', img: 'https://storage.ctinews.com/compression/files/default/cut-1766821000-PuSDNL3.jpg' },
+        { type: 'choice', context: '你的朋友個性很急，做決定非常快。<br><span class="pinyin">(Nǐ de péngyǒu gèxìng hěn jí, zuò juédìng fēicháng kuài.)</span>', q: '他決定的事情，說走____走。', options: ['就', '都', '也', '還'], ans: 0, cite: '語法：說...就...', explain: '說走就走：一說出口馬上就採取行動。', img: 'https://i0.wp.com/hkhealpy.com/wp-content/uploads/2024/02/%E8%9E%A2%E5%B9%95%E6%93%B7%E5%8F%96%E7%95%AB%E9%9D%A2-1297.png?resize=1200%2C675&ssl=1' },
+        { type: 'choice', context: '小明非常聰明，每次測驗都能拿高分。<br><span class="pinyin">(Xiǎomíng fēicháng cōngmíng, měi cì cèyàn dōu néng ná gāofēn.)</span>', q: '不管____，他都拿第一名。', options: ['什麼考試', '誰在說話', '哪裡好玩', '什麼時候'], ans: 0, cite: '語法：不管...都...', explain: '不管什麼考試：表示任何種類的測驗都不影響他拿第一的結果。', img: 'https://www.epochtimes.com/_next/image?url=https%3A%2F%2Fi.epochtimes.com%2Fassets%2Fuploads%2F2024%2F07%2Fid14286692-f204c40476ba513f56d6662d200bc842.jpg&w=1200&q=75' },
+        { type: 'sort', context: '你的朋友很喜歡購物，看到喜歡的東西就馬上付錢。<br><span class="pinyin">(Nǐ de péngyǒu hěn xǐhuān gòuwù, kàndào xǐhuān de dōngxi jiù mǎshàng fùqián.)</span>', q: '請重組句子：', words: ['看到', '喜歡的衣服', '說買', '就買'], ans: '看到喜歡的衣服說買就買', cite: '語法：說...就...', explain: '看到就買：形容衝動消費的行為。', img: 'https://thumbs.dreamstime.com/b/none-163905744.jpg?w=992' }
     ];
 
     let defaultAdvanced = [
@@ -492,21 +519,21 @@
         ]
     };
 
-    // ================== 儲存與系統變數 (V7 金鑰，保證更新並解決共享問題) ==================
-    let config = JSON.parse(localStorage.getItem('hyConfigV7')) || { 
-        banner: 'https://study.mdnkids.com/CH/images/fb.jpg', 
+    // ================== 儲存與系統變數 (V8 金鑰，強制更新介面與題庫) ==================
+    let config = JSON.parse(localStorage.getItem('hyConfigV8')) || { 
+        banner: 'https://stepheniehuang6a619c4bba.wordpress.com/wp-content/uploads/2023/04/bzm8_0m9n_180625.jpg', 
         theme: 'classic', displayMode: 'both', 
         bgmId: 'nRy0W3jpk7Q', bgmList: 'PL0SpIPXG4xRwg5I5YpvBniXdXXNQ4IByy', bgmVol: 10 
     };
     
     let qdb = {
-        beginner: JSON.parse(localStorage.getItem('hyDB_Beg_V7')) || defaultBeginner,
-        intermediate: JSON.parse(localStorage.getItem('hyDB_Int_V7')) || defaultIntermediate,
-        advanced: JSON.parse(localStorage.getItem('hyDB_Adv_V7')) || defaultAdvanced
+        beginner: JSON.parse(localStorage.getItem('hyDB_Beg_V8')) || defaultBeginner,
+        intermediate: JSON.parse(localStorage.getItem('hyDB_Int_V8')) || defaultIntermediate,
+        advanced: JSON.parse(localStorage.getItem('hyDB_Adv_V8')) || defaultAdvanced
     };
-    let mgDB = JSON.parse(localStorage.getItem('hyMG_V7')) || defaultMiniGames;
+    let mgDB = JSON.parse(localStorage.getItem('hyMG_V8')) || defaultMiniGames;
     
-    let leaderboard = JSON.parse(localStorage.getItem('hyLB_V7')) || {
+    let leaderboard = JSON.parse(localStorage.getItem('hyLB_V8')) || {
         main: { beginner: [], intermediate: [], advanced: [] },
         mini: { beginner: [], intermediate: [], advanced: [] }
     };
@@ -957,14 +984,15 @@
         document.getElementById('end-player').innerText = `${displayLevelText}：${playerName}`;
         document.getElementById('final-score').innerText = `總得分：${score}`;
         
+        // 儲存到正確的榜單
         leaderboard[gameMode][levelKey].push({ name: playerName, score: score });
         leaderboard[gameMode][levelKey].sort((a,b) => b.score - a.score);
-        localStorage.setItem('hyLB_V6', JSON.stringify(leaderboard));
+        localStorage.setItem('hyLB_V8', JSON.stringify(leaderboard));
     }
 
     function shareToInstagram() {
         const modeText = gameMode === 'main' ? '生詞&語法練習' : '遊戲帶你學華語';
-        const shareText = `我在「簡單學華語 Let's Learn Mandarin」的【${modeText} - ${displayLevelText}】獲得了 ${score} 分！🎉\n\n快來跟我一起挑戰中文吧！ 📚✨\n#學華語 #MandarinLearning #Taiwan`;
+        const shareText = `我在「簡單學華語 Learn Taiwanese Mandarin」的【${modeText} - ${displayLevelText}】獲得了 ${score} 分！🎉\n\n快來跟我一起挑戰中文吧！ 📚✨\n#學華語 #MandarinLearning #Taiwan`;
         
         if (navigator.share && /mobile|android|iphone|ipad/i.test(navigator.userAgent.toLowerCase())) {
             navigator.share({
@@ -1048,10 +1076,8 @@
         config.bgmVol = parseInt(document.getElementById('setting-bgm-vol').value) || 10;
         config.theme = document.getElementById('setting-theme').value;
         config.displayMode = document.getElementById('setting-display').value;
-        localStorage.setItem('hyConfigV7', JSON.stringify(config));
-        applySettings(); 
-        alert("全局與音樂設定已儲存！將自動重新載入網頁套用最新背景。");
-        location.reload();
+        localStorage.setItem('hyConfigV8', JSON.stringify(config));
+        applySettings(); alert("全局與音樂設定已儲存！將重新載入網頁套用最新音樂與背景。"); location.reload();
     }
 
     // --- 主測驗編輯 ---
@@ -1097,7 +1123,7 @@
         });
         const lvl = document.getElementById('admin-level-select').value;
         qdb[lvl] = editingDB;
-        localStorage.setItem(lvl === 'beginner' ? 'hyDB_Beg_V7' : (lvl === 'intermediate' ? 'hyDB_Int_V7' : 'hyDB_Adv_V7'), JSON.stringify(qdb[lvl]));
+        localStorage.setItem(lvl === 'beginner' ? 'hyDB_Beg_V8' : (lvl === 'intermediate' ? 'hyDB_Int_V8' : 'hyDB_Adv_V8'), JSON.stringify(qdb[lvl]));
         alert("主測驗題庫儲存成功！");
     }
 
@@ -1128,7 +1154,7 @@
         });
         const key = document.getElementById('admin-mg-select').value;
         mgDB[key] = editingMG;
-        localStorage.setItem('hyMG_V7', JSON.stringify(mgDB));
+        localStorage.setItem('hyMG_V8', JSON.stringify(mgDB));
         alert("遊戲詞庫儲存成功！");
     }
 
@@ -1150,12 +1176,12 @@
         leaderboard[mode][lvl][i].name = document.getElementById(`lb-name-${mode}-${lvl}-${i}`).value;
         leaderboard[mode][lvl][i].score = parseInt(document.getElementById(`lb-score-${mode}-${lvl}-${i}`).value);
         leaderboard[mode][lvl].sort((a,b) => b.score - a.score);
-        localStorage.setItem('hyLB_V7', JSON.stringify(leaderboard)); alert("成績已更新！"); renderAdminLB();
+        localStorage.setItem('hyLB_V8', JSON.stringify(leaderboard)); alert("成績已更新！"); renderAdminLB();
     }
     function clearLB() {
         const mode = document.getElementById('admin-lb-mode-select').value;
         const lvl = document.getElementById('admin-lb-lvl-select').value;
-        if(confirm("確定清空此層級紀錄？")) { leaderboard[mode][lvl] = []; localStorage.setItem('hyLB_V7', JSON.stringify(leaderboard)); renderAdminLB(); }
+        if(confirm("確定清空此層級紀錄？")) { leaderboard[mode][lvl] = []; localStorage.setItem('hyLB_V8', JSON.stringify(leaderboard)); renderAdminLB(); }
     }
 </script>
 </body>
